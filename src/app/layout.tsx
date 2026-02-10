@@ -3,9 +3,9 @@ import { Providers } from '@/components/layout/Providers';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'FuelUp — Smart Vehicle Management & Mileage Tracker',
+  title: 'FuelUp | Smart Vehicle Management & Mileage Tracker',
   description:
-    'Track fuel expenses, monitor vehicle efficiency, manage maintenance schedules, and save money with FuelUp — the ultimate vehicle management PWA.',
+    'Track fuel expenses, monitor vehicle efficiency, manage maintenance schedules, and save money with FuelUp. The ultimate vehicle management PWA.',
   keywords: ['fuel tracker', 'mileage tracker', 'vehicle management', 'car maintenance', 'fuel efficiency'],
   manifest: '/manifest.json',
   icons: {

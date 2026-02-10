@@ -39,7 +39,7 @@ export default function LandingPage() {
             Smart Vehicle Management
           </div>
 
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tight mb-6 max-w-4xl mx-auto leading-tight text-center border-2 border-red-500">
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tight mb-6 max-w-4xl mx-auto leading-tight text-center">
             Track Fuel.{' '}
             <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
               Save Money.
@@ -50,7 +50,7 @@ export default function LandingPage() {
 
           <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10">
             The ultimate vehicle management platform. Track fuel expenses, monitor efficiency,
-            schedule maintenance, and make data-driven decisions — all in one beautiful app.
+            schedule maintenance, and make data-driven decisions. All in one beautiful app.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -123,25 +123,6 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Stats Section */}
-      <section className="py-16 px-6 bg-muted/50">
-        <div className="max-w-4xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-          {[
-            { value: '50K+', label: 'Active Users' },
-            { value: '2M+', label: 'Fuel Logs' },
-            { value: '$4.2M', label: 'Money Saved' },
-            { value: '4.9★', label: 'User Rating' },
-          ].map((stat, i) => (
-            <div key={i}>
-              <div className="text-3xl md:text-4xl font-bold font-mono text-primary mb-1">
-                {stat.value}
-              </div>
-              <div className="text-sm text-muted-foreground">{stat.label}</div>
-            </div>
-          ))}
-        </div>
-      </section>
-
       {/* CTA Section */}
       <section className="py-24 px-6 text-center">
         <div className="max-w-3xl mx-auto">
@@ -149,11 +130,11 @@ export default function LandingPage() {
             Ready to Take Control of Your Vehicle Costs?
           </h2>
           <p className="text-lg text-muted-foreground mb-8">
-            Join thousands of drivers who save money and drive smarter with FuelUp.
+            Start tracking your fuel expenses, maintenance, and trips today.
           </p>
           <Link href="/login">
             <Button size="xl" className="gap-2 shadow-lg shadow-primary/25">
-              Get Started — It&apos;s Free
+              Get Started for Free
               <ArrowRight className="h-5 w-5" />
             </Button>
           </Link>

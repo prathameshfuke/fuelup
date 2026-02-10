@@ -1,15 +1,19 @@
 'use client';
 
 import Link from 'next/link';
-import { Gauge, Chrome, Mail, ArrowRight, Fuel, BarChart3, Bell } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { Gauge, Chrome, Mail, ArrowRight, Fuel, BarChart3, Bell, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useState } from 'react';
+import { useAuthStore } from '@/lib/store/authStore';
 
 export default function LoginPage() {
     const [email, setEmail] = useState('');
     const [isEmailMode, setIsEmailMode] = useState(false);
+    const router = useRouter();
+    const { signInAsGuest } = useAuthStore();
 
     const handleGoogleSignIn = () => {
         // Supabase OAuth would go here
@@ -19,6 +23,11 @@ export default function LoginPage() {
     const handleEmailSignIn = () => {
         // Supabase email auth would go here
         window.location.href = '/dashboard';
+    };
+
+    const handleGuestSignIn = () => {
+        signInAsGuest();
+        router.push('/dashboard');
     };
 
     return (
@@ -114,10 +123,32 @@ export default function LoginPage() {
                                     className="w-full text-sm text-muted-foreground hover:text-foreground transition-colors"
                                     onClick={() => setIsEmailMode(false)}
                                 >
-                                    ← Back to options
+                                    Back to options
                                 </button>
                             </div>
                         )}
+
+                        <div className="relative">
+                            <div className="absolute inset-0 flex items-center">
+                                <span className="w-full border-t" />
+                            </div>
+                            <div className="relative flex justify-center text-xs uppercase">
+                                <span className="bg-background px-2 text-muted-foreground">Or</span>
+                            </div>
+                        </div>
+
+                        <Button
+                            onClick={handleGuestSignIn}
+                            variant="secondary"
+                            className="w-full h-12 text-base gap-3"
+                            size="lg"
+                        >
+                            <User className="h-5 w-5" />
+                            Continue as Guest
+                        </Button>
+                        <p className="text-center text-xs text-muted-foreground">
+                            Your data will be saved locally. Sign in later to sync across devices.
+                        </p>
                     </div>
 
                     {/* Value Props */}
@@ -158,10 +189,10 @@ export default function LoginPage() {
                         </div>
                     </div>
                     <h2 className="text-3xl font-bold mb-4">
-                        Your Vehicle. Your Data. Your Savings.
+                        Your Vehicle. Your Data. Your Control.
                     </h2>
                     <p className="text-white/80 text-lg mb-8">
-                        Join drivers who save an average of $320/year by tracking their fuel expenses and optimizing their driving habits.
+                        Track fuel costs, monitor efficiency, and stay on top of maintenance, all in one app.
                     </p>
                     <div className="inline-flex flex-col gap-3 text-left bg-white/10 backdrop-blur-sm rounded-2xl p-6">
                         <div className="flex items-center gap-3">
@@ -170,15 +201,15 @@ export default function LoginPage() {
                         </div>
                         <div className="flex items-center gap-3">
                             <div className="h-2 w-2 rounded-full bg-green-400" />
-                            <span className="text-sm text-white/90">AI-powered maintenance predictions</span>
+                            <span className="text-sm text-white/90">Smart maintenance reminders</span>
                         </div>
                         <div className="flex items-center gap-3">
                             <div className="h-2 w-2 rounded-full bg-green-400" />
-                            <span className="text-sm text-white/90">Tax-ready mileage reports</span>
+                            <span className="text-sm text-white/90">Trip logging and mileage reports</span>
                         </div>
                         <div className="flex items-center gap-3">
                             <div className="h-2 w-2 rounded-full bg-green-400" />
-                            <span className="text-sm text-white/90">Works offline — syncs when online</span>
+                            <span className="text-sm text-white/90">Works offline, syncs when online</span>
                         </div>
                     </div>
                 </div>

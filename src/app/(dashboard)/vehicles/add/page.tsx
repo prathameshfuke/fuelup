@@ -1,242 +1,190 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Car, Save } from 'lucide-react';
+import { ArrowLeft, Car } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import {
-    Select,
-    SelectTrigger,
-    SelectValue,
-    SelectContent,
-    SelectItem,
-} from '@/components/ui/select';
-import Link from 'next/link';
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
+import { useRouter } from 'next/navigation';
+import { useVehiclesStore, type Vehicle } from '@/lib/store/vehiclesStore';
 import { toast } from 'sonner';
+import Link from 'next/link';
 
 const vehicleTypes = [
-    { value: 'car', label: '🚗 Car' },
-    { value: 'motorcycle', label: '🏍️ Motorcycle' },
-    { value: 'scooter', label: '🛵 Scooter' },
-    { value: 'truck', label: '🚛 Truck' },
-    { value: 'suv', label: '🚙 SUV' },
-    { value: 'van', label: '🚐 Van' },
+    { value: 'car', label: 'Car', emoji: '🚗' },
+    { value: 'motorcycle', label: 'Motorcycle', emoji: '🏍️' },
+    { value: 'scooter', label: 'Scooter', emoji: '🛵' },
+    { value: 'suv', label: 'SUV', emoji: '🚙' },
+    { value: 'truck', label: 'Truck', emoji: '🚛' },
+    { value: 'van', label: 'Van', emoji: '🚐' },
 ];
 
-const fuelTypes = [
-    { value: 'gasoline', label: 'Gasoline' },
-    { value: 'diesel', label: 'Diesel' },
-    { value: 'electric', label: 'Electric' },
-    { value: 'hybrid', label: 'Hybrid' },
-    { value: 'plugin_hybrid', label: 'Plug-in Hybrid' },
-    { value: 'cng', label: 'CNG' },
-    { value: 'lpg', label: 'LPG' },
+const fuelTypes = ['Gasoline', 'Diesel', 'Hybrid', 'Electric', 'CNG', 'LPG'];
+
+const colors = [
+    '#3b82f6', '#ef4444', '#22c55e', '#f59e0b', '#8b5cf6',
+    '#ec4899', '#06b6d4', '#f97316', '#6366f1', '#14b8a6',
 ];
+
+const anim = { hidden: { opacity: 0, y: 15 }, show: { opacity: 1, y: 0 } };
 
 export default function AddVehiclePage() {
     const router = useRouter();
-    const [isSubmitting, setIsSubmitting] = useState(false);
+    const { addVehicle } = useVehiclesStore();
+
     const [form, setForm] = useState({
-        name: '',
-        vehicleType: '',
-        make: '',
-        model: '',
-        year: '',
-        fuelType: '',
-        engineSize: '',
-        tankCapacity: '',
-        color: '',
-        licensePlate: '',
-        initialOdometer: '',
+        name: '', type: 'car' as Vehicle['type'], make: '', model: '',
+        year: new Date().getFullYear().toString(), fuelType: 'Gasoline',
+        color: '#3b82f6', licensePlate: '',
     });
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        setIsSubmitting(true);
-
-        // Simulate saving
-        await new Promise((r) => setTimeout(r, 1000));
+        addVehicle({
+            name: form.name || `${form.make} ${form.model}`,
+            type: form.type,
+            make: form.make,
+            model: form.model,
+            year: parseInt(form.year),
+            fuelType: form.fuelType,
+            color: form.color,
+            licensePlate: form.licensePlate,
+            isActive: true,
+        });
         toast.success('Vehicle added successfully!');
         router.push('/vehicles');
-        setIsSubmitting(false);
     };
 
     return (
-        <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="max-w-2xl mx-auto space-y-6"
-        >
-            {/* Header */}
-            <div className="flex items-center gap-3">
+        <motion.div initial="hidden" animate="show" transition={{ staggerChildren: 0.06 }} className="max-w-2xl mx-auto space-y-6">
+            <motion.div variants={anim} className="flex items-center gap-3">
                 <Link href="/vehicles">
-                    <Button variant="ghost" size="icon">
-                        <ArrowLeft className="h-5 w-5" />
-                    </Button>
+                    <Button variant="ghost" size="icon"><ArrowLeft className="h-5 w-5" /></Button>
                 </Link>
                 <div>
-                    <h1 className="text-2xl font-bold">Add Vehicle</h1>
-                    <p className="text-muted-foreground">Enter your vehicle details</p>
+                    <h1 className="text-2xl md:text-3xl font-bold">Add Vehicle</h1>
+                    <p className="text-muted-foreground mt-1">Register a new vehicle to track</p>
                 </div>
-            </div>
+            </motion.div>
 
             <form onSubmit={handleSubmit} className="space-y-6">
-                {/* Basic Info */}
-                <Card>
-                    <CardHeader>
-                        <CardTitle className="text-base flex items-center gap-2">
-                            <Car className="h-4 w-4" /> Basic Information
-                        </CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                        <div>
-                            <Label htmlFor="name">Vehicle Name *</Label>
-                            <Input
-                                id="name"
-                                placeholder='e.g., "My Honda Civic"'
-                                value={form.name}
-                                onChange={(e) => setForm({ ...form, name: e.target.value })}
-                                className="mt-1.5"
-                                required
-                            />
-                        </div>
+                {/* Vehicle Type */}
+                <motion.div variants={anim}>
+                    <Card>
+                        <CardHeader><CardTitle className="text-base">Vehicle Type</CardTitle></CardHeader>
+                        <CardContent>
+                            <div className="grid grid-cols-3 md:grid-cols-6 gap-2">
+                                {vehicleTypes.map((vt) => (
+                                    <button
+                                        key={vt.value} type="button"
+                                        className={`flex flex-col items-center gap-1 p-3 rounded-xl border-2 transition-all ${form.type === vt.value
+                                                ? 'border-primary bg-primary/5'
+                                                : 'border-transparent bg-muted/50 hover:bg-muted'
+                                            }`}
+                                        onClick={() => setForm({ ...form, type: vt.value as Vehicle['type'] })}
+                                    >
+                                        <span className="text-2xl">{vt.emoji}</span>
+                                        <span className="text-xs font-medium">{vt.label}</span>
+                                    </button>
+                                ))}
+                            </div>
+                        </CardContent>
+                    </Card>
+                </motion.div>
 
-                        <div className="grid grid-cols-2 gap-4">
+                {/* Details */}
+                <motion.div variants={anim}>
+                    <Card>
+                        <CardHeader><CardTitle className="text-base">Vehicle Details</CardTitle></CardHeader>
+                        <CardContent className="space-y-4">
                             <div>
-                                <Label>Vehicle Type *</Label>
-                                <Select value={form.vehicleType} onValueChange={(v) => setForm({ ...form, vehicleType: v })}>
-                                    <SelectTrigger className="mt-1.5">
-                                        <SelectValue placeholder="Select type" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        {vehicleTypes.map((t) => (
-                                            <SelectItem key={t.value} value={t.value}>{t.label}</SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
+                                <Label>Nickname</Label>
+                                <Input
+                                    placeholder="My Daily Driver" value={form.name}
+                                    onChange={(e) => setForm({ ...form, name: e.target.value })}
+                                    className="mt-1.5"
+                                />
+                            </div>
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <Label>Make *</Label>
+                                    <Input
+                                        placeholder="Honda" value={form.make}
+                                        onChange={(e) => setForm({ ...form, make: e.target.value })}
+                                        className="mt-1.5" required
+                                    />
+                                </div>
+                                <div>
+                                    <Label>Model *</Label>
+                                    <Input
+                                        placeholder="Civic" value={form.model}
+                                        onChange={(e) => setForm({ ...form, model: e.target.value })}
+                                        className="mt-1.5" required
+                                    />
+                                </div>
+                            </div>
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <Label>Year *</Label>
+                                    <Input
+                                        type="number" min="1900" max="2030" value={form.year}
+                                        onChange={(e) => setForm({ ...form, year: e.target.value })}
+                                        className="mt-1.5" required
+                                    />
+                                </div>
+                                <div>
+                                    <Label>License Plate</Label>
+                                    <Input
+                                        placeholder="ABC 1234" value={form.licensePlate}
+                                        onChange={(e) => setForm({ ...form, licensePlate: e.target.value })}
+                                        className="mt-1.5"
+                                    />
+                                </div>
                             </div>
                             <div>
-                                <Label>Fuel Type *</Label>
+                                <Label>Fuel Type</Label>
                                 <Select value={form.fuelType} onValueChange={(v) => setForm({ ...form, fuelType: v })}>
-                                    <SelectTrigger className="mt-1.5">
-                                        <SelectValue placeholder="Select fuel" />
-                                    </SelectTrigger>
+                                    <SelectTrigger className="mt-1.5"><SelectValue /></SelectTrigger>
                                     <SelectContent>
-                                        {fuelTypes.map((f) => (
-                                            <SelectItem key={f.value} value={f.value}>{f.label}</SelectItem>
+                                        {fuelTypes.map((ft) => (
+                                            <SelectItem key={ft} value={ft}>{ft}</SelectItem>
                                         ))}
                                     </SelectContent>
                                 </Select>
                             </div>
-                        </div>
+                        </CardContent>
+                    </Card>
+                </motion.div>
 
-                        <div className="grid grid-cols-3 gap-4">
-                            <div>
-                                <Label htmlFor="make">Make</Label>
-                                <Input
-                                    id="make"
-                                    placeholder="Honda"
-                                    value={form.make}
-                                    onChange={(e) => setForm({ ...form, make: e.target.value })}
-                                    className="mt-1.5"
-                                />
+                {/* Color */}
+                <motion.div variants={anim}>
+                    <Card>
+                        <CardHeader><CardTitle className="text-base">Color Tag</CardTitle></CardHeader>
+                        <CardContent>
+                            <div className="flex gap-3 flex-wrap">
+                                {colors.map((c) => (
+                                    <button
+                                        key={c} type="button"
+                                        className={`h-9 w-9 rounded-full transition-all ${form.color === c ? 'ring-2 ring-offset-2 ring-offset-background ring-primary scale-110' : 'hover:scale-105'
+                                            }`}
+                                        style={{ backgroundColor: c }}
+                                        onClick={() => setForm({ ...form, color: c })}
+                                    />
+                                ))}
                             </div>
-                            <div>
-                                <Label htmlFor="model">Model</Label>
-                                <Input
-                                    id="model"
-                                    placeholder="Civic"
-                                    value={form.model}
-                                    onChange={(e) => setForm({ ...form, model: e.target.value })}
-                                    className="mt-1.5"
-                                />
-                            </div>
-                            <div>
-                                <Label htmlFor="year">Year</Label>
-                                <Input
-                                    id="year"
-                                    type="number"
-                                    placeholder="2024"
-                                    value={form.year}
-                                    onChange={(e) => setForm({ ...form, year: e.target.value })}
-                                    className="mt-1.5"
-                                />
-                            </div>
-                        </div>
-                    </CardContent>
-                </Card>
-
-                {/* Technical Specs */}
-                <Card>
-                    <CardHeader>
-                        <CardTitle className="text-base">⚙️ Technical Specs</CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                        <div className="grid grid-cols-2 gap-4">
-                            <div>
-                                <Label htmlFor="engineSize">Engine Size (CC)</Label>
-                                <Input
-                                    id="engineSize"
-                                    type="number"
-                                    placeholder="1500"
-                                    value={form.engineSize}
-                                    onChange={(e) => setForm({ ...form, engineSize: e.target.value })}
-                                    className="mt-1.5"
-                                />
-                            </div>
-                            <div>
-                                <Label htmlFor="tankCapacity">Tank Capacity (L)</Label>
-                                <Input
-                                    id="tankCapacity"
-                                    type="number"
-                                    placeholder="50"
-                                    value={form.tankCapacity}
-                                    onChange={(e) => setForm({ ...form, tankCapacity: e.target.value })}
-                                    className="mt-1.5"
-                                />
-                            </div>
-                        </div>
-
-                        <div className="grid grid-cols-2 gap-4">
-                            <div>
-                                <Label htmlFor="licensePlate">License Plate</Label>
-                                <Input
-                                    id="licensePlate"
-                                    placeholder="ABC 1234"
-                                    value={form.licensePlate}
-                                    onChange={(e) => setForm({ ...form, licensePlate: e.target.value })}
-                                    className="mt-1.5"
-                                />
-                            </div>
-                            <div>
-                                <Label htmlFor="odometer">Current Odometer (km)</Label>
-                                <Input
-                                    id="odometer"
-                                    type="number"
-                                    placeholder="0"
-                                    value={form.initialOdometer}
-                                    onChange={(e) => setForm({ ...form, initialOdometer: e.target.value })}
-                                    className="mt-1.5"
-                                />
-                            </div>
-                        </div>
-                    </CardContent>
-                </Card>
+                        </CardContent>
+                    </Card>
+                </motion.div>
 
                 {/* Submit */}
-                <Button
-                    type="submit"
-                    size="lg"
-                    className="w-full gap-2"
-                    disabled={isSubmitting || !form.name || !form.vehicleType || !form.fuelType}
-                >
-                    <Save className="h-4 w-4" />
-                    {isSubmitting ? 'Saving...' : 'Add Vehicle'}
-                </Button>
+                <motion.div variants={anim}>
+                    <Button type="submit" size="lg" className="w-full" disabled={!form.make || !form.model}>
+                        Add Vehicle
+                    </Button>
+                </motion.div>
             </form>
         </motion.div>
     );
