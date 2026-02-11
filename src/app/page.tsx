@@ -15,9 +15,7 @@ export default function LandingPage() {
         {/* Nav */}
         <nav className="relative z-10 flex items-center justify-between px-6 py-4 max-w-7xl mx-auto">
           <div className="flex items-center gap-2">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl gradient-primary">
-              <Gauge className="h-5 w-5 text-white" />
-            </div>
+            <img src="/logo.png" alt="FuelUp" className="h-8 w-8 object-contain" />
             <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
               FuelUp
             </span>
@@ -145,9 +143,7 @@ export default function LandingPage() {
       <footer className="border-t py-8 px-6">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
-            <div className="flex h-7 w-7 items-center justify-center rounded-lg gradient-primary">
-              <Gauge className="h-4 w-4 text-white" />
-            </div>
+            <img src="/logo.png" alt="FuelUp" className="h-6 w-6 object-contain" />
             <span className="font-semibold">FuelUp</span>
           </div>
           <p className="text-sm text-muted-foreground">

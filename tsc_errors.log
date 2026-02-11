@@ -1,0 +1,18 @@
+src/components/ui/fade-up-word.tsx(48,14): error TS2322: Type 'RefObject<HTMLElement | null>' is not assignable to type 'Ref<HTMLHeadingElement> | undefined'.
+  Type 'RefObject<HTMLElement | null>' is not assignable to type 'RefObject<HTMLHeadingElement | null>'.
+    Type 'HTMLElement | null' is not assignable to type 'HTMLHeadingElement | null'.
+      Property 'align' is missing in type 'HTMLElement' but required in type 'HTMLHeadingElement'.
+src/components/ui/fade-up-word.tsx(57,25): error TS2322: Type '{ visible: { opacity: number; y: number; transition: { type: string; damping: number; stiffness: number; }; }; hidden: { opacity: number; y: number; transition: { type: string; damping: number; stiffness: number; }; }; }' is not assignable to type 'Variants'.
+  Property 'visible' is incompatible with index signature.
+    Type '{ opacity: number; y: number; transition: { type: string; damping: number; stiffness: number; }; }' is not assignable to type 'Variant'.
+      Type '{ opacity: number; y: number; transition: { type: string; damping: number; stiffness: number; }; }' is not assignable to type 'TargetAndTransition'.
+        Type '{ opacity: number; y: number; transition: { type: string; damping: number; stiffness: number; }; }' is not assignable to type '{ transition?: Transition<any> | undefined; transitionEnd?: ResolvedValues$1 | undefined; }'.
+          Types of property 'transition' are incompatible.
+            Type '{ type: string; damping: number; stiffness: number; }' is not assignable to type 'Transition<any> | undefined'.
+              Type '{ type: string; damping: number; stiffness: number; }' is not assignable to type 'TransitionWithValueOverrides<any>'.
+                Type '{ type: string; damping: number; stiffness: number; }' is not assignable to type 'ValueAnimationTransition<any>'.
+                  Types of property 'type' are incompatible.
+                    Type 'string' is not assignable to type 'AnimationGeneratorType | undefined'.
+src/components/ui/particles.tsx(88,13): error TS2322: Type '{ fpsLimit: number; particles: { color: { value: string; }; links: { enable: boolean; color: string; distance: number; opacity: number; }; move: { enable: boolean; speed: number; direction: string; random: boolean; straight: boolean; outModes: { ...; }; }; number: { ...; }; opacity: { ...; }; size: { ...; }; }; inte...' is not assignable to type 'RecursivePartial<IOptions>'.
+  The types of 'particles.move.direction' are incompatible between these types.
+    Type 'string' is not assignable to type 'number | "none" | "bottom" | MoveDirection | "bottomLeft" | "bottomRight" | "left" | "right" | "top" | "topLeft" | "topRight" | "outside" | "inside" | MoveDirectionAlt | undefined'.
