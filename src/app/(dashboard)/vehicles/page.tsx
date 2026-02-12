@@ -2,7 +2,9 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, Car, Fuel as FuelIcon, Gauge, Calendar, Trash2, MoreVertical } from 'lucide-react';
-import { Card, CardContent } from '@/components/ui/card';
+import { GlassCard } from '@/components/ui/glass-card';
+import { BorderBeam } from '@/components/ui/border-beam';
+import { AnimatedCounter } from '@/components/ui/animated-counter';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
@@ -62,17 +64,17 @@ export default function VehiclesPage() {
     };
 
     return (
-        <motion.div variants={container} initial="hidden" animate="show" className="space-y-6">
-            <motion.div variants={item} className="flex items-center justify-between">
+        <motion.div variants={container} initial="hidden" animate="show" className="max-w-7xl mx-auto space-y-8">
+            <motion.div variants={item} className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-2xl md:text-3xl font-bold">My Vehicles</h1>
-                    <p className="text-muted-foreground mt-1">
-                        {vehicles.length} vehicle{vehicles.length !== 1 ? 's' : ''} in your garage
+                    <h1 className="text-3xl md:text-4xl font-light tracking-tight text-white">My Vehicles</h1>
+                    <p className="text-neutral-400 mt-1">
+                        Manage your fleet and track performance
                     </p>
                 </div>
                 <Link href="/vehicles/add">
-                    <Button className="gap-2 shadow-md">
-                        <Plus className="h-4 w-4" />
+                    <Button className="rounded-full h-10 px-6 bg-white text-black hover:bg-neutral-200 transition-all font-medium">
+                        <Plus className="h-4 w-4 mr-2" />
                         Add Vehicle
                     </Button>
                 </Link>
@@ -91,69 +93,86 @@ export default function VehiclesPage() {
                                 whileHover={{ y: -4 }}
                                 transition={{ type: 'spring', stiffness: 300, damping: 25 }}
                             >
-                                <Card className="group relative overflow-hidden hover:shadow-xl transition-shadow cursor-pointer">
+                                <GlassCard className="h-full group relative overflow-hidden transition-shadow cursor-pointer p-0">
+                                    <div className="absolute top-0 inset-x-0 h-32 bg-gradient-to-b from-neutral-800/50 to-transparent pointer-events-none" />
+
+                                    {/* Color Accent */}
                                     <div
-                                        className="absolute top-0 left-0 right-0 h-1.5"
-                                        style={{ background: `linear-gradient(90deg, ${vehicle.color}, ${vehicle.color}88)` }}
+                                        className="absolute top-0 left-0 right-0 h-1 opacity-50"
+                                        style={{ background: `linear-gradient(90deg, ${vehicle.color}, transparent)` }}
                                     />
-                                    <CardContent className="p-5 pt-6">
-                                        <div className="flex items-start justify-between mb-4">
+
+                                    <div className="p-6 relative">
+                                        <div className="flex items-start justify-between mb-6">
                                             <div>
-                                                <div className="flex items-center gap-2 mb-1">
-                                                    <span className="text-2xl">{vehicleEmoji[vehicle.type] || '🚗'}</span>
-                                                    <h3 className="text-lg font-bold">{vehicle.name}</h3>
+                                                <div className="flex items-center gap-3 mb-2">
+                                                    <span className="text-3xl p-2 bg-neutral-900/50 rounded-xl border border-neutral-800">{vehicleEmoji[vehicle.type] || '🚗'}</span>
+                                                    <div>
+                                                        <h3 className="text-xl font-light text-white tracking-tight">{vehicle.name}</h3>
+                                                        <p className="text-xs text-neutral-400 font-medium px-2 py-0.5 rounded-full bg-neutral-900 border border-neutral-800 inline-block mt-1">
+                                                            {vehicle.licensePlate}
+                                                        </p>
+                                                    </div>
                                                 </div>
-                                                <p className="text-sm text-muted-foreground">
+                                                <p className="text-sm text-neutral-500 pl-1">
                                                     {vehicle.year} {vehicle.make} {vehicle.model}
                                                 </p>
                                             </div>
-                                            <div className="flex items-center gap-1">
-                                                <Badge variant="secondary" className="text-xs">{vehicle.licensePlate}</Badge>
-                                                <Button
-                                                    variant="ghost" size="icon"
-                                                    className="h-7 w-7 opacity-0 group-hover:opacity-100 transition-opacity text-destructive"
-                                                    onClick={(e) => handleDelete(e, vehicle.id)}
-                                                >
-                                                    <Trash2 className="h-3.5 w-3.5" />
-                                                </Button>
-                                            </div>
+                                            <Button
+                                                variant="ghost" size="icon"
+                                                className="h-8 w-8 text-neutral-600 hover:text-red-400 hover:bg-red-950/20 transition-colors"
+                                                onClick={(e) => handleDelete(e, vehicle.id)}
+                                            >
+                                                <Trash2 className="h-4 w-4" />
+                                            </Button>
                                         </div>
-                                        <div className="grid grid-cols-2 gap-3 mt-4">
-                                            <div className="rounded-lg bg-muted/50 p-2.5">
-                                                <div className="flex items-center gap-1.5 mb-1">
-                                                    <Gauge className="h-3.5 w-3.5 text-primary" />
-                                                    <span className="text-xs text-muted-foreground">Efficiency</span>
+
+                                        <div className="grid grid-cols-2 gap-3">
+                                            <div className="rounded-xl bg-neutral-900/50 border border-neutral-800 p-3">
+                                                <div className="flex items-center gap-2 mb-1">
+                                                    <Gauge className="h-3.5 w-3.5 text-neutral-400" />
+                                                    <span className="text-xs text-neutral-500 font-medium">Efficiency</span>
                                                 </div>
-                                                <p className="text-sm font-semibold font-mono">
-                                                    {stats.avgEfficiency > 0 ? `${stats.avgEfficiency.toFixed(1)} ${distLabel}/L` : 'N/A'}
+                                                <p className="text-lg font-light text-white">
+                                                    {stats.avgEfficiency > 0 ? (
+                                                        <>
+                                                            {stats.avgEfficiency.toFixed(1)} <span className="text-xs text-neutral-500">{distLabel}/L</span>
+                                                        </>
+                                                    ) : 'N/A'}
                                                 </p>
                                             </div>
-                                            <div className="rounded-lg bg-muted/50 p-2.5">
-                                                <div className="flex items-center gap-1.5 mb-1">
-                                                    <FuelIcon className="h-3.5 w-3.5 text-green-500" />
-                                                    <span className="text-xs text-muted-foreground">Total Cost</span>
+                                            <div className="rounded-xl bg-neutral-900/50 border border-neutral-800 p-3">
+                                                <div className="flex items-center gap-2 mb-1">
+                                                    <FuelIcon className="h-3.5 w-3.5 text-neutral-400" />
+                                                    <span className="text-xs text-neutral-500 font-medium">Cost</span>
                                                 </div>
-                                                <p className="text-sm font-semibold font-mono">{formatCurrency(stats.totalCost)}</p>
+                                                <p className="text-lg font-light text-white">{formatCurrency(stats.totalCost)}</p>
                                             </div>
-                                            <div className="rounded-lg bg-muted/50 p-2.5">
-                                                <div className="flex items-center gap-1.5 mb-1">
-                                                    <Car className="h-3.5 w-3.5 text-purple-500" />
-                                                    <span className="text-xs text-muted-foreground">Distance</span>
+                                            <div className="rounded-xl bg-neutral-900/50 border border-neutral-800 p-3">
+                                                <div className="flex items-center gap-2 mb-1">
+                                                    <Car className="h-3.5 w-3.5 text-neutral-400" />
+                                                    <span className="text-xs text-neutral-500 font-medium">Distance</span>
                                                 </div>
-                                                <p className="text-sm font-semibold font-mono">
-                                                    {stats.totalDistance > 0 ? `${stats.totalDistance.toLocaleString()} ${distLabel}` : 'N/A'}
+                                                <p className="text-lg font-light text-white">
+                                                    {stats.totalDistance > 0 ? (
+                                                        <>
+                                                            {(stats.totalDistance / 1000).toFixed(1)}k <span className="text-xs text-neutral-500">{distLabel}</span>
+                                                        </>
+                                                    ) : 'N/A'}
                                                 </p>
                                             </div>
-                                            <div className="rounded-lg bg-muted/50 p-2.5">
-                                                <div className="flex items-center gap-1.5 mb-1">
-                                                    <Calendar className="h-3.5 w-3.5 text-amber-500" />
-                                                    <span className="text-xs text-muted-foreground">Last Fill</span>
+                                            <div className="rounded-xl bg-neutral-900/50 border border-neutral-800 p-3">
+                                                <div className="flex items-center gap-2 mb-1">
+                                                    <Calendar className="h-3.5 w-3.5 text-neutral-400" />
+                                                    <span className="text-xs text-neutral-500 font-medium">Last Fill</span>
                                                 </div>
-                                                <p className="text-sm font-semibold">{stats.lastFillup}</p>
+                                                <p className="text-lg font-light text-white truncate">{stats.lastFillup}</p>
                                             </div>
                                         </div>
-                                    </CardContent>
-                                </Card>
+                                    </div>
+                                    {/* Subtle active border effect for visual interest */}
+                                    <BorderBeam size={200} duration={12} delay={Math.random() * 5} />
+                                </GlassCard>
                             </motion.div>
                         );
                     })}
@@ -162,15 +181,13 @@ export default function VehiclesPage() {
                 {/* Add Vehicle Card */}
                 <motion.div variants={item}>
                     <Link href="/vehicles/add">
-                        <Card className="h-full border-dashed hover:border-primary/50 hover:bg-primary/5 transition-all cursor-pointer flex items-center justify-center min-h-[200px]">
-                            <CardContent className="text-center p-6">
-                                <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-3">
-                                    <Plus className="h-6 w-6 text-primary" />
-                                </div>
-                                <p className="font-medium">Add New Vehicle</p>
-                                <p className="text-sm text-muted-foreground mt-1">Track another vehicle&apos;s expenses</p>
-                            </CardContent>
-                        </Card>
+                        <div className="h-full min-h-[300px] border border-dashed border-neutral-800 rounded-2xl hover:border-neutral-600 hover:bg-neutral-900/20 transition-all cursor-pointer flex flex-col items-center justify-center group">
+                            <div className="h-16 w-16 rounded-full bg-neutral-900 border border-neutral-800 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                                <Plus className="h-6 w-6 text-neutral-400 group-hover:text-white" />
+                            </div>
+                            <p className="font-medium text-white">Add New Vehicle</p>
+                            <p className="text-sm text-neutral-500 mt-1">Track another vehicle&apos;s expenses</p>
+                        </div>
                     </Link>
                 </motion.div>
             </motion.div>

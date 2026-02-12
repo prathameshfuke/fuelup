@@ -2,8 +2,9 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, Route, MapPin, Briefcase, Heart, Stethoscope, Car as CarIcon, Trash2, DollarSign } from 'lucide-react';
-import { Card, CardContent } from '@/components/ui/card';
+import { Plus, Route, MapPin, Briefcase, Heart, Stethoscope, Car as CarIcon, Trash2, DollarSign, Calendar } from 'lucide-react';
+import { GlassCard } from '@/components/ui/glass-card';
+import { AnimatedCounter } from '@/components/ui/animated-counter';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
@@ -16,10 +17,10 @@ import { useTripsStore, type Trip } from '@/lib/store/tripsStore';
 import { useSettingsStore } from '@/lib/store/settingsStore';
 
 const purposeConfig: Record<Trip['purpose'], { icon: React.ElementType; color: string; label: string }> = {
-    commute: { icon: CarIcon, color: 'text-blue-500 bg-blue-500/10', label: 'commute' },
-    business: { icon: Briefcase, color: 'text-green-500 bg-green-500/10', label: 'business' },
-    personal: { icon: Heart, color: 'text-pink-500 bg-pink-500/10', label: 'personal' },
-    medical: { icon: Stethoscope, color: 'text-red-500 bg-red-500/10', label: 'medical' },
+    commute: { icon: CarIcon, color: 'text-blue-400', label: 'commute' },
+    business: { icon: Briefcase, color: 'text-green-400', label: 'business' },
+    personal: { icon: Heart, color: 'text-pink-400', label: 'personal' },
+    medical: { icon: Stethoscope, color: 'text-red-400', label: 'medical' },
 };
 
 const container = { hidden: { opacity: 0 }, show: { opacity: 1, transition: { staggerChildren: 0.06 } } };
@@ -59,39 +60,51 @@ export default function TripsPage() {
     };
 
     return (
-        <motion.div variants={container} initial="hidden" animate="show" className="space-y-6">
-            <motion.div variants={item} className="flex items-center justify-between">
+        <motion.div variants={container} initial="hidden" animate="show" className="max-w-7xl mx-auto space-y-8">
+            <motion.div variants={item} className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-2xl md:text-3xl font-bold">Trips</h1>
-                    <p className="text-muted-foreground mt-1">Mileage tracking and tax deductions</p>
+                    <h1 className="text-3xl md:text-4xl font-light tracking-tight text-white">Trips</h1>
+                    <p className="text-neutral-400 mt-1">Mileage tracking for tax and reimbursement</p>
                 </div>
-                <Button className="gap-2 shadow-md" onClick={() => setIsFormOpen(true)}>
-                    <Plus className="h-4 w-4" /> Log Trip
+                <Button
+                    className="rounded-full h-10 px-6 bg-white text-black hover:bg-neutral-200 transition-all font-medium"
+                    onClick={() => setIsFormOpen(true)}
+                >
+                    <Plus className="h-4 w-4 mr-2" />
+                    Log Trip
                 </Button>
             </motion.div>
 
             {/* Tax Summary */}
             <motion.div variants={item}>
-                <Card className="overflow-hidden">
-                    <div className="h-1 bg-gradient-to-r from-green-500 to-emerald-500" />
-                    <CardContent className="p-5">
-                        <div className="flex items-center justify-between">
-                            <div>
-                                <p className="text-sm font-medium text-green-500">Tax Deductible Mileage</p>
-                                <p className="text-2xl font-bold font-mono">{taxDeductibleDistance.toFixed(1)} {distLabel}</p>
-                                <p className="text-xs text-muted-foreground">{taxTrips.length} deductible trips</p>
+                <GlassCard className="p-0 overflow-hidden relative">
+                    <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-emerald-500/50 to-emerald-900/50" />
+                    <div className="p-6 md:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
+                        <div>
+                            <div className="flex items-center gap-2 mb-2">
+                                <div className="p-1.5 rounded-md bg-emerald-950/30 border border-emerald-900/30">
+                                    <DollarSign className="h-4 w-4 text-emerald-400" />
+                                </div>
+                                <p className="text-sm font-medium text-neutral-400">Estimated Reimbursement</p>
                             </div>
-                            <div className="text-right">
-                                <p className="text-sm text-muted-foreground">Estimated Reimbursement</p>
-                                <p className="text-2xl font-bold font-mono text-green-500">{formatCurrency(estimatedReimbursement)}</p>
+                            <div className="text-4xl font-light text-white tracking-tight">
+                                {formatCurrency(estimatedReimbursement)}
                             </div>
                         </div>
-                    </CardContent>
-                </Card>
+                        <div className="text-left md:text-right">
+                            <p className="text-sm font-medium text-neutral-400 mb-2">Tax Deductible Mileage</p>
+                            <div className="text-2xl font-light text-white tracking-tight flex md:justify-end items-baseline gap-1">
+                                <AnimatedCounter value={taxDeductibleDistance} />
+                                <span className="text-sm text-neutral-500">{distLabel}</span>
+                            </div>
+                            <p className="text-xs text-neutral-500 mt-1">{taxTrips.length} deductible trips logged</p>
+                        </div>
+                    </div>
+                </GlassCard>
             </motion.div>
 
             {/* Trip List */}
-            <motion.div variants={item} className="space-y-3">
+            <motion.div variants={item} className="space-y-4">
                 <AnimatePresence>
                     {trips.map((trip) => {
                         const config = purposeConfig[trip.purpose];
@@ -104,61 +117,75 @@ export default function TripsPage() {
                                 exit={{ opacity: 0, x: -50 }}
                                 layout
                             >
-                                <Card className="group hover:shadow-md transition-all overflow-hidden">
-                                    <CardContent className="p-4">
-                                        <div className="flex items-center justify-between">
-                                            <div className="flex items-center gap-3">
-                                                <div className={`h-10 w-10 rounded-xl flex items-center justify-center ${config.color}`}>
-                                                    <Icon className="h-5 w-5" />
-                                                </div>
-                                                <div>
-                                                    <div className="flex items-center gap-2">
-                                                        <p className="font-medium">
-                                                            {trip.startLocation} → {trip.endLocation}
-                                                        </p>
-                                                        {trip.isTaxDeductible && (
-                                                            <Badge variant="success" className="text-[10px] px-1.5 py-0">Tax</Badge>
-                                                        )}
-                                                    </div>
-                                                    <p className="text-xs text-muted-foreground mt-0.5">
-                                                        {new Date(trip.date).toLocaleDateString()} · {trip.notes || trip.purpose}
-                                                    </p>
-                                                </div>
+                                <GlassCard className="p-0 overflow-hidden group hover:bg-neutral-900/50 transition-colors">
+                                    <div className="p-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                        <div className="flex items-center gap-4">
+                                            <div className="h-12 w-12 rounded-2xl bg-neutral-800/50 flex items-center justify-center border border-neutral-700/50">
+                                                <Icon className={`h-5 w-5 ${config.color}`} />
                                             </div>
-                                            <div className="flex items-center gap-3">
-                                                <div className="text-right">
-                                                    <p className="font-bold font-mono">{trip.distance} {distLabel}</p>
-                                                    <Badge variant="secondary" className="text-[10px]">{config.label}</Badge>
+                                            <div>
+                                                <div className="flex items-center gap-2 flex-wrap">
+                                                    <h3 className="text-lg font-medium text-white">
+                                                        {trip.startLocation} <span className="text-neutral-600 px-1">→</span> {trip.endLocation}
+                                                    </h3>
+                                                    {trip.isTaxDeductible && (
+                                                        <Badge variant="outline" className="text-xs border-emerald-900 text-emerald-400 bg-emerald-950/10">Tax Deductible</Badge>
+                                                    )}
                                                 </div>
-                                                <Button
-                                                    variant="ghost" size="icon"
-                                                    className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity text-destructive"
-                                                    onClick={() => { deleteTrip(trip.id); toast.success('Trip deleted'); }}
-                                                >
-                                                    <Trash2 className="h-4 w-4" />
-                                                </Button>
+                                                <div className="flex items-center gap-3 text-sm text-neutral-400 mt-1">
+                                                    <div className="flex items-center gap-1">
+                                                        <Calendar className="h-3.5 w-3.5" />
+                                                        <span>{new Date(trip.date).toLocaleDateString()}</span>
+                                                    </div>
+                                                    <span className="text-neutral-600">|</span>
+                                                    <span className="capitalize">{trip.purpose}</span>
+                                                    {trip.notes && (
+                                                        <>
+                                                            <span className="text-neutral-600">|</span>
+                                                            <span className="italic text-neutral-500">{trip.notes}</span>
+                                                        </>
+                                                    )}
+                                                </div>
                                             </div>
                                         </div>
-                                    </CardContent>
-                                </Card>
+
+                                        <div className="flex items-center justify-between md:justify-end gap-6 pl-16 md:pl-0">
+                                            <div className="text-right">
+                                                <p className="text-lg font-medium text-white tracking-tight">{trip.distance} {distLabel}</p>
+                                                {trip.isTaxDeductible && (
+                                                    <p className="text-xs text-emerald-500 mt-0.5">
+                                                        +{formatCurrency(trip.distance * ratePerKm)} est.
+                                                    </p>
+                                                )}
+                                            </div>
+                                            <Button
+                                                variant="ghost"
+                                                size="icon"
+                                                className="h-9 w-9 text-neutral-500 hover:text-red-400 hover:bg-red-950/20 md:opacity-0 md:group-hover:opacity-100 transition-all"
+                                                onClick={() => { deleteTrip(trip.id); toast.success('Trip deleted'); }}
+                                            >
+                                                <Trash2 className="h-4 w-4" />
+                                            </Button>
+                                        </div>
+                                    </div>
+                                </GlassCard>
                             </motion.div>
                         );
                     })}
                 </AnimatePresence>
                 {trips.length === 0 && (
-                    <Card className="border-dashed">
-                        <CardContent className="p-12 text-center">
-                            <Route className="h-12 w-12 text-muted-foreground/30 mx-auto mb-3" />
-                            <p className="text-muted-foreground">No trips logged yet. Tap + to add your first trip!</p>
-                        </CardContent>
-                    </Card>
+                    <div className="flex flex-col items-center justify-center py-20 text-neutral-500 border border-dashed border-neutral-800 rounded-3xl bg-neutral-900/20">
+                        <Route className="h-12 w-12 mb-4 opacity-20" />
+                        <p className="text-lg font-medium text-white">No trips logged yet</p>
+                        <p className="text-sm">Tap "Log Trip" to track your mileage!</p>
+                    </div>
                 )}
             </motion.div>
 
             {/* Mobile FAB */}
             <Button
                 size="lg"
-                className="fixed bottom-20 right-4 h-14 w-14 rounded-full shadow-2xl md:hidden z-40"
+                className="fixed bottom-24 right-6 h-14 w-14 rounded-full shadow-2xl md:hidden z-40 bg-white text-black hover:bg-neutral-200"
                 onClick={() => setIsFormOpen(true)}
             >
                 <Plus className="h-6 w-6" />
@@ -166,68 +193,68 @@ export default function TripsPage() {
 
             {/* Add Trip Sheet */}
             <Sheet open={isFormOpen} onOpenChange={setIsFormOpen}>
-                <SheetContent side="bottom" className="h-[80vh] overflow-y-auto">
-                    <SheetHeader>
-                        <SheetTitle>Log Trip</SheetTitle>
-                        <SheetDescription>Record a new trip for mileage tracking</SheetDescription>
+                <SheetContent side="bottom" className="h-[80vh] overflow-y-auto bg-neutral-950 border-t border-neutral-800 text-white">
+                    <SheetHeader className="text-left">
+                        <SheetTitle className="text-white">Log Trip</SheetTitle>
+                        <SheetDescription className="text-neutral-400">Record a new trip for mileage tracking</SheetDescription>
                     </SheetHeader>
-                    <form onSubmit={handleSubmit} className="space-y-5 p-4 pt-2">
+                    <form onSubmit={handleSubmit} className="space-y-6 p-4 pt-6">
                         <div className="grid grid-cols-2 gap-4">
-                            <div>
-                                <Label>Start Location *</Label>
+                            <div className="space-y-2">
+                                <Label className="text-neutral-300">Start Location *</Label>
                                 <Input
                                     placeholder="Home" value={newTrip.startLocation}
                                     onChange={(e) => setNewTrip({ ...newTrip, startLocation: e.target.value })}
-                                    className="mt-1.5" required
+                                    className="bg-neutral-900 border-neutral-800 text-white placeholder:text-neutral-600 focus:border-neutral-600" required
                                 />
                             </div>
-                            <div>
-                                <Label>End Location *</Label>
+                            <div className="space-y-2">
+                                <Label className="text-neutral-300">End Location *</Label>
                                 <Input
                                     placeholder="Office" value={newTrip.endLocation}
                                     onChange={(e) => setNewTrip({ ...newTrip, endLocation: e.target.value })}
-                                    className="mt-1.5" required
+                                    className="bg-neutral-900 border-neutral-800 text-white placeholder:text-neutral-600 focus:border-neutral-600" required
                                 />
                             </div>
                         </div>
-                        <div>
-                            <Label>Distance ({distLabel}) *</Label>
+                        <div className="space-y-2">
+                            <Label className="text-neutral-300">Distance ({distLabel}) *</Label>
                             <Input
                                 type="number" step="0.1" placeholder="24.5"
                                 value={newTrip.distance}
                                 onChange={(e) => setNewTrip({ ...newTrip, distance: e.target.value })}
-                                className="mt-1.5" required
+                                className="bg-neutral-900 border-neutral-800 text-white placeholder:text-neutral-600 focus:border-neutral-600" required
                             />
                         </div>
-                        <div>
-                            <Label>Purpose</Label>
+                        <div className="space-y-2">
+                            <Label className="text-neutral-300">Purpose</Label>
                             <Select value={newTrip.purpose} onValueChange={(v) => setNewTrip({ ...newTrip, purpose: v as Trip['purpose'] })}>
-                                <SelectTrigger className="mt-1.5"><SelectValue /></SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="commute">Commute</SelectItem>
-                                    <SelectItem value="business">Business</SelectItem>
-                                    <SelectItem value="personal">Personal</SelectItem>
-                                    <SelectItem value="medical">Medical</SelectItem>
+                                <SelectTrigger className="bg-neutral-900 border-neutral-800 text-white focus:border-neutral-600"><SelectValue /></SelectTrigger>
+                                <SelectContent className="bg-neutral-900 border-neutral-800 text-white">
+                                    <SelectItem value="commute" className="focus:bg-neutral-800 focus:text-white">Commute</SelectItem>
+                                    <SelectItem value="business" className="focus:bg-neutral-800 focus:text-white">Business</SelectItem>
+                                    <SelectItem value="personal" className="focus:bg-neutral-800 focus:text-white">Personal</SelectItem>
+                                    <SelectItem value="medical" className="focus:bg-neutral-800 focus:text-white">Medical</SelectItem>
                                 </SelectContent>
                             </Select>
                         </div>
-                        <div className="flex items-center justify-between rounded-lg border p-3">
-                            <Label>Tax Deductible?</Label>
+                        <div className="flex items-center justify-between rounded-xl border border-neutral-800 bg-neutral-900 p-4">
+                            <Label className="text-neutral-300 cursor-pointer">Tax Deductible?</Label>
                             <Switch
                                 checked={newTrip.isTaxDeductible}
                                 onCheckedChange={(checked) => setNewTrip({ ...newTrip, isTaxDeductible: checked })}
                             />
                         </div>
-                        <div>
-                            <Label>Notes (Optional)</Label>
+                        <div className="space-y-2">
+                            <Label className="text-neutral-300">Notes (Optional)</Label>
                             <Input
                                 placeholder="Client meeting, doctor visit..."
                                 value={newTrip.notes}
                                 onChange={(e) => setNewTrip({ ...newTrip, notes: e.target.value })}
-                                className="mt-1.5"
+                                className="bg-neutral-900 border-neutral-800 text-white placeholder:text-neutral-600 focus:border-neutral-600"
                             />
                         </div>
-                        <Button type="submit" size="lg" className="w-full" disabled={!newTrip.startLocation || !newTrip.endLocation || !newTrip.distance}>
+                        <Button type="submit" size="lg" className="w-full bg-white text-black hover:bg-neutral-200 mt-4 h-12 text-base font-medium" disabled={!newTrip.startLocation || !newTrip.endLocation || !newTrip.distance}>
                             Save Trip
                         </Button>
                     </form>

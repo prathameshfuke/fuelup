@@ -2,8 +2,9 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, Wrench, AlertTriangle, CheckCircle2, Clock, Trash2 } from 'lucide-react';
-import { Card, CardContent } from '@/components/ui/card';
+import { Plus, Wrench, AlertTriangle, CheckCircle2, Clock, Trash2, Calendar, Gauge } from 'lucide-react';
+import { GlassCard } from '@/components/ui/glass-card';
+import { AnimatedCounter } from '@/components/ui/animated-counter';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
@@ -15,9 +16,9 @@ import { useMaintenanceStore, type MaintenanceItem } from '@/lib/store/maintenan
 import { useSettingsStore } from '@/lib/store/settingsStore';
 
 const priorityConfig = {
-    high: { color: 'bg-red-500/10 text-red-500 border-red-500/20', badge: 'destructive' as const, icon: AlertTriangle },
-    medium: { color: 'bg-amber-500/10 text-amber-500 border-amber-500/20', badge: 'warning' as const, icon: Clock },
-    low: { color: 'bg-blue-500/10 text-blue-500 border-blue-500/20', badge: 'secondary' as const, icon: Wrench },
+    high: { color: 'text-red-400', badge: 'destructive' as const, icon: AlertTriangle, border: 'border-red-900/30', bg: 'bg-red-950/20' },
+    medium: { color: 'text-amber-400', badge: 'warning' as const, icon: Clock, border: 'border-amber-900/30', bg: 'bg-amber-950/20' },
+    low: { color: 'text-blue-400', badge: 'secondary' as const, icon: Wrench, border: 'border-blue-900/30', bg: 'bg-blue-950/20' },
 };
 
 const container = { hidden: { opacity: 0 }, show: { opacity: 1, transition: { staggerChildren: 0.06 } } };
@@ -62,63 +63,88 @@ export default function MaintenancePage() {
     };
 
     return (
-        <motion.div variants={container} initial="hidden" animate="show" className="space-y-6">
-            <motion.div variants={item} className="flex items-center justify-between">
+        <motion.div variants={container} initial="hidden" animate="show" className="max-w-7xl mx-auto space-y-8">
+            <motion.div variants={item} className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-2xl md:text-3xl font-bold">Maintenance</h1>
-                    <p className="text-muted-foreground mt-1">Track services and reminders</p>
+                    <h1 className="text-3xl md:text-4xl font-light tracking-tight text-white">Maintenance</h1>
+                    <p className="text-neutral-400 mt-1">Track services and keep your vehicle healthy</p>
                 </div>
-                <Button className="gap-2 shadow-md" onClick={() => setIsFormOpen(true)}>
-                    <Plus className="h-4 w-4" /> Add Reminder
+                <Button
+                    className="rounded-full h-10 px-6 bg-white text-black hover:bg-neutral-200 transition-all font-medium"
+                    onClick={() => setIsFormOpen(true)}
+                >
+                    <Plus className="h-4 w-4 mr-2" />
+                    Add Reminder
                 </Button>
             </motion.div>
 
             {/* Summary */}
-            <motion.div variants={item} className="grid grid-cols-3 gap-4">
-                <Card className="overflow-hidden">
-                    <div className="h-0.5 bg-gradient-to-r from-red-500 to-orange-500" />
-                    <CardContent className="p-4 text-center">
-                        <AlertTriangle className="h-5 w-5 text-red-500 mx-auto mb-1" />
-                        <p className="text-xl font-bold">{upcoming.filter(i => i.priority === 'high').length}</p>
-                        <p className="text-xs text-muted-foreground">Urgent</p>
-                    </CardContent>
-                </Card>
-                <Card className="overflow-hidden">
-                    <div className="h-0.5 bg-gradient-to-r from-amber-500 to-yellow-500" />
-                    <CardContent className="p-4 text-center">
-                        <Clock className="h-5 w-5 text-amber-500 mx-auto mb-1" />
-                        <p className="text-xl font-bold">{upcoming.length}</p>
-                        <p className="text-xs text-muted-foreground">Upcoming</p>
-                    </CardContent>
-                </Card>
-                <Card className="overflow-hidden">
-                    <div className="h-0.5 bg-gradient-to-r from-green-500 to-emerald-500" />
-                    <CardContent className="p-4 text-center">
-                        <CheckCircle2 className="h-5 w-5 text-green-500 mx-auto mb-1" />
-                        <p className="text-xl font-bold">{completed.length}</p>
-                        <p className="text-xs text-muted-foreground">Completed</p>
-                    </CardContent>
-                </Card>
+            <motion.div variants={item} className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <GlassCard className="p-6">
+                    <div className="flex items-center gap-3 mb-2">
+                        <div className="p-2 rounded-lg bg-red-950/30 border border-red-900/30">
+                            <AlertTriangle className="h-4 w-4 text-red-400" />
+                        </div>
+                        <p className="text-sm font-medium text-neutral-400">Urgent Actions</p>
+                    </div>
+                    <div className="text-2xl font-light text-white tracking-tight">
+                        <AnimatedCounter value={upcoming.filter(i => i.priority === 'high').length} />
+                    </div>
+                </GlassCard>
+
+                <GlassCard className="p-6">
+                    <div className="flex items-center gap-3 mb-2">
+                        <div className="p-2 rounded-lg bg-amber-950/30 border border-amber-900/30">
+                            <Clock className="h-4 w-4 text-amber-400" />
+                        </div>
+                        <p className="text-sm font-medium text-neutral-400">Upcoming</p>
+                    </div>
+                    <div className="text-2xl font-light text-white tracking-tight">
+                        <AnimatedCounter value={upcoming.length} />
+                    </div>
+                </GlassCard>
+
+                <GlassCard className="p-6">
+                    <div className="flex items-center gap-3 mb-2">
+                        <div className="p-2 rounded-lg bg-green-950/30 border border-green-900/30">
+                            <CheckCircle2 className="h-4 w-4 text-green-400" />
+                        </div>
+                        <p className="text-sm font-medium text-neutral-400">Completed</p>
+                    </div>
+                    <div className="text-2xl font-light text-white tracking-tight">
+                        <AnimatedCounter value={completed.length} />
+                    </div>
+                </GlassCard>
             </motion.div>
 
             {/* Tabs */}
-            <motion.div variants={item} className="flex gap-1 bg-muted/50 rounded-lg p-1">
+            <motion.div variants={item} className="p-1 rounded-full bg-neutral-900 border border-neutral-800 flex relative max-w-md">
                 <button
-                    className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all ${tab === 'upcoming' ? 'bg-background shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}
+                    className={`flex-1 py-1.5 px-4 rounded-full text-sm font-medium transition-all relative z-10 ${tab === 'upcoming' ? 'text-black' : 'text-neutral-500 hover:text-white'}`}
                     onClick={() => setTab('upcoming')}
                 >
                     Upcoming ({upcoming.length})
                 </button>
                 <button
-                    className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all ${tab === 'completed' ? 'bg-background shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}
+                    className={`flex-1 py-1.5 px-4 rounded-full text-sm font-medium transition-all relative z-10 ${tab === 'completed' ? 'text-black' : 'text-neutral-500 hover:text-white'}`}
                     onClick={() => setTab('completed')}
                 >
                     Completed ({completed.length})
                 </button>
+                <motion.div
+                    className="absolute top-1 bottom-1 bg-white rounded-full z-0 shadow-sm"
+                    initial={false}
+                    animate={{
+                        left: tab === 'upcoming' ? '4px' : '50%',
+                        width: 'calc(50% - 4px)',
+                        x: tab === 'completed' ? 0 : 0
+                    }}
+                    transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                />
             </motion.div>
 
             {/* Items List */}
-            <motion.div variants={item} className="space-y-3">
+            <motion.div variants={item} className="space-y-4">
                 <AnimatePresence mode="wait">
                     {displayItems.map((mItem) => {
                         const config = priorityConfig[mItem.priority];
@@ -131,72 +157,93 @@ export default function MaintenancePage() {
                                 exit={{ opacity: 0, x: -50 }}
                                 layout
                             >
-                                <Card className={`group hover:shadow-md transition-all overflow-hidden ${mItem.isCompleted ? 'opacity-75' : ''}`}>
-                                    <CardContent className="p-4">
-                                        <div className="flex items-center justify-between">
-                                            <div className="flex items-center gap-3">
-                                                <div className={`h-10 w-10 rounded-xl flex items-center justify-center ${config.color}`}>
-                                                    {mItem.isCompleted ? <CheckCircle2 className="h-5 w-5 text-green-500" /> : <Icon className="h-5 w-5" />}
-                                                </div>
-                                                <div>
-                                                    <p className={`font-medium ${mItem.isCompleted ? 'line-through' : ''}`}>{mItem.service}</p>
-                                                    <p className="text-xs text-muted-foreground mt-0.5">
-                                                        {mItem.isCompleted && mItem.completedDate
-                                                            ? `Completed ${new Date(mItem.completedDate).toLocaleDateString()}`
-                                                            : mItem.dueDate
-                                                                ? `Due ${new Date(mItem.dueDate).toLocaleDateString()}`
-                                                                : mItem.dueOdometer
-                                                                    ? `Due at ${mItem.dueOdometer.toLocaleString()} ${distLabel}`
-                                                                    : 'No due date set'}
-                                                        {mItem.notes ? ` · ${mItem.notes}` : ''}
-                                                    </p>
-                                                </div>
+                                <GlassCard className={`p-0 overflow-hidden group hover:bg-neutral-900/50 transition-colors ${mItem.isCompleted ? 'opacity-60 grayscale' : ''}`}>
+                                    <div className="p-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                        <div className="flex items-center gap-4">
+                                            <div className={`h-12 w-12 rounded-2xl flex items-center justify-center border ${config.bg} ${config.border}`}>
+                                                {mItem.isCompleted ? <CheckCircle2 className="h-5 w-5 text-green-500" /> : <Icon className={`h-5 w-5 ${config.color}`} />}
                                             </div>
-                                            <div className="flex items-center gap-2">
-                                                {mItem.isCompleted && mItem.cost && (
-                                                    <span className="text-sm font-mono font-medium">{formatCurrency(mItem.cost)}</span>
-                                                )}
-                                                <Badge variant={config.badge}>{mItem.priority}</Badge>
-                                                {!mItem.isCompleted && (
-                                                    <Button
-                                                        variant="ghost" size="icon" className="h-8 w-8"
-                                                        onClick={() => handleComplete(mItem.id)}
-                                                        title="Mark complete"
-                                                    >
-                                                        <CheckCircle2 className="h-4 w-4 text-green-500" />
-                                                    </Button>
-                                                )}
-                                                <Button
-                                                    variant="ghost" size="icon"
-                                                    className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity text-destructive"
-                                                    onClick={() => { deleteItem(mItem.id); toast.success('Removed'); }}
-                                                >
-                                                    <Trash2 className="h-4 w-4" />
-                                                </Button>
+                                            <div>
+                                                <div className="flex items-center gap-2">
+                                                    <h3 className={`text-lg font-medium text-white ${mItem.isCompleted ? 'line-through decoration-neutral-500' : ''}`}>{mItem.service}</h3>
+                                                    {!mItem.isCompleted && (
+                                                        <Badge variant="outline" className={`text-xs border transition-colors ${mItem.priority === 'high' ? 'border-red-900 text-red-400' : mItem.priority === 'medium' ? 'border-amber-900 text-amber-400' : 'border-blue-900 text-blue-400'}`}>
+                                                            {mItem.priority}
+                                                        </Badge>
+                                                    )}
+                                                </div>
+
+                                                <div className="flex flex-wrap items-center gap-3 text-sm text-neutral-400 mt-1">
+                                                    {mItem.dueDate && (
+                                                        <div className="flex items-center gap-1.5">
+                                                            <Calendar className="h-3.5 w-3.5" />
+                                                            <span>{new Date(mItem.dueDate).toLocaleDateString()}</span>
+                                                        </div>
+                                                    )}
+                                                    {mItem.dueOdometer && (
+                                                        <div className="flex items-center gap-1.5">
+                                                            <Gauge className="h-3.5 w-3.5" />
+                                                            <span>{mItem.dueOdometer.toLocaleString()} {distLabel}</span>
+                                                        </div>
+                                                    )}
+                                                    {mItem.isCompleted && mItem.completedDate && (
+                                                        <div className="flex items-center gap-1.5 text-green-500/80">
+                                                            <CheckCircle2 className="h-3.5 w-3.5" />
+                                                            <span>Done {new Date(mItem.completedDate).toLocaleDateString()}</span>
+                                                        </div>
+                                                    )}
+                                                    {mItem.notes && (
+                                                        <span className="text-neutral-500 italic"> — {mItem.notes}</span>
+                                                    )}
+                                                </div>
                                             </div>
                                         </div>
-                                    </CardContent>
-                                </Card>
+
+                                        <div className="flex items-center justify-end gap-3 pl-16 md:pl-0">
+                                            {mItem.isCompleted && mItem.cost && (
+                                                <span className="text-lg font-mono font-medium text-white mr-4">{formatCurrency(mItem.cost)}</span>
+                                            )}
+
+                                            {!mItem.isCompleted && (
+                                                <Button
+                                                    variant="ghost" size="icon" className="h-9 w-9 text-green-500 hover:text-green-400 hover:bg-green-950/20"
+                                                    onClick={() => handleComplete(mItem.id)}
+                                                    title="Mark complete"
+                                                >
+                                                    <CheckCircle2 className="h-5 w-5" />
+                                                </Button>
+                                            )}
+                                            <Button
+                                                variant="ghost" size="icon"
+                                                className="h-9 w-9 text-neutral-600 hover:text-red-400 hover:bg-red-950/20 md:opacity-0 group-hover:opacity-100 transition-all"
+                                                onClick={() => { deleteItem(mItem.id); toast.success('Removed'); }}
+                                            >
+                                                <Trash2 className="h-4 w-4" />
+                                            </Button>
+                                        </div>
+                                    </div>
+                                </GlassCard>
                             </motion.div>
                         );
                     })}
                 </AnimatePresence>
                 {displayItems.length === 0 && (
-                    <Card className="border-dashed">
-                        <CardContent className="p-12 text-center">
-                            <Wrench className="h-12 w-12 text-muted-foreground/30 mx-auto mb-3" />
-                            <p className="text-muted-foreground">
-                                {tab === 'upcoming' ? 'No upcoming maintenance. Add a reminder!' : 'No completed services yet.'}
-                            </p>
-                        </CardContent>
-                    </Card>
+                    <div className="flex flex-col items-center justify-center py-20 text-neutral-500 border border-dashed border-neutral-800 rounded-3xl bg-neutral-900/20">
+                        <Wrench className="h-12 w-12 mb-4 opacity-20" />
+                        <p className="text-lg font-medium text-white">
+                            {tab === 'upcoming' ? 'No upcoming maintenance' : 'No completed services'}
+                        </p>
+                        <p className="text-sm">
+                            {tab === 'upcoming' ? 'Add a reminder to stay on top of services!' : 'Complete a task to see it here.'}
+                        </p>
+                    </div>
                 )}
             </motion.div>
 
             {/* Mobile FAB */}
             <Button
                 size="lg"
-                className="fixed bottom-20 right-4 h-14 w-14 rounded-full shadow-2xl md:hidden z-40"
+                className="fixed bottom-24 right-6 h-14 w-14 rounded-full shadow-2xl md:hidden z-40 bg-white text-black hover:bg-neutral-200"
                 onClick={() => setIsFormOpen(true)}
             >
                 <Plus className="h-6 w-6" />
@@ -204,58 +251,58 @@ export default function MaintenancePage() {
 
             {/* Add Maintenance Sheet */}
             <Sheet open={isFormOpen} onOpenChange={setIsFormOpen}>
-                <SheetContent side="bottom" className="h-[75vh] overflow-y-auto">
-                    <SheetHeader>
-                        <SheetTitle>Add Maintenance Reminder</SheetTitle>
-                        <SheetDescription>Track upcoming vehicle services</SheetDescription>
+                <SheetContent side="bottom" className="h-[75vh] overflow-y-auto bg-neutral-950 border-t border-neutral-800 text-white">
+                    <SheetHeader className="text-left">
+                        <SheetTitle className="text-white">Add Maintenance Reminder</SheetTitle>
+                        <SheetDescription className="text-neutral-400">Track upcoming vehicle services</SheetDescription>
                     </SheetHeader>
-                    <form onSubmit={handleSubmit} className="space-y-5 p-4 pt-2">
-                        <div>
-                            <Label>Service Name *</Label>
+                    <form onSubmit={handleSubmit} className="space-y-6 p-4 pt-6">
+                        <div className="space-y-2">
+                            <Label className="text-neutral-300">Service Name *</Label>
                             <Input
                                 placeholder="Oil Change, Tire Rotation..." value={newItem.service}
                                 onChange={(e) => setNewItem({ ...newItem, service: e.target.value })}
-                                className="mt-1.5" required
+                                className="bg-neutral-900 border-neutral-800 text-white placeholder:text-neutral-600 focus:border-neutral-600" required
                             />
                         </div>
                         <div className="grid grid-cols-2 gap-4">
-                            <div>
-                                <Label>Due Date</Label>
+                            <div className="space-y-2">
+                                <Label className="text-neutral-300">Due Date</Label>
                                 <Input
                                     type="date" value={newItem.dueDate}
                                     onChange={(e) => setNewItem({ ...newItem, dueDate: e.target.value })}
-                                    className="mt-1.5"
+                                    className="bg-neutral-900 border-neutral-800 text-white placeholder:text-neutral-600 focus:border-neutral-600"
                                 />
                             </div>
-                            <div>
-                                <Label>Due Odometer ({distLabel})</Label>
+                            <div className="space-y-2">
+                                <Label className="text-neutral-300">Due Odometer ({distLabel})</Label>
                                 <Input
                                     type="number" placeholder="30000" value={newItem.dueOdometer}
                                     onChange={(e) => setNewItem({ ...newItem, dueOdometer: e.target.value })}
-                                    className="mt-1.5"
+                                    className="bg-neutral-900 border-neutral-800 text-white placeholder:text-neutral-600 focus:border-neutral-600"
                                 />
                             </div>
                         </div>
-                        <div>
-                            <Label>Priority</Label>
+                        <div className="space-y-2">
+                            <Label className="text-neutral-300">Priority</Label>
                             <Select value={newItem.priority} onValueChange={(v) => setNewItem({ ...newItem, priority: v as MaintenanceItem['priority'] })}>
-                                <SelectTrigger className="mt-1.5"><SelectValue /></SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="high">High Priority</SelectItem>
-                                    <SelectItem value="medium">Medium Priority</SelectItem>
-                                    <SelectItem value="low">Low Priority</SelectItem>
+                                <SelectTrigger className="bg-neutral-900 border-neutral-800 text-white focus:border-neutral-600"><SelectValue /></SelectTrigger>
+                                <SelectContent className="bg-neutral-900 border-neutral-800 text-white">
+                                    <SelectItem value="high" className="focus:bg-neutral-800 focus:text-white">High Priority</SelectItem>
+                                    <SelectItem value="medium" className="focus:bg-neutral-800 focus:text-white">Medium Priority</SelectItem>
+                                    <SelectItem value="low" className="focus:bg-neutral-800 focus:text-white">Low Priority</SelectItem>
                                 </SelectContent>
                             </Select>
                         </div>
-                        <div>
-                            <Label>Notes (Optional)</Label>
+                        <div className="space-y-2">
+                            <Label className="text-neutral-300">Notes (Optional)</Label>
                             <Input
                                 placeholder="Use synthetic 5W-30..." value={newItem.notes}
                                 onChange={(e) => setNewItem({ ...newItem, notes: e.target.value })}
-                                className="mt-1.5"
+                                className="bg-neutral-900 border-neutral-800 text-white placeholder:text-neutral-600 focus:border-neutral-600"
                             />
                         </div>
-                        <Button type="submit" size="lg" className="w-full" disabled={!newItem.service}>
+                        <Button type="submit" size="lg" className="w-full bg-white text-black hover:bg-neutral-200 mt-4 h-12 text-base font-medium" disabled={!newItem.service}>
                             Save Reminder
                         </Button>
                     </form>

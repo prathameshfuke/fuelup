@@ -11,13 +11,13 @@ export function TopBar() {
     const initial = user?.name?.[0]?.toUpperCase() || 'G';
 
     return (
-        <header className="sticky top-0 z-40 flex h-14 items-center justify-between border-b border-border/50 bg-card/95 backdrop-blur-xl px-4 md:px-6">
+        <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-neutral-800 bg-neutral-950/80 backdrop-blur-md px-4 md:px-6">
             {/* Mobile Logo */}
             <div className="flex items-center gap-2 md:hidden">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg gradient-primary">
-                    <Gauge className="h-5 w-5 text-white" />
+                <div className="bg-neutral-100 rounded p-0.5">
+                    <img src="/logo.png" alt="FuelUp" className="h-5 w-5 object-contain mix-blend-multiply" />
                 </div>
-                <span className="text-lg font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                <span className="text-lg font-medium tracking-tight text-white">
                     FuelUp
                 </span>
             </div>
@@ -26,17 +26,17 @@ export function TopBar() {
             <div className="hidden md:block" />
 
             {/* Right section */}
-            <div className="flex items-center gap-1.5">
-                <Button variant="ghost" size="icon" className="relative h-9 w-9">
+            <div className="flex items-center gap-4">
+                <Button variant="ghost" size="icon" className="relative h-9 w-9 text-neutral-400 hover:text-white hover:bg-neutral-800">
                     <Bell className="h-4 w-4" />
-                    <span className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-destructive text-[10px] font-bold text-white">
-                        3
+                    <span className="absolute right-1 top-1 flex h-2 w-2 rounded-full bg-red-500">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
                     </span>
                 </Button>
 
                 <Link href="/settings">
-                    <Avatar className="h-8 w-8 cursor-pointer ring-2 ring-primary/20 hover:ring-primary/40 transition-all">
-                        <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-600 text-white text-xs font-semibold">
+                    <Avatar className="h-8 w-8 cursor-pointer ring-1 ring-neutral-800 transition-all hover:ring-neutral-600">
+                        <AvatarFallback className="bg-neutral-900 text-neutral-300 text-xs font-medium border border-neutral-800">
                             {initial}
                         </AvatarFallback>
                     </Avatar>

@@ -37,17 +37,17 @@ export function Sidebar() {
     return (
         <aside
             className={cn(
-                'hidden md:flex flex-col h-screen border-r bg-card sticky top-0 transition-all duration-300',
+                'hidden md:flex flex-col h-screen border-r border-neutral-800 bg-neutral-950 sticky top-0 transition-all duration-300',
                 sidebarCollapsed ? 'w-[68px]' : 'w-[240px]'
             )}
         >
             {/* Logo */}
-            <div className="flex h-16 items-center gap-2 border-b px-4">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg gradient-primary">
-                    <Gauge className="h-5 w-5 text-white" />
+            <div className="flex h-16 items-center gap-2 border-b border-neutral-800 px-4">
+                <div className="bg-neutral-100 rounded p-0.5">
+                    <img src="/logo.png" alt="FuelUp" className="h-5 w-5 object-contain mix-blend-multiply" />
                 </div>
                 {!sidebarCollapsed && (
-                    <span className="text-lg font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                    <span className="text-lg font-medium tracking-tight text-white">
                         FuelUp
                     </span>
                 )}
@@ -63,14 +63,14 @@ export function Sidebar() {
                             key={item.href}
                             href={item.href}
                             className={cn(
-                                'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200',
+                                'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200',
                                 isActive
-                                    ? 'bg-primary/10 text-primary'
-                                    : 'text-muted-foreground hover:bg-accent hover:text-foreground',
+                                    ? 'bg-neutral-800 text-white shadow-sm'
+                                    : 'text-neutral-400 hover:bg-neutral-900 hover:text-white',
                                 sidebarCollapsed && 'justify-center px-2'
                             )}
                         >
-                            <item.icon className={cn('h-5 w-5 shrink-0', isActive && 'text-primary')} />
+                            <item.icon className={cn('h-4 w-4 shrink-0', isActive ? 'text-white' : 'text-neutral-500')} />
                             {!sidebarCollapsed && <span>{item.label}</span>}
                         </Link>
                     );
@@ -78,12 +78,12 @@ export function Sidebar() {
             </nav>
 
             {/* Collapse Toggle */}
-            <div className="border-t p-3">
+            <div className="border-t border-neutral-800 p-3">
                 <Button
                     variant="ghost"
                     size="sm"
                     onClick={toggleSidebar}
-                    className="w-full justify-center"
+                    className="w-full justify-center text-neutral-400 hover:text-white hover:bg-neutral-900"
                 >
                     {sidebarCollapsed ? (
                         <ChevronRight className="h-4 w-4" />

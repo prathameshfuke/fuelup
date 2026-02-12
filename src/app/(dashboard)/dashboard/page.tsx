@@ -5,7 +5,9 @@ import {
     Fuel, DollarSign, Gauge, TrendingUp, TrendingDown,
     Plus, Droplets, Route, Bell,
 } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { GlassCard } from '@/components/ui/glass-card';
+import { BorderBeam } from '@/components/ui/border-beam';
+import { AnimatedCounter } from '@/components/ui/animated-counter';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
@@ -19,7 +21,7 @@ import { useSettingsStore } from '@/lib/store/settingsStore';
 
 const container = {
     hidden: { opacity: 0 },
-    show: { opacity: 1, transition: { staggerChildren: 0.08 } },
+    show: { opacity: 1, transition: { staggerChildren: 0.1 } },
 };
 const item = { hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0 } };
 
@@ -34,7 +36,7 @@ export default function DashboardPage() {
     const monthlyCost = getTotalSpent();
     const upcoming = getUpcoming();
 
-    // Build chart data from real logs
+    // Chart data
     const chartData = (() => {
         const sorted = [...logs].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
         return sorted.map((log) => ({
@@ -46,258 +48,271 @@ export default function DashboardPage() {
 
     const recentLogs = logs.slice(0, 4);
 
-    // Calculate distance from logs
+    // Calculate distance
     const sortedByOdometer = [...logs].sort((a, b) => b.odometer - a.odometer);
     const totalDistance = sortedByOdometer.length >= 2
         ? sortedByOdometer[0].odometer - sortedByOdometer[sortedByOdometer.length - 1].odometer
         : 0;
 
     return (
-        <motion.div variants={container} initial="hidden" animate="show" className="space-y-6">
-            {/* Page Header */}
-            <motion.div variants={item} className="flex items-center justify-between">
+        <motion.div variants={container} initial="hidden" animate="show" className="max-w-7xl mx-auto space-y-8">
+            {/* Header */}
+            <motion.div variants={item} className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-2xl md:text-3xl font-bold">Dashboard</h1>
-                    <p className="text-muted-foreground mt-1">Your vehicle performance at a glance</p>
+                    <h1 className="text-3xl md:text-4xl font-light tracking-tight text-white">Dashboard</h1>
+                    <p className="text-neutral-400 mt-1">Overview of your fleet's performance.</p>
                 </div>
                 <Link href="/fuel">
-                    <Button className="gap-2 shadow-md">
-                        <Plus className="h-4 w-4" />
-                        <span className="hidden sm:inline">Log Fuel</span>
+                    <Button className="rounded-full h-10 px-6 bg-white text-black hover:bg-neutral-200 transition-all font-medium">
+                        <Plus className="h-4 w-4 mr-2" />
+                        Log Fuel
                     </Button>
                 </Link>
             </motion.div>
 
             {/* Stat Cards */}
-            <motion.div variants={item} className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                <StatCard
-                    title="Avg. Efficiency" value={avgEfficiency.toFixed(1)} unit={`${distLabel}/${volLabel}`}
-                    change={avgEfficiency > 14 ? '+5.2%' : ''} trend="up"
-                    icon={Gauge} gradient="from-blue-500 to-cyan-500"
-                />
-                <StatCard
-                    title="Total Spent" value={formatCurrency(monthlyCost)} unit=""
-                    change="" trend="down" icon={DollarSign} gradient="from-green-500 to-emerald-500"
-                />
-                <StatCard
-                    title="Total Distance" value={totalDistance.toLocaleString()} unit={distLabel}
-                    change="" trend="up" icon={Route} gradient="from-purple-500 to-pink-500"
-                />
-                <StatCard
-                    title="Fill-ups" value={logs.length.toString()} unit="total"
-                    change="" trend="up" icon={Droplets} gradient="from-amber-500 to-orange-500"
-                />
+            <motion.div variants={item} className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+                <GlassCard className="p-6 relative overflow-hidden group">
+                    <div className="flex justify-between items-start mb-4">
+                        <div className="p-2 rounded-lg bg-neutral-900 border border-neutral-800">
+                            <Gauge className="h-5 w-5 text-white" />
+                        </div>
+                        {avgEfficiency > 14 && (
+                            <Badge variant="outline" className="bg-neutral-900/50 text-green-400 border-green-900/30">
+                                <TrendingUp className="h-3 w-3 mr-1" /> +5.2%
+                            </Badge>
+                        )}
+                    </div>
+                    <div>
+                        <div className="text-3xl font-light tracking-tighter text-white mb-1">
+                            <AnimatedCounter value={avgEfficiency} />
+                        </div>
+                        <p className="text-sm text-neutral-500 font-medium tracking-wide">AVG. EFFICIENCY ({distLabel}/{volLabel})</p>
+                    </div>
+                    <BorderBeam size={100} duration={8} delay={2} />
+                </GlassCard>
+
+                <GlassCard className="p-6">
+                    <div className="flex justify-between items-start mb-4">
+                        <div className="p-2 rounded-lg bg-neutral-900 border border-neutral-800">
+                            <DollarSign className="h-5 w-5 text-white" />
+                        </div>
+                    </div>
+                    <div>
+                        <div className="text-3xl font-light tracking-tighter text-white mb-1">
+                            {formatCurrency(monthlyCost)}
+                        </div>
+                        <p className="text-sm text-neutral-500 font-medium tracking-wide">TOTAL SPENT</p>
+                    </div>
+                </GlassCard>
+
+                <GlassCard className="p-6">
+                    <div className="flex justify-between items-start mb-4">
+                        <div className="p-2 rounded-lg bg-neutral-900 border border-neutral-800">
+                            <Route className="h-5 w-5 text-white" />
+                        </div>
+                    </div>
+                    <div>
+                        <div className="text-3xl font-light tracking-tighter text-white mb-1">
+                            <AnimatedCounter value={totalDistance} />
+                        </div>
+                        <p className="text-sm text-neutral-500 font-medium tracking-wide">TOTAL DISTANCE ({distLabel})</p>
+                    </div>
+                </GlassCard>
+
+                <GlassCard className="p-6">
+                    <div className="flex justify-between items-start mb-4">
+                        <div className="p-2 rounded-lg bg-neutral-900 border border-neutral-800">
+                            <Droplets className="h-5 w-5 text-white" />
+                        </div>
+                    </div>
+                    <div>
+                        <div className="text-3xl font-light tracking-tighter text-white mb-1">
+                            <AnimatedCounter value={logs.length} />
+                        </div>
+                        <p className="text-sm text-neutral-500 font-medium tracking-wide">TOTAL FILL-UPS</p>
+                    </div>
+                </GlassCard>
             </motion.div>
 
-            {/* Charts Row */}
+            {/* Charts Section */}
             <motion.div variants={item} className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <Card className="overflow-hidden">
-                    <div className="h-0.5 bg-gradient-to-r from-blue-500 to-purple-500" />
-                    <CardHeader className="pb-2">
-                        <CardTitle className="text-base font-semibold flex items-center gap-2">
-                            <TrendingUp className="h-4 w-4 text-primary" />
-                            Fuel Efficiency Trend
-                        </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="h-[240px]">
-                            <ResponsiveContainer width="100%" height="100%">
-                                <AreaChart data={chartData}>
-                                    <defs>
-                                        <linearGradient id="effGradient" x1="0" y1="0" x2="0" y2="1">
-                                            <stop offset="5%" stopColor="hsl(221, 83%, 53%)" stopOpacity={0.3} />
-                                            <stop offset="95%" stopColor="hsl(221, 83%, 53%)" stopOpacity={0} />
-                                        </linearGradient>
-                                    </defs>
-                                    <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
-                                    <XAxis dataKey="date" fontSize={12} tickLine={false} axisLine={false} />
-                                    <YAxis fontSize={12} tickLine={false} axisLine={false} />
-                                    <Tooltip
-                                        contentStyle={{
-                                            borderRadius: '12px', border: 'none',
-                                            boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
-                                            backgroundColor: 'hsl(var(--card))',
-                                            color: 'hsl(var(--foreground))',
-                                        }}
-                                    />
-                                    <Area
-                                        type="monotone" dataKey="efficiency" stroke="hsl(221, 83%, 53%)"
-                                        strokeWidth={2.5} fill="url(#effGradient)" name={`${distLabel}/${volLabel}`}
-                                    />
-                                </AreaChart>
-                            </ResponsiveContainer>
-                        </div>
-                    </CardContent>
-                </Card>
+                <GlassCard className="p-6 flex flex-col h-[350px]">
+                    <div className="flex items-center gap-2 mb-6">
+                        <TrendingUp className="h-4 w-4 text-neutral-400" />
+                        <h3 className="text-lg font-light text-white">Efficiency Trend</h3>
+                    </div>
+                    <div className="flex-1 w-full min-h-0">
+                        <ResponsiveContainer width="100%" height="100%">
+                            <AreaChart data={chartData}>
+                                <defs>
+                                    <linearGradient id="effGradient" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="5%" stopColor="#fff" stopOpacity={0.1} />
+                                        <stop offset="95%" stopColor="#fff" stopOpacity={0} />
+                                    </linearGradient>
+                                </defs>
+                                <CartesianGrid strokeDasharray="3 3" stroke="#262626" vertical={false} />
+                                <XAxis
+                                    dataKey="date"
+                                    stroke="#525252"
+                                    fontSize={12}
+                                    tickLine={false}
+                                    axisLine={false}
+                                    dy={10}
+                                />
+                                <YAxis
+                                    stroke="#525252"
+                                    fontSize={12}
+                                    tickLine={false}
+                                    axisLine={false}
+                                    dx={-10}
+                                />
+                                <Tooltip
+                                    contentStyle={{
+                                        backgroundColor: '#0a0a0a',
+                                        border: '1px solid #262626',
+                                        borderRadius: '8px',
+                                        color: '#fff',
+                                    }}
+                                    cursor={{ stroke: '#404040' }}
+                                />
+                                <Area
+                                    type="monotone"
+                                    dataKey="efficiency"
+                                    stroke="#fff"
+                                    strokeWidth={2}
+                                    fill="url(#effGradient)"
+                                />
+                            </AreaChart>
+                        </ResponsiveContainer>
+                    </div>
+                </GlassCard>
 
-                <Card className="overflow-hidden">
-                    <div className="h-0.5 bg-gradient-to-r from-green-500 to-emerald-500" />
-                    <CardHeader className="pb-2">
-                        <CardTitle className="text-base font-semibold flex items-center gap-2">
-                            <DollarSign className="h-4 w-4 text-green-500" />
-                            Fuel Spending
-                        </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="h-[240px]">
-                            <ResponsiveContainer width="100%" height="100%">
-                                <BarChart data={chartData}>
-                                    <defs>
-                                        <linearGradient id="costGradient" x1="0" y1="0" x2="0" y2="1">
-                                            <stop offset="5%" stopColor="hsl(142, 71%, 45%)" stopOpacity={0.9} />
-                                            <stop offset="95%" stopColor="hsl(142, 71%, 45%)" stopOpacity={0.4} />
-                                        </linearGradient>
-                                    </defs>
-                                    <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
-                                    <XAxis dataKey="date" fontSize={12} tickLine={false} axisLine={false} />
-                                    <YAxis fontSize={12} tickLine={false} axisLine={false} />
-                                    <Tooltip
-                                        contentStyle={{
-                                            borderRadius: '12px', border: 'none',
-                                            boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
-                                            backgroundColor: 'hsl(var(--card))',
-                                            color: 'hsl(var(--foreground))',
-                                        }}
-                                    />
-                                    <Bar
-                                        dataKey="cost" fill="url(#costGradient)"
-                                        radius={[6, 6, 0, 0]} name="Cost"
-                                    />
-                                </BarChart>
-                            </ResponsiveContainer>
-                        </div>
-                    </CardContent>
-                </Card>
+                <GlassCard className="p-6 flex flex-col h-[350px]">
+                    <div className="flex items-center gap-2 mb-6">
+                        <DollarSign className="h-4 w-4 text-neutral-400" />
+                        <h3 className="text-lg font-light text-white">Fuel Spending</h3>
+                    </div>
+                    <div className="flex-1 w-full min-h-0">
+                        <ResponsiveContainer width="100%" height="100%">
+                            <BarChart data={chartData}>
+                                <CartesianGrid strokeDasharray="3 3" stroke="#262626" vertical={false} />
+                                <XAxis
+                                    dataKey="date"
+                                    stroke="#525252"
+                                    fontSize={12}
+                                    tickLine={false}
+                                    axisLine={false}
+                                    dy={10}
+                                />
+                                <YAxis
+                                    stroke="#525252"
+                                    fontSize={12}
+                                    tickLine={false}
+                                    axisLine={false}
+                                    dx={-10}
+                                />
+                                <Tooltip
+                                    contentStyle={{
+                                        backgroundColor: '#0a0a0a',
+                                        border: '1px solid #262626',
+                                        borderRadius: '8px',
+                                        color: '#fff',
+                                    }}
+                                    cursor={{ fill: '#262626' }}
+                                />
+                                <Bar
+                                    dataKey="cost"
+                                    fill="#e5e5e5"
+                                    radius={[4, 4, 0, 0]}
+                                    barSize={40}
+                                />
+                            </BarChart>
+                        </ResponsiveContainer>
+                    </div>
+                </GlassCard>
             </motion.div>
 
-            {/* Bottom Row */}
+            {/* Bottom Row: Recent Logs & Alerts */}
             <motion.div variants={item} className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                {/* Recent Fuel Logs */}
-                <Card className="lg:col-span-2 overflow-hidden">
-                    <div className="h-0.5 bg-gradient-to-r from-blue-500 to-cyan-500" />
-                    <CardHeader className="pb-3">
-                        <div className="flex items-center justify-between">
-                            <CardTitle className="text-base font-semibold flex items-center gap-2">
-                                <Fuel className="h-4 w-4 text-primary" />
-                                Recent Fill-ups
-                            </CardTitle>
-                            <Link href="/fuel">
-                                <Button variant="ghost" size="sm">View All</Button>
-                            </Link>
+                <GlassCard className="lg:col-span-2 p-6">
+                    <div className="flex items-center justify-between mb-6">
+                        <div className="flex items-center gap-2">
+                            <Fuel className="h-4 w-4 text-neutral-400" />
+                            <h3 className="text-lg font-light text-white">Recent Fill-ups</h3>
                         </div>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="space-y-3">
-                            {recentLogs.map((log) => (
-                                <div
-                                    key={log.id}
-                                    className="flex items-center justify-between rounded-lg border p-3 hover:bg-accent/50 transition-colors cursor-pointer"
-                                >
-                                    <div className="flex items-center gap-3">
-                                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
-                                            <Fuel className="h-5 w-5 text-primary" />
-                                        </div>
-                                        <div>
-                                            <p className="text-sm font-medium">{log.stationName}</p>
-                                            <p className="text-xs text-muted-foreground">
-                                                {new Date(log.date).toLocaleDateString()} · {log.fuelAmount} {volLabel}
-                                            </p>
-                                        </div>
+                        <Link href="/fuel">
+                            <Button variant="ghost" size="sm" className="text-neutral-400 hover:text-white">View All</Button>
+                        </Link>
+                    </div>
+                    <div className="space-y-4">
+                        {recentLogs.map((log) => (
+                            <div
+                                key={log.id}
+                                className="flex items-center justify-between p-4 rounded-xl border border-neutral-800 bg-neutral-900/30 hover:bg-neutral-800/50 transition-colors"
+                            >
+                                <div className="flex items-center gap-4">
+                                    <div className="h-10 w-10 rounded-full bg-neutral-800 flex items-center justify-center">
+                                        <Fuel className="h-5 w-5 text-neutral-300" />
                                     </div>
-                                    <div className="text-right">
-                                        <p className="text-sm font-semibold font-mono">{formatCurrency(log.totalCost)}</p>
-                                        {log.efficiency && (
-                                            <p className="text-xs text-muted-foreground">{log.efficiency} {distLabel}/{volLabel}</p>
-                                        )}
-                                    </div>
-                                </div>
-                            ))}
-                            {recentLogs.length === 0 && (
-                                <p className="text-center text-muted-foreground py-8">No fuel logs yet</p>
-                            )}
-                        </div>
-                    </CardContent>
-                </Card>
-
-                {/* Service Alerts */}
-                <Card className="overflow-hidden">
-                    <div className="h-0.5 bg-gradient-to-r from-amber-500 to-red-500" />
-                    <CardHeader className="pb-3">
-                        <CardTitle className="text-base font-semibold flex items-center gap-2">
-                            <Bell className="h-4 w-4 text-amber-500" />
-                            Service Alerts
-                        </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="space-y-3">
-                            {upcoming.slice(0, 3).map((alert) => (
-                                <div key={alert.id} className="flex items-center justify-between rounded-lg border p-3">
                                     <div>
-                                        <p className="text-sm font-medium">{alert.service}</p>
-                                        <p className="text-xs text-muted-foreground">
-                                            {alert.dueDate
-                                                ? `Due ${new Date(alert.dueDate).toLocaleDateString()}`
-                                                : alert.dueOdometer
-                                                    ? `At ${alert.dueOdometer.toLocaleString()} ${distLabel}`
-                                                    : 'No due date'}
+                                        <p className="text-sm font-medium text-white">{log.stationName}</p>
+                                        <p className="text-xs text-neutral-500">
+                                            {new Date(log.date).toLocaleDateString()} · {log.fuelAmount} {volLabel}
                                         </p>
                                     </div>
-                                    <Badge
-                                        variant={
-                                            alert.priority === 'high' ? 'destructive'
-                                                : alert.priority === 'medium' ? 'warning' : 'secondary'
-                                        }
-                                    >
-                                        {alert.priority}
-                                    </Badge>
                                 </div>
-                            ))}
-                            {upcoming.length === 0 && (
-                                <p className="text-center text-muted-foreground py-4">All clear!</p>
-                            )}
-                            <Link href="/maintenance">
-                                <Button variant="outline" size="sm" className="w-full mt-2">
-                                    View All Reminders
-                                </Button>
-                            </Link>
-                        </div>
-                    </CardContent>
-                </Card>
+                                <div className="text-right">
+                                    <p className="text-sm font-medium text-white font-mono">{formatCurrency(log.totalCost)}</p>
+                                    {log.efficiency && (
+                                        <p className="text-xs text-neutral-500">{log.efficiency} {distLabel}/{volLabel}</p>
+                                    )}
+                                </div>
+                            </div>
+                        ))}
+                        {recentLogs.length === 0 && (
+                            <p className="text-center text-neutral-500 py-8">No fuel logs yet</p>
+                        )}
+                    </div>
+                </GlassCard>
+
+                <GlassCard className="p-6">
+                    <div className="flex items-center gap-2 mb-6">
+                        <Bell className="h-4 w-4 text-neutral-400" />
+                        <h3 className="text-lg font-light text-white">Service Alerts</h3>
+                    </div>
+                    <div className="space-y-4">
+                        {upcoming.slice(0, 3).map((alert) => (
+                            <div key={alert.id} className="flex items-start justify-between p-3 rounded-lg border border-neutral-800 bg-neutral-900/30">
+                                <div>
+                                    <p className="text-sm font-medium text-white">{alert.service}</p>
+                                    <p className="text-xs text-neutral-500 mt-1">
+                                        {alert.dueDate
+                                            ? `Due ${new Date(alert.dueDate).toLocaleDateString()}`
+                                            : alert.dueOdometer
+                                                ? `At ${alert.dueOdometer.toLocaleString()} ${distLabel}`
+                                                : 'No due date'}
+                                    </p>
+                                </div>
+                                <Badge variant="outline" className="text-xs border-neutral-700 text-neutral-300">
+                                    {alert.priority}
+                                </Badge>
+                            </div>
+                        ))}
+                        {upcoming.length === 0 && (
+                            <div className="flex flex-col items-center justify-center py-8 text-neutral-500">
+                                <Bell className="h-8 w-8 mb-2 opacity-20" />
+                                <p>All clear!</p>
+                            </div>
+                        )}
+                        <Link href="/maintenance">
+                            <Button variant="outline" className="w-full mt-2 border-neutral-800 text-neutral-400 hover:text-white hover:bg-neutral-800">
+                                View All Reminders
+                            </Button>
+                        </Link>
+                    </div>
+                </GlassCard>
             </motion.div>
         </motion.div>
-    );
-}
-
-function StatCard({ title, value, unit, change, trend, icon: Icon, gradient }: {
-    title: string; value: string; unit: string; change: string;
-    trend: 'up' | 'down'; icon: React.ElementType; gradient: string;
-}) {
-    return (
-        <Card className="relative overflow-hidden hover:shadow-md transition-shadow">
-            <div className={`absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r ${gradient}`} />
-            <CardContent className="p-4 md:p-5">
-                <div className="flex items-start justify-between mb-3">
-                    <p className="text-xs md:text-sm text-muted-foreground font-medium">{title}</p>
-                    <div className={`p-1.5 rounded-lg bg-gradient-to-br ${gradient}`}>
-                        <Icon className="h-3.5 w-3.5 text-white" />
-                    </div>
-                </div>
-                <div className="flex items-baseline gap-1.5">
-                    <span className="text-xl md:text-2xl font-bold font-mono">{value}</span>
-                    {unit && <span className="text-xs text-muted-foreground">{unit}</span>}
-                </div>
-                {change && (
-                    <div className="flex items-center gap-1 mt-2">
-                        {trend === 'up' ? (
-                            <TrendingUp className="h-3 w-3 text-green-500" />
-                        ) : (
-                            <TrendingDown className="h-3 w-3 text-green-500" />
-                        )}
-                        <span className="text-xs font-medium text-green-500">{change}</span>
-                        <span className="text-xs text-muted-foreground">vs last month</span>
-                    </div>
-                )}
-            </CardContent>
-        </Card>
     );
 }
