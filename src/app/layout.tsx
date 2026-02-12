@@ -1,26 +1,24 @@
 import type { Metadata, Viewport } from 'next';
+import { Inter, JetBrains_Mono } from 'next/font/google';
 import { Providers } from '@/components/layout/Providers';
 import './globals.css';
+import { cn } from '@/lib/utils';
+
+const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
+const jetbrainsMono = JetBrains_Mono({ subsets: ['latin'], variable: '--font-mono' });
 
 export const metadata: Metadata = {
-  title: 'FuelUp | Smart Vehicle Management & Mileage Tracker',
-  description:
-    'Track fuel expenses, monitor vehicle efficiency, manage maintenance schedules, and save money with FuelUp. The ultimate vehicle management PWA.',
-  keywords: ['fuel tracker', 'mileage tracker', 'vehicle management', 'car maintenance', 'fuel efficiency'],
+  title: 'FuelUp | Smart Vehicle Management',
+  description: 'Track fuel, maintenance, and expenses with data-forward precision.',
   manifest: '/manifest.json',
-  icons: {
-    icon: '/favicon.ico',
-  },
+  icons: { icon: '/favicon.ico' },
 };
 
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   maximumScale: 1,
-  themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#f8fafc' },
-    { media: '(prefers-color-scheme: dark)', color: '#020617' },
-  ],
+  themeColor: '#0a0a0a', // neutral-950
 };
 
 export default function RootLayout({
@@ -29,8 +27,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className="min-h-screen antialiased">
+    <html lang="en" suppressHydrationWarning className="dark">
+      <body className={cn(
+        "min-h-screen bg-background font-sans antialiased selection:bg-neutral-800 selection:text-white",
+        inter.variable,
+        jetbrainsMono.variable
+      )}>
         <Providers>{children}</Providers>
       </body>
     </html>
