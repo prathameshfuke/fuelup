@@ -25,33 +25,7 @@ interface FuelStore {
     getAverageEfficiency: () => number;
 }
 
-const INITIAL_LOGS: FuelLog[] = [
-    {
-        id: 'f1', vehicleId: 'v1', date: '2026-02-10', odometer: 25200,
-        fuelAmount: 35.2, totalCost: 52.80, pricePerUnit: 1.50,
-        stationName: 'Shell Express', isFullTank: true, notes: '', efficiency: 14.8,
-    },
-    {
-        id: 'f2', vehicleId: 'v1', date: '2026-01-28', odometer: 24680,
-        fuelAmount: 42.1, totalCost: 63.15, pricePerUnit: 1.50,
-        stationName: 'BP Highway', isFullTank: true, notes: '', efficiency: 15.2,
-    },
-    {
-        id: 'f3', vehicleId: 'v1', date: '2026-01-20', odometer: 24040,
-        fuelAmount: 38.5, totalCost: 57.75, pricePerUnit: 1.50,
-        stationName: 'Chevron Downtown', isFullTank: true, notes: '', efficiency: 14.5,
-    },
-    {
-        id: 'f4', vehicleId: 'v1', date: '2026-01-12', odometer: 23480,
-        fuelAmount: 40.0, totalCost: 60.00, pricePerUnit: 1.50,
-        stationName: 'Shell Express', isFullTank: true, notes: '', efficiency: 13.9,
-    },
-    {
-        id: 'f5', vehicleId: 'v1', date: '2026-01-03', odometer: 22920,
-        fuelAmount: 44.2, totalCost: 59.67, pricePerUnit: 1.35,
-        stationName: 'Costco Gas', isFullTank: true, notes: '', efficiency: 14.1,
-    },
-];
+const INITIAL_LOGS: FuelLog[] = [];
 
 export const useFuelStore = create<FuelStore>()(
     persist(

@@ -2,12 +2,15 @@
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Gauge, Chrome, Mail, ArrowRight, Fuel, BarChart3, Bell, User } from 'lucide-react';
+import { Gauge, Mail, ArrowRight, BarChart3, Bell, User, Lock, Chrome } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useState } from 'react';
 import { useAuthStore } from '@/lib/store/authStore';
+import { GlassCard } from '@/components/ui/glass-card';
+import { BorderBeam } from '@/components/ui/border-beam';
+import { motion } from 'framer-motion';
 
 export default function LoginPage() {
     const [email, setEmail] = useState('');
@@ -31,186 +34,152 @@ export default function LoginPage() {
     };
 
     return (
-        <div className="flex min-h-screen">
+        <div className="flex min-h-screen bg-neutral-950 text-white selection:bg-white/20">
             {/* Left side - Form */}
-            <div className="flex flex-1 flex-col items-center justify-center p-6 md:p-12">
+            <div className="flex flex-1 flex-col items-center justify-center p-6 md:p-12 relative z-10">
                 <div className="w-full max-w-md space-y-8">
                     {/* Logo & Branding */}
                     <div className="text-center">
-                        <Link href="/" className="inline-flex items-center gap-2 mb-6">
-                            <div className="flex h-10 w-10 items-center justify-center rounded-xl gradient-primary">
-                                <Gauge className="h-6 w-6 text-white" />
+                        <Link href="/" className="inline-flex items-center gap-3 mb-8 group">
+                            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white text-black shadow-lg shadow-white/10 group-hover:scale-105 transition-transform duration-500">
+                                <Gauge className="h-7 w-7" />
                             </div>
-                            <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                            <span className="text-3xl font-bold tracking-tighter text-white">
                                 FuelUp
                             </span>
                         </Link>
-                        <h1 className="text-3xl font-bold tracking-tight">Welcome back</h1>
-                        <p className="mt-2 text-muted-foreground">
-                            Sign in to manage your vehicles and track expenses
-                        </p>
+                        <motion.div
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.5 }}
+                        >
+                            <h1 className="text-4xl font-semibold tracking-tight text-white mb-2">Welcome back</h1>
+                            <p className="text-neutral-400 text-lg">
+                                Manage your fleet with precision and style.
+                            </p>
+                        </motion.div>
                     </div>
 
-                    {/* Auth Buttons */}
-                    <div className="space-y-3">
-                        <Button
-                            onClick={handleGoogleSignIn}
-                            variant="outline"
-                            className="w-full h-12 text-base gap-3"
-                            size="lg"
-                        >
-                            <svg className="h-5 w-5" viewBox="0 0 24 24">
-                                <path
-                                    d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"
-                                    fill="#4285F4"
-                                />
-                                <path
-                                    d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-                                    fill="#34A853"
-                                />
-                                <path
-                                    d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
-                                    fill="#FBBC05"
-                                />
-                                <path
-                                    d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
-                                    fill="#EA4335"
-                                />
-                            </svg>
-                            Continue with Google
-                        </Button>
+                    {/* Auth Glass Card */}
+                    <GlassCard className="p-8 relative overflow-hidden group/card border-white/10">
+                        <BorderBeam size={200} duration={8} delay={2} />
 
-                        <div className="relative">
-                            <div className="absolute inset-0 flex items-center">
-                                <span className="w-full border-t" />
-                            </div>
-                            <div className="relative flex justify-center text-xs uppercase">
-                                <span className="bg-background px-2 text-muted-foreground">Or</span>
-                            </div>
-                        </div>
-
-                        {!isEmailMode ? (
+                        <div className="space-y-4">
                             <Button
+                                onClick={handleGoogleSignIn}
                                 variant="outline"
-                                className="w-full h-12 gap-3"
-                                onClick={() => setIsEmailMode(true)}
+                                className="w-full h-12 text-base gap-3 border-neutral-800 bg-neutral-900/50 text-white hover:bg-neutral-800 hover:text-white transition-all"
+                                size="lg"
                             >
-                                <Mail className="h-5 w-5" />
-                                Continue with Email
+                                <Chrome className="h-5 w-5" />
+                                Continue with Google
                             </Button>
-                        ) : (
-                            <div className="space-y-4">
-                                <div>
-                                    <Label htmlFor="email">Email address</Label>
-                                    <Input
-                                        id="email"
-                                        type="email"
-                                        placeholder="you@example.com"
-                                        value={email}
-                                        onChange={(e) => setEmail(e.target.value)}
-                                        className="h-12 mt-1.5"
-                                    />
+
+                            <div className="relative py-2">
+                                <div className="absolute inset-0 flex items-center">
+                                    <span className="w-full border-t border-white/10" />
                                 </div>
+                                <div className="relative flex justify-center text-xs uppercase bg-transparent">
+                                    <span className="bg-neutral-900/90 px-3 py-1 rounded-full border border-white/10 text-neutral-500">Or</span>
+                                </div>
+                            </div>
+
+                            {!isEmailMode ? (
                                 <Button
-                                    className="w-full h-12 gap-2"
-                                    onClick={handleEmailSignIn}
-                                    disabled={!email}
+                                    variant="ghost"
+                                    className="w-full h-12 gap-3 border border-white/10 hover:bg-white/5 text-neutral-300 hover:text-white transition-all"
+                                    onClick={() => setIsEmailMode(true)}
                                 >
-                                    Send Magic Link
-                                    <ArrowRight className="h-4 w-4" />
+                                    <Mail className="h-5 w-5" />
+                                    Continue with Email
                                 </Button>
-                                <button
-                                    className="w-full text-sm text-muted-foreground hover:text-foreground transition-colors"
-                                    onClick={() => setIsEmailMode(false)}
+                            ) : (
+                                <motion.div
+                                    initial={{ opacity: 0, height: 0 }}
+                                    animate={{ opacity: 1, height: 'auto' }}
+                                    className="space-y-4"
                                 >
-                                    Back to options
-                                </button>
-                            </div>
-                        )}
+                                    <div className="space-y-2">
+                                        <Label htmlFor="email" className="text-neutral-300">Email address</Label>
+                                        <div className="relative">
+                                            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-500" />
+                                            <Input
+                                                id="email"
+                                                type="email"
+                                                placeholder="name@company.com"
+                                                value={email}
+                                                onChange={(e) => setEmail(e.target.value)}
+                                                className="h-11 pl-10 bg-black/50 border-white/10 text-white placeholder:text-neutral-600 focus:border-white/20 transition-colors"
+                                            />
+                                        </div>
+                                    </div>
+                                    <Button
+                                        className="w-full h-11 gap-2 bg-white text-black hover:bg-neutral-200 transition-colors"
+                                        onClick={handleEmailSignIn}
+                                        disabled={!email}
+                                    >
+                                        Send Login Link
+                                        <ArrowRight className="h-4 w-4" />
+                                    </Button>
+                                    <button
+                                        className="w-full text-xs text-neutral-500 hover:text-white transition-colors py-2"
+                                        onClick={() => setIsEmailMode(false)}
+                                    >
+                                        ← Back to other options
+                                    </button>
+                                </motion.div>
+                            )}
 
-                        <div className="relative">
-                            <div className="absolute inset-0 flex items-center">
-                                <span className="w-full border-t" />
-                            </div>
-                            <div className="relative flex justify-center text-xs uppercase">
-                                <span className="bg-background px-2 text-muted-foreground">Or</span>
-                            </div>
-                        </div>
-
-                        <Button
-                            onClick={handleGuestSignIn}
-                            variant="secondary"
-                            className="w-full h-12 text-base gap-3"
-                            size="lg"
-                        >
-                            <User className="h-5 w-5" />
-                            Continue as Guest
-                        </Button>
-                        <p className="text-center text-xs text-muted-foreground">
-                            Your data will be saved locally. Sign in later to sync across devices.
-                        </p>
-                    </div>
-
-                    {/* Value Props */}
-                    <div className="grid grid-cols-3 gap-4 pt-6 text-center">
-                        {[
-                            { icon: Fuel, label: 'Track Efficiency' },
-                            { icon: BarChart3, label: 'Save Money' },
-                            { icon: Bell, label: 'Stay Maintained' },
-                        ].map((item, i) => (
-                            <div key={i} className="flex flex-col items-center gap-1.5">
-                                <div className="rounded-full bg-primary/10 p-2">
-                                    <item.icon className="h-4 w-4 text-primary" />
+                            <div className="relative py-2">
+                                <div className="absolute inset-0 flex items-center">
+                                    <span className="w-full border-t border-white/10" />
                                 </div>
-                                <span className="text-xs text-muted-foreground">{item.label}</span>
+                                <div className="relative flex justify-center text-xs uppercase bg-transparent">
+                                    <span className="bg-neutral-900/90 px-3 py-1 rounded-full border border-white/10 text-neutral-500">Guests</span>
+                                </div>
                             </div>
-                        ))}
-                    </div>
 
-                    <p className="text-center text-xs text-muted-foreground">
+                            <Button
+                                onClick={handleGuestSignIn}
+                                variant="secondary"
+                                className="w-full h-11 text-sm gap-2 bg-neutral-800 text-neutral-300 hover:bg-neutral-700 hover:text-white transition-all"
+                            >
+                                <User className="h-4 w-4" />
+                                Continue as Guest
+                            </Button>
+                        </div>
+                    </GlassCard>
+
+                    <p className="text-center text-xs text-neutral-600 mt-6">
                         By continuing, you agree to our{' '}
-                        <Link href="#" className="text-primary hover:underline">Terms</Link> and{' '}
-                        <Link href="#" className="text-primary hover:underline">Privacy Policy</Link>.
+                        <Link href="#" className="text-white hover:underline decoration-neutral-600 underline-offset-4">Terms</Link> and{' '}
+                        <Link href="#" className="text-white hover:underline decoration-neutral-600 underline-offset-4">Privacy Policy</Link>.
                     </p>
                 </div>
             </div>
 
             {/* Right side - Visual (desktop only) */}
-            <div className="hidden lg:flex flex-1 items-center justify-center bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 p-12 relative overflow-hidden">
-                <div className="absolute inset-0 opacity-10">
-                    <div className="absolute top-20 left-20 w-72 h-72 bg-white rounded-full blur-3xl" />
-                    <div className="absolute bottom-20 right-20 w-96 h-96 bg-white rounded-full blur-3xl" />
-                </div>
+            <div className="hidden lg:flex flex-1 relative overflow-hidden bg-black items-center justify-center p-12">
+                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-neutral-800 via-black to-black opacity-50" />
+                <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-white/5 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2" />
 
-                <div className="relative z-10 max-w-md text-white text-center">
-                    <div className="flex justify-center mb-8">
-                        <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm">
-                            <Gauge className="h-9 w-9 text-white" />
-                        </div>
-                    </div>
-                    <h2 className="text-3xl font-bold mb-4">
-                        Your Vehicle. Your Data. Your Control.
-                    </h2>
-                    <p className="text-white/80 text-lg mb-8">
-                        Track fuel costs, monitor efficiency, and stay on top of maintenance, all in one app.
-                    </p>
-                    <div className="inline-flex flex-col gap-3 text-left bg-white/10 backdrop-blur-sm rounded-2xl p-6">
-                        <div className="flex items-center gap-3">
-                            <div className="h-2 w-2 rounded-full bg-green-400" />
-                            <span className="text-sm text-white/90">Multi-vehicle fleet management</span>
-                        </div>
-                        <div className="flex items-center gap-3">
-                            <div className="h-2 w-2 rounded-full bg-green-400" />
-                            <span className="text-sm text-white/90">Smart maintenance reminders</span>
-                        </div>
-                        <div className="flex items-center gap-3">
-                            <div className="h-2 w-2 rounded-full bg-green-400" />
-                            <span className="text-sm text-white/90">Trip logging and mileage reports</span>
-                        </div>
-                        <div className="flex items-center gap-3">
-                            <div className="h-2 w-2 rounded-full bg-green-400" />
-                            <span className="text-sm text-white/90">Works offline, syncs when online</span>
-                        </div>
+                <div className="relative z-10 max-w-lg">
+                    <div className="grid grid-cols-1 gap-6">
+                        {[
+                            { icon: BarChart3, title: 'Real-time Analytics', desc: 'Monitor fuel efficiency and costs.' },
+                            { icon: Bell, title: 'Smart Reminders', desc: 'Never miss a maintenance service.' },
+                            { icon: Lock, title: 'Secure Data', desc: 'Your fleet data, encrypted and safe.' },
+                        ].map((item, i) => (
+                            <GlassCard key={i} className="p-6 flex items-start gap-4 hover:bg-white/5 transition-colors border-white/5">
+                                <div className="p-3 rounded-xl bg-white/5 border border-white/10 text-white">
+                                    <item.icon className="h-6 w-6" />
+                                </div>
+                                <div>
+                                    <h3 className="text-lg font-medium text-white">{item.title}</h3>
+                                    <p className="text-neutral-400 leading-relaxed mt-1">{item.desc}</p>
+                                </div>
+                            </GlassCard>
+                        ))}
                     </div>
                 </div>
             </div>
