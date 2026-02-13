@@ -188,10 +188,21 @@ export default function FuelPage() {
                     ))}
                 </AnimatePresence>
                 {logs.length === 0 && (
-                    <div className="flex flex-col items-center justify-center py-20 text-neutral-500 border border-dashed border-neutral-800 rounded-3xl bg-neutral-900/20">
-                        <Fuel className="h-12 w-12 mb-4 opacity-20" />
-                        <p className="text-lg font-medium text-white">No fuel logs yet</p>
-                        <p className="text-sm">Tap "Add Entry" to log your first fill-up!</p>
+                    <div className="flex flex-col items-center justify-center py-20 text-center">
+                        <div className="h-24 w-24 rounded-full bg-neutral-900 border border-neutral-800 flex items-center justify-center mb-6">
+                            <Fuel className="h-10 w-10 text-neutral-500" />
+                        </div>
+                        <h2 className="text-2xl font-medium text-white mb-2">No fuel logs yet</h2>
+                        <p className="text-neutral-400 max-w-sm mb-8">
+                            Track your fuel consumption, costs, and efficiency by adding your first fill-up.
+                        </p>
+                        <Button
+                            size="lg"
+                            className="rounded-full px-8 bg-white text-black hover:bg-neutral-200"
+                            onClick={() => setIsFormOpen(true)}
+                        >
+                            Log Fuel Entry
+                        </Button>
                     </div>
                 )}
             </motion.div>

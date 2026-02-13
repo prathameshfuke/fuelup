@@ -228,14 +228,27 @@ export default function MaintenancePage() {
                     })}
                 </AnimatePresence>
                 {displayItems.length === 0 && (
-                    <div className="flex flex-col items-center justify-center py-20 text-neutral-500 border border-dashed border-neutral-800 rounded-3xl bg-neutral-900/20">
-                        <Wrench className="h-12 w-12 mb-4 opacity-20" />
-                        <p className="text-lg font-medium text-white">
+                    <div className="flex flex-col items-center justify-center py-20 text-center">
+                        <div className="h-24 w-24 rounded-full bg-neutral-900 border border-neutral-800 flex items-center justify-center mb-6">
+                            <Wrench className="h-10 w-10 text-neutral-500" />
+                        </div>
+                        <h2 className="text-2xl font-medium text-white mb-2">
                             {tab === 'upcoming' ? 'No upcoming maintenance' : 'No completed services'}
+                        </h2>
+                        <p className="text-neutral-400 max-w-sm mb-8">
+                            {tab === 'upcoming'
+                                ? 'Keep your vehicle running smoothly by tracking service records and reminders.'
+                                : 'Completed maintenance tasks will appear here for your history.'}
                         </p>
-                        <p className="text-sm">
-                            {tab === 'upcoming' ? 'Add a reminder to stay on top of services!' : 'Complete a task to see it here.'}
-                        </p>
+                        {tab === 'upcoming' && (
+                            <Button
+                                size="lg"
+                                className="rounded-full px-8 bg-white text-black hover:bg-neutral-200"
+                                onClick={() => setIsFormOpen(true)}
+                            >
+                                Add Reminder
+                            </Button>
+                        )}
                     </div>
                 )}
             </motion.div>

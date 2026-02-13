@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Car } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -8,10 +8,12 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
+import { Combobox } from '@/components/ui/combobox';
 import { useRouter } from 'next/navigation';
 import { useVehiclesStore, type Vehicle } from '@/lib/store/vehiclesStore';
 import { toast } from 'sonner';
 import Link from 'next/link';
+import { getMakes, getModels, VEHICLE_DATA } from '@/data/vehicles';
 
 const vehicleTypes = [
     { value: 'car', label: 'Car', emoji: '🚗' },
@@ -40,6 +42,45 @@ export default function AddVehiclePage() {
         year: new Date().getFullYear().toString(), fuelType: 'Gasoline',
         color: '#3b82f6', licensePlate: '',
     });
+
+    // Data for Comboboxes
+    const makeOptions = useMemo(() => getMakes().map(m => ({ value: m, label: m })), []);
+    const modelOptions = useMemo(() => {
+        if (!form.make) return [];
+        return getModels(form.make).map(m => ({ value: m.name, label: m.name }));
+    }, [form.make]);
+
+    const handleMakeSelect = (make: string) => {
+        setForm(prev => ({ ...prev, make, model: '' }));
+    };
+
+    const handleModelSelect = (modelName: string) => {
+        const makeData = VEHICLE_DATA.find(v => v.make === form.make);
+        const modelData = makeData?.models.find(m => m.name === modelName);
+
+        let newType = form.type;
+        let newFuel = form.fuelType;
+
+        if (modelData) {
+            // Auto-detect type
+            const typeLower = modelData.type.toLowerCase();
+            if (['car', 'sedan', 'coupe', 'hatchback', 'convertible'].includes(typeLower)) newType = 'car';
+            else if (['suv', 'crossover'].includes(typeLower)) newType = 'suv';
+            else if (['truck', 'pickup'].includes(typeLower)) newType = 'truck';
+            else if (['van', 'minivan'].includes(typeLower)) newType = 'van';
+            else if (['motorcycle'].includes(typeLower)) newType = 'motorcycle';
+
+            // Auto-detect fuel
+            newFuel = modelData.fuelType;
+        }
+
+        setForm(prev => ({
+            ...prev,
+            model: modelName,
+            type: newType,
+            fuelType: newFuel
+        }));
+    };
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -71,68 +112,46 @@ export default function AddVehiclePage() {
             </motion.div>
 
             <form onSubmit={handleSubmit} className="space-y-6">
-                {/* Vehicle Type */}
-                <motion.div variants={anim}>
-                    <Card>
-                        <CardHeader><CardTitle className="text-base">Vehicle Type</CardTitle></CardHeader>
-                        <CardContent>
-                            <div className="grid grid-cols-3 md:grid-cols-6 gap-2">
-                                {vehicleTypes.map((vt) => (
-                                    <button
-                                        key={vt.value} type="button"
-                                        className={`flex flex-col items-center gap-1 p-3 rounded-xl border-2 transition-all ${form.type === vt.value
-                                                ? 'border-primary bg-primary/5'
-                                                : 'border-transparent bg-muted/50 hover:bg-muted'
-                                            }`}
-                                        onClick={() => setForm({ ...form, type: vt.value as Vehicle['type'] })}
-                                    >
-                                        <span className="text-2xl">{vt.emoji}</span>
-                                        <span className="text-xs font-medium">{vt.label}</span>
-                                    </button>
-                                ))}
-                            </div>
-                        </CardContent>
-                    </Card>
-                </motion.div>
-
-                {/* Details */}
+                {/* Vehicle Details */}
                 <motion.div variants={anim}>
                     <Card>
                         <CardHeader><CardTitle className="text-base">Vehicle Details</CardTitle></CardHeader>
                         <CardContent className="space-y-4">
-                            <div>
-                                <Label>Nickname</Label>
-                                <Input
-                                    placeholder="My Daily Driver" value={form.name}
-                                    onChange={(e) => setForm({ ...form, name: e.target.value })}
-                                    className="mt-1.5"
-                                />
-                            </div>
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
                                     <Label>Make *</Label>
-                                    <Input
-                                        placeholder="Honda" value={form.make}
-                                        onChange={(e) => setForm({ ...form, make: e.target.value })}
-                                        className="mt-1.5" required
-                                    />
+                                    <div className="mt-1.5">
+                                        <Combobox
+                                            options={makeOptions}
+                                            value={form.make}
+                                            onSelect={handleMakeSelect}
+                                            placeholder="Select make..."
+                                            searchPlaceholder="Search makes..."
+                                        />
+                                    </div>
                                 </div>
                                 <div>
                                     <Label>Model *</Label>
-                                    <Input
-                                        placeholder="Civic" value={form.model}
-                                        onChange={(e) => setForm({ ...form, model: e.target.value })}
-                                        className="mt-1.5" required
-                                    />
+                                    <div className="mt-1.5">
+                                        <Combobox
+                                            options={modelOptions}
+                                            value={form.model}
+                                            onSelect={handleModelSelect}
+                                            placeholder={form.make ? "Select model..." : "Select make first"}
+                                            searchPlaceholder="Search models..."
+                                            disabled={!form.make}
+                                        />
+                                    </div>
                                 </div>
                             </div>
+
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
                                     <Label>Year *</Label>
                                     <Input
                                         type="number" min="1900" max="2030" value={form.year}
                                         onChange={(e) => setForm({ ...form, year: e.target.value })}
-                                        className="mt-1.5" required
+                                        className="mt-1.5 bg-neutral-900 border-neutral-800" required
                                     />
                                 </div>
                                 <div>
@@ -140,15 +159,53 @@ export default function AddVehiclePage() {
                                     <Input
                                         placeholder="ABC 1234" value={form.licensePlate}
                                         onChange={(e) => setForm({ ...form, licensePlate: e.target.value })}
-                                        className="mt-1.5"
+                                        className="mt-1.5 bg-neutral-900 border-neutral-800"
                                     />
                                 </div>
                             </div>
+
+                            <div>
+                                <Label>Nickname</Label>
+                                <Input
+                                    placeholder={form.make && form.model ? `${form.make} ${form.model}` : "My Daily Driver"}
+                                    value={form.name}
+                                    onChange={(e) => setForm({ ...form, name: e.target.value })}
+                                    className="mt-1.5 bg-neutral-900 border-neutral-800"
+                                />
+                            </div>
+                        </CardContent>
+                    </Card>
+                </motion.div>
+
+                {/* Auto-filled Type & Fuel */}
+                <motion.div variants={anim}>
+                    <Card>
+                        <CardHeader><CardTitle className="text-base">Classification</CardTitle></CardHeader>
+                        <CardContent className="space-y-4">
+                            <div>
+                                <Label className="mb-2 block">Vehicle Type</Label>
+                                <div className="grid grid-cols-3 md:grid-cols-6 gap-2">
+                                    {vehicleTypes.map((vt) => (
+                                        <button
+                                            key={vt.value} type="button"
+                                            className={`flex flex-col items-center gap-1 p-3 rounded-xl border-2 transition-all ${form.type === vt.value
+                                                ? 'border-emerald-500 bg-emerald-500/10 text-white'
+                                                : 'border-transparent bg-neutral-900 hover:bg-neutral-800 text-neutral-400'
+                                                }`}
+                                            onClick={() => setForm({ ...form, type: vt.value as Vehicle['type'] })}
+                                        >
+                                            <span className="text-2xl">{vt.emoji}</span>
+                                            <span className="text-xs font-medium">{vt.label}</span>
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+
                             <div>
                                 <Label>Fuel Type</Label>
                                 <Select value={form.fuelType} onValueChange={(v) => setForm({ ...form, fuelType: v })}>
-                                    <SelectTrigger className="mt-1.5"><SelectValue /></SelectTrigger>
-                                    <SelectContent>
+                                    <SelectTrigger className="mt-1.5 bg-neutral-900 border-neutral-800"><SelectValue /></SelectTrigger>
+                                    <SelectContent className="bg-neutral-950 border-neutral-800">
                                         {fuelTypes.map((ft) => (
                                             <SelectItem key={ft} value={ft}>{ft}</SelectItem>
                                         ))}
@@ -168,9 +225,9 @@ export default function AddVehiclePage() {
                                 {colors.map((c) => (
                                     <button
                                         key={c} type="button"
-                                        className={`h-9 w-9 rounded-full transition-all ${form.color === c ? 'ring-2 ring-offset-2 ring-offset-background ring-primary scale-110' : 'hover:scale-105'
+                                        className={`h-9 w-9 rounded-full transition-all ${form.color === c ? 'ring-2 ring-offset-2 ring-offset-neutral-950 scale-110' : 'hover:scale-105'
                                             }`}
-                                        style={{ backgroundColor: c }}
+                                        style={{ backgroundColor: c, boxShadow: form.color === c ? `0 0 10px ${c}` : 'none' }}
                                         onClick={() => setForm({ ...form, color: c })}
                                     />
                                 ))}
@@ -179,9 +236,10 @@ export default function AddVehiclePage() {
                     </Card>
                 </motion.div>
 
+
                 {/* Submit */}
                 <motion.div variants={anim}>
-                    <Button type="submit" size="lg" className="w-full" disabled={!form.make || !form.model}>
+                    <Button type="submit" size="lg" className="w-full h-12 text-base bg-emerald-600 hover:bg-emerald-700 text-white" disabled={!form.make || !form.model}>
                         Add Vehicle
                     </Button>
                 </motion.div>

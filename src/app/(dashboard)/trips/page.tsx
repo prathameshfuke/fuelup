@@ -174,10 +174,21 @@ export default function TripsPage() {
                     })}
                 </AnimatePresence>
                 {trips.length === 0 && (
-                    <div className="flex flex-col items-center justify-center py-20 text-neutral-500 border border-dashed border-neutral-800 rounded-3xl bg-neutral-900/20">
-                        <Route className="h-12 w-12 mb-4 opacity-20" />
-                        <p className="text-lg font-medium text-white">No trips logged yet</p>
-                        <p className="text-sm">Tap "Log Trip" to track your mileage!</p>
+                    <div className="flex flex-col items-center justify-center py-20 text-center">
+                        <div className="h-24 w-24 rounded-full bg-neutral-900 border border-neutral-800 flex items-center justify-center mb-6">
+                            <Route className="h-10 w-10 text-neutral-500" />
+                        </div>
+                        <h2 className="text-2xl font-medium text-white mb-2">No trips logged yet</h2>
+                        <p className="text-neutral-400 max-w-sm mb-8">
+                            Start tracking your mileage for tax deductions and reimbursement.
+                        </p>
+                        <Button
+                            size="lg"
+                            className="rounded-full px-8 bg-white text-black hover:bg-neutral-200"
+                            onClick={() => setIsFormOpen(true)}
+                        >
+                            Log Trip
+                        </Button>
                     </div>
                 )}
             </motion.div>

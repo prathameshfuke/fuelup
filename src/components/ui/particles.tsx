@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import Particles, { initParticlesEngine } from "@tsparticles/react";
+import TSParticles, { initParticlesEngine } from "@tsparticles/react";
 import { loadSlim } from "@tsparticles/slim";
 import type { Container, Engine } from "@tsparticles/engine";
 import { cn } from "@/lib/utils";
@@ -11,21 +11,33 @@ interface ParticleStyle {
     opacity?: { min: number; max: number };
 }
 
-interface ParticlesComponentProps {
+interface ParticlesProps {
     className?: string;
     variant?: "default" | "snow" | "stars";
     style?: ParticleStyle;
     interactive?: boolean;
     customOptions?: Record<string, any>;
+    quantity?: number;
+    staticity?: number;
+    ease?: number;
+    size?: number;
+    color?: string;
+    refresh?: boolean;
 }
 
-export function ParticlesComponent({
+export function Particles({
     className,
     variant = "default",
     style = {},
     interactive = true,
     customOptions = {},
-}: ParticlesComponentProps) {
+    quantity = 100,
+    staticity = 50,
+    ease = 50,
+    size = 0.4,
+    color = "#ffffff",
+    refresh = false,
+}: ParticlesProps) {
     const [init, setInit] = useState(false);
 
     useEffect(() => {
@@ -35,17 +47,17 @@ export function ParticlesComponent({
     }, []);
 
     const particlesLoaded = async (container?: Container): Promise<void> => {
-        console.log("Particles loaded", container);
+        // console.log("Particles loaded", container);
     };
 
     const getVariantOptions = () => {
         const baseOptions = {
             fpsLimit: 120,
             particles: {
-                color: { value: style.color || "#ffffff" },
+                color: { value: color || style.color || "#ffffff" },
                 links: {
                     enable: variant === "default",
-                    color: style.color || "#ffffff",
+                    color: color || style.color || "#ffffff",
                     distance: 150,
                     opacity: 0.4,
                 },
@@ -58,13 +70,13 @@ export function ParticlesComponent({
                     outModes: { default: "out" as const },
                 },
                 number: {
-                    value: variant === "stars" ? 100 : variant === "snow" ? 50 : 80,
+                    value: quantity,
                 },
                 opacity: {
                     value: style.opacity || { min: 0.3, max: 0.8 },
                 },
                 size: {
-                    value: style.size || { min: 1, max: variant === "snow" ? 4 : 3 },
+                    value: { min: size * 0.5, max: size * 2 },
                 },
             },
             interactivity: {
@@ -82,7 +94,7 @@ export function ParticlesComponent({
     if (!init) return null;
 
     return (
-        <Particles
+        <TSParticles
             id="tsparticles"
             particlesLoaded={particlesLoaded}
             options={getVariantOptions()}
