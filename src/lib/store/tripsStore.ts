@@ -21,7 +21,41 @@ interface TripsStore {
     getTotalDistance: () => number;
 }
 
-const INITIAL_TRIPS: Trip[] = [];
+const INITIAL_TRIPS: Trip[] = [
+    {
+        id: 't1',
+        vehicleId: 'v1',
+        date: '2024-02-13',
+        startLocation: 'Home',
+        endLocation: 'Office',
+        distance: 25.4,
+        purpose: 'commute',
+        isTaxDeductible: true,
+        notes: 'Morning traffic',
+    },
+    {
+        id: 't2',
+        vehicleId: 'v1',
+        date: '2024-02-11',
+        startLocation: 'Office',
+        endLocation: 'Client Site',
+        distance: 12.8,
+        purpose: 'business',
+        isTaxDeductible: true,
+        notes: 'Meeting with potential lead',
+    },
+    {
+        id: 't3',
+        vehicleId: 'v2',
+        date: '2024-02-10',
+        startLocation: 'Home',
+        endLocation: 'Mountain Cafe',
+        distance: 85.0,
+        purpose: 'personal',
+        isTaxDeductible: false,
+        notes: 'Weekend canyon run',
+    },
+];
 
 export const useTripsStore = create<TripsStore>()(
     persist(
