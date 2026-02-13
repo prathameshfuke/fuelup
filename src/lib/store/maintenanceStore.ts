@@ -53,7 +53,6 @@ const INITIAL_ITEMS: MaintenanceItem[] = [
         cost: 45.00,
         priority: 'low',
         notes: 'Rotated at dealership',
-        vehicleId: 'v1',
     } as MaintenanceItem,
 ];
 
