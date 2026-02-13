@@ -57,9 +57,14 @@ export function Particles({
                 color: { value: color || style.color || "#ffffff" },
                 links: {
                     enable: variant === "default",
+                    shadow: {
+                        enable: true,
+                        color: "#000000",
+                        blur: 5,
+                    },
                     color: color || style.color || "#ffffff",
-                    distance: 150,
-                    opacity: 0.4,
+                    distance: 120,
+                    opacity: 0.15,
                 },
                 move: {
                     enable: true,

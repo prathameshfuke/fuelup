@@ -19,10 +19,10 @@ export default function LandingPage() {
       <div className="fixed inset-0 z-0 pointer-events-none">
         <Particles
           className="absolute inset-0"
-          quantity={100}
-          staticity={30}
+          quantity={30}
+          staticity={50}
           ease={50}
-          size={0.5}
+          size={0.4}
           color="#ffffff"
           refresh
         />
