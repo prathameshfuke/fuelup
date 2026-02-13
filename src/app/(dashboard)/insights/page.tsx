@@ -150,8 +150,8 @@ export default function InsightsPage() {
                                                 contentStyle={{ backgroundColor: '#0a0a0a', borderRadius: '12px', border: '1px solid #262626', color: '#fff' }}
                                                 itemStyle={{ color: '#fff' }}
                                             />
-                                            <Line yAxisId="left" type="monotone" dataKey="efficiency" stroke="#fff" strokeWidth={2} dot={{ r: 4, fill: '#0a0a0a', strokeWidth: 2 }} activeDot={{ r: 6 }} name="Efficiency" />
-                                            <Line yAxisId="right" type="monotone" dataKey="cost" stroke="#525252" strokeWidth={2} dot={{ r: 4, fill: '#0a0a0a', strokeWidth: 2 }} name="Cost" />
+                                            <Line yAxisId="left" type="monotone" dataKey="efficiency" stroke="#3b82f6" strokeWidth={2} dot={{ r: 4, fill: '#0a0a0a', strokeWidth: 2 }} activeDot={{ r: 6 }} name="Efficiency" />
+                                            <Line yAxisId="right" type="monotone" dataKey="cost" stroke="#10b981" strokeWidth={2} dot={{ r: 4, fill: '#0a0a0a', strokeWidth: 2 }} name="Cost" />
                                         </LineChart>
                                     </ResponsiveContainer>
                                 </div>
