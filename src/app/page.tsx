@@ -1,14 +1,14 @@
 "use client";
 
 import Link from 'next/link';
-import Image from 'next/image';
+
 import { Button } from '@/components/ui/button';
 import { GlassCard } from '@/components/ui/glass-card';
 import { BorderBeam } from '@/components/ui/border-beam';
 import { TextGenerateEffect } from '@/components/ui/text-generate-effect';
 import { AnimatedCounter } from '@/components/ui/animated-counter';
 import { ProgressiveBlur } from '@/components/ui/progressive-blur';
-import { Wrapper3D } from '@/components/ui/wrapper-3d';
+
 import { Particles } from '@/components/ui/particles';
 import { ArrowRight, BarChart3, Fuel, Smartphone, Wrench, ShieldCheck, Zap, Globe } from 'lucide-react';
 
@@ -91,22 +91,7 @@ export default function LandingPage() {
           </div>
 
           {/* 3D Dashboard Preview */}
-          <div className="w-full max-w-5xl px-4 perspective-1000">
-            <Wrapper3D>
-              <div className="relative rounded-xl border border-neutral-800 bg-neutral-900/50 backdrop-blur-sm shadow-2xl overflow-hidden group">
-                <div className="absolute inset-0 bg-gradient-to-tr from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
-                <Image
-                  src="/hero.png"
-                  alt="FuelUp Dashboard"
-                  width={1200}
-                  height={675}
-                  className="w-full h-auto rounded-xl opacity-90 hover:opacity-100 transition-opacity"
-                  priority
-                />
-                <BorderBeam size={400} duration={10} delay={4} />
-              </div>
-            </Wrapper3D>
-          </div>
+          {/* 3D Dashboard Preview Removed */}
         </div>
 
         <ProgressiveBlur direction="bottom" className="z-20 h-40 pointer-events-none" />
