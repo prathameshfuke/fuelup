@@ -39,10 +39,10 @@ export function TripDistribution({ trips }: TripDistributionProps) {
     const totalDistance = data.reduce((acc, curr) => acc + curr.value, 0);
 
     return (
-        <GlassCard className="p-6">
-            <div className="flex items-center justify-between mb-2">
-                <h3 className="text-lg font-medium text-white flex items-center gap-2">
-                    <MapPin className="h-5 w-5 text-neutral-400" />
+        <GlassCard className="p-6 border-white/5 bg-[#0A0E1A]/40">
+            <div className="flex items-center justify-between mb-2 relative z-10">
+                <h3 className="text-sm font-heading font-semibold text-neutral-400 mb-1 uppercase tracking-widest flex items-center gap-2">
+                    <div className="w-1.5 h-4 bg-purple-500 rounded-full shadow-[0_0_8px_rgba(168,85,247,0.6)]" />
                     Trip Distribution
                 </h3>
             </div>
@@ -70,20 +70,20 @@ export function TripDistribution({ trips }: TripDistributionProps) {
                     </ResponsiveContainer>
                 </ChartContainer>
                 {/* Center Text */}
-                <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                    <span className="text-3xl font-light text-white">{totalDistance.toLocaleString()}</span>
-                    <span className="text-xs text-neutral-500 uppercase tracking-wider">{distanceUnit}</span>
+                <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]">
+                    <span className="text-4xl font-mono font-bold text-white tracking-tighter">{totalDistance.toLocaleString()}</span>
+                    <span className="text-xs text-neutral-400 uppercase tracking-widest font-mono mt-1">{distanceUnit}</span>
                 </div>
             </div>
 
             <div className="grid grid-cols-2 gap-2 mt-4">
                 {data.map((entry) => (
-                    <div key={entry.name} className="flex items-center justify-between p-2 rounded-lg bg-white/5 border border-white/5">
-                        <div className="flex items-center gap-2">
-                            <div className="w-2 h-2 rounded-full" style={{ backgroundColor: entry.color }} />
-                            <span className="text-sm text-neutral-300 capitalize">{entry.name}</span>
+                    <div key={entry.name} className="flex items-center justify-between p-2.5 rounded-lg bg-neutral-900/50 border border-white/5 backdrop-blur-sm">
+                        <div className="flex items-center gap-2.5">
+                            <div className="w-2 h-2 rounded-full" style={{ backgroundColor: entry.color, boxShadow: `0 0 8px ${entry.color}` }} />
+                            <span className="text-xs text-neutral-400 uppercase tracking-wider font-mono">{entry.name}</span>
                         </div>
-                        <span className="text-sm font-medium text-white">{entry.percentage}%</span>
+                        <span className="text-sm font-bold font-mono text-white">{entry.percentage}%</span>
                     </div>
                 ))}
             </div>

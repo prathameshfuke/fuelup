@@ -66,52 +66,58 @@ export default function MaintenancePage() {
         <motion.div variants={container} initial="hidden" animate="show" className="max-w-7xl mx-auto space-y-8">
             <motion.div variants={item} className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl md:text-4xl font-light tracking-tight text-white">Maintenance</h1>
-                    <p className="text-neutral-400 mt-1">Track services and keep your vehicle healthy</p>
+                    <h1 className="text-3xl md:text-4xl font-heading font-bold tracking-tight text-white uppercase flex items-center gap-3">
+                        <div className="w-1.5 h-6 bg-[#FFB800] rounded-full shadow-[0_0_10px_rgba(255,184,0,0.8)]" />
+                        Service Records
+                    </h1>
+                    <p className="text-sm font-mono text-neutral-500 uppercase tracking-widest mt-2 ml-4">Track maintenance events and vehicle health</p>
                 </div>
                 <Button
                     className="rounded-full h-10 px-6 bg-white text-black hover:bg-neutral-200 transition-all font-medium"
                     onClick={() => setIsFormOpen(true)}
                 >
                     <Plus className="h-4 w-4 mr-2" />
-                    Add Reminder
+                    Log Service
                 </Button>
             </motion.div>
 
             {/* Summary */}
             <motion.div variants={item} className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <GlassCard className="p-6">
+                <GlassCard className="p-6 relative overflow-hidden">
+                    <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-red-500/50 to-red-900/50" />
                     <div className="flex items-center gap-3 mb-2">
                         <div className="p-2 rounded-lg bg-red-950/30 border border-red-900/30">
                             <AlertTriangle className="h-4 w-4 text-red-400" />
                         </div>
-                        <p className="text-sm font-medium text-neutral-400">Urgent Actions</p>
+                        <p className="text-xs font-mono font-medium text-neutral-500 uppercase tracking-widest">Urgent Actions</p>
                     </div>
-                    <div className="text-2xl font-light text-white tracking-tight">
+                    <div className="text-3xl font-mono text-white tracking-tight mt-2">
                         <AnimatedCounter value={upcoming.filter(i => i.priority === 'high').length} />
                     </div>
                 </GlassCard>
 
-                <GlassCard className="p-6">
+                <GlassCard className="p-6 relative overflow-hidden">
+                    <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-500/50 to-amber-900/50" />
                     <div className="flex items-center gap-3 mb-2">
                         <div className="p-2 rounded-lg bg-amber-950/30 border border-amber-900/30">
                             <Clock className="h-4 w-4 text-amber-400" />
                         </div>
-                        <p className="text-sm font-medium text-neutral-400">Upcoming</p>
+                        <p className="text-xs font-mono font-medium text-neutral-500 uppercase tracking-widest">Upcoming</p>
                     </div>
-                    <div className="text-2xl font-light text-white tracking-tight">
+                    <div className="text-3xl font-mono text-white tracking-tight mt-2">
                         <AnimatedCounter value={upcoming.length} />
                     </div>
                 </GlassCard>
 
-                <GlassCard className="p-6">
+                <GlassCard className="p-6 relative overflow-hidden">
+                    <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-green-500/50 to-green-900/50" />
                     <div className="flex items-center gap-3 mb-2">
                         <div className="p-2 rounded-lg bg-green-950/30 border border-green-900/30">
                             <CheckCircle2 className="h-4 w-4 text-green-400" />
                         </div>
-                        <p className="text-sm font-medium text-neutral-400">Completed</p>
+                        <p className="text-xs font-mono font-medium text-neutral-500 uppercase tracking-widest">Completed</p>
                     </div>
-                    <div className="text-2xl font-light text-white tracking-tight">
+                    <div className="text-3xl font-mono text-white tracking-tight mt-2">
                         <AnimatedCounter value={completed.length} />
                     </div>
                 </GlassCard>
@@ -165,7 +171,7 @@ export default function MaintenancePage() {
                                             </div>
                                             <div>
                                                 <div className="flex items-center gap-2">
-                                                    <h3 className={`text-lg font-medium text-white ${mItem.isCompleted ? 'line-through decoration-neutral-500' : ''}`}>{mItem.service}</h3>
+                                                    <h3 className={`text-lg font-heading font-medium tracking-wide text-white ${mItem.isCompleted ? 'line-through decoration-neutral-500 text-neutral-500' : ''}`}>{mItem.service}</h3>
                                                     {!mItem.isCompleted && (
                                                         <Badge variant="outline" className={`text-xs border transition-colors ${mItem.priority === 'high' ? 'border-red-900 text-red-400' : mItem.priority === 'medium' ? 'border-amber-900 text-amber-400' : 'border-blue-900 text-blue-400'}`}>
                                                             {mItem.priority}

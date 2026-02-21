@@ -75,55 +75,73 @@ export default function FuelPage() {
             {/* Header */}
             <motion.div variants={item} className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl md:text-4xl font-light tracking-tight text-white">Fuel Logs</h1>
-                    <p className="text-neutral-400 mt-1">Track your fill-ups and efficiency</p>
+                    <h1 className="text-3xl md:text-4xl font-heading font-bold tracking-tight text-white uppercase flex items-center gap-3">
+                        <div className="w-1.5 h-6 bg-[#FF0039] rounded-full shadow-[0_0_10px_rgba(255,0,57,0.8)]" />
+                        Pit Stop Log
+                    </h1>
+                    <p className="text-sm font-mono text-neutral-500 uppercase tracking-widest mt-2 ml-4">Track your refueling pit stops and efficiency</p>
                 </div>
                 <Button
                     className="rounded-full h-10 px-6 bg-white text-black hover:bg-neutral-200 transition-all font-medium"
                     onClick={() => setIsFormOpen(true)}
                 >
                     <Plus className="h-4 w-4 mr-2" />
-                    Add Entry
+                    Log Pit Stop
                 </Button>
             </motion.div>
 
             {/* Summary Stats */}
             <motion.div variants={item} className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <GlassCard className="p-6">
-                    <div className="flex items-center gap-3 mb-2">
-                        <div className="p-2 rounded-lg bg-neutral-900 border border-neutral-800">
-                            <DollarSign className="h-4 w-4 text-white" />
+                <GlassCard className="p-6 relative overflow-hidden group border-white/5 bg-[#0A0E1A]/40">
+                    <div className="absolute top-0 left-0 w-full h-0.5" style={{ background: `linear-gradient(90deg, #FF0039, transparent)` }} />
+                    <div className="flex justify-between items-start mb-4 relative z-10">
+                        <div className="p-2 rounded-lg bg-white/5 border border-white/5 text-neutral-400 group-hover:bg-white/10 group-hover:text-white transition-colors">
+                            <DollarSign className="h-5 w-5 text-[#FF0039]" />
                         </div>
-                        <p className="text-sm font-medium text-neutral-400">Total Spent</p>
                     </div>
-                    <div className="text-2xl font-light text-white tracking-tight">
-                        {formatCurrency(totalCost)}
+                    <div className="relative z-10">
+                        <h4 className="text-[10px] text-neutral-500 font-mono uppercase tracking-widest mb-1">TOTAL SPENT</h4>
+                        <div className="flex items-baseline gap-2">
+                            <span className="text-3xl font-mono font-bold text-white tracking-tighter" style={{ textShadow: `0 0 20px rgba(255,0,57,0.4)` }}>
+                                {formatCurrency(totalCost)}
+                            </span>
+                        </div>
                     </div>
                 </GlassCard>
 
-                <GlassCard className="p-6">
-                    <div className="flex items-center gap-3 mb-2">
-                        <div className="p-2 rounded-lg bg-neutral-900 border border-neutral-800">
-                            <Droplets className="h-4 w-4 text-white" />
+                <GlassCard className="p-6 relative overflow-hidden group border-white/5 bg-[#0A0E1A]/40">
+                    <div className="absolute top-0 left-0 w-full h-0.5" style={{ background: `linear-gradient(90deg, #00D9FF, transparent)` }} />
+                    <div className="flex justify-between items-start mb-4 relative z-10">
+                        <div className="p-2 rounded-lg bg-white/5 border border-white/5 text-neutral-400 group-hover:bg-white/10 group-hover:text-white transition-colors">
+                            <Droplets className="h-5 w-5 text-[#00D9FF]" />
                         </div>
-                        <p className="text-sm font-medium text-neutral-400">Total Fuel</p>
                     </div>
-                    <div className="text-2xl font-light text-white tracking-tight flex items-baseline gap-1">
-                        <AnimatedCounter value={totalFuel} />
-                        <span className="text-sm text-neutral-500">{volLabel}</span>
+                    <div className="relative z-10">
+                        <h4 className="text-[10px] text-neutral-500 font-mono uppercase tracking-widest mb-1">TOTAL FUEL</h4>
+                        <div className="flex items-baseline gap-2">
+                            <span className="text-3xl font-mono font-bold text-white tracking-tighter" style={{ textShadow: `0 0 20px rgba(0,217,255,0.4)` }}>
+                                <AnimatedCounter value={totalFuel} />
+                            </span>
+                            <span className="text-xs font-mono text-neutral-500 tracking-wider">({volLabel})</span>
+                        </div>
                     </div>
                 </GlassCard>
 
-                <GlassCard className="p-6">
-                    <div className="flex items-center gap-3 mb-2">
-                        <div className="p-2 rounded-lg bg-neutral-900 border border-neutral-800">
-                            <Gauge className="h-4 w-4 text-white" />
+                <GlassCard className="p-6 relative overflow-hidden group border-white/5 bg-[#0A0E1A]/40">
+                    <div className="absolute top-0 left-0 w-full h-0.5" style={{ background: `linear-gradient(90deg, #00FF88, transparent)` }} />
+                    <div className="flex justify-between items-start mb-4 relative z-10">
+                        <div className="p-2 rounded-lg bg-white/5 border border-white/5 text-neutral-400 group-hover:bg-white/10 group-hover:text-white transition-colors">
+                            <Gauge className="h-5 w-5 text-[#00FF88]" />
                         </div>
-                        <p className="text-sm font-medium text-neutral-400">Avg. Efficiency</p>
                     </div>
-                    <div className="text-2xl font-light text-white tracking-tight flex items-baseline gap-1">
-                        <AnimatedCounter value={avgEfficiency} />
-                        <span className="text-sm text-neutral-500">{distLabel}/{volLabel}</span>
+                    <div className="relative z-10">
+                        <h4 className="text-[10px] text-neutral-500 font-mono uppercase tracking-widest mb-1">AVG. EFFICIENCY</h4>
+                        <div className="flex items-baseline gap-2">
+                            <span className="text-3xl font-mono font-bold text-white tracking-tighter" style={{ textShadow: `0 0 20px rgba(0,255,136,0.4)` }}>
+                                <AnimatedCounter value={avgEfficiency} />
+                            </span>
+                            <span className="text-xs font-mono text-neutral-500 tracking-wider">({distLabel}/{volLabel})</span>
+                        </div>
                     </div>
                 </GlassCard>
             </motion.div>
@@ -139,22 +157,23 @@ export default function FuelPage() {
                             exit={{ opacity: 0, x: -50 }}
                             layout
                         >
-                            <GlassCard className="p-0 overflow-hidden hover:bg-neutral-900/50 transition-colors group">
-                                <div className="p-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                            <GlassCard className="p-0 overflow-hidden border-white/5 bg-[#0A0E1A]/40 hover:bg-[#0A0E1A]/60 transition-colors group backdrop-blur-sm relative">
+                                <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-[#00D9FF] to-transparent opacity-50 group-hover:opacity-100 transition-opacity" />
+                                <div className="p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 relative z-10">
                                     <div className="flex items-center gap-4">
-                                        <div className="h-12 w-12 rounded-2xl bg-neutral-800/50 flex items-center justify-center border border-neutral-700/50">
-                                            <Fuel className="h-6 w-6 text-white" />
+                                        <div className="h-12 w-12 rounded-xl bg-neutral-950/50 flex items-center justify-center border border-white/5 shadow-[inset_0_0_10px_rgba(0,0,0,0.5)]">
+                                            <Fuel className="h-6 w-6 text-[#00D9FF]" />
                                         </div>
                                         <div>
-                                            <h3 className="text-lg font-medium text-white">{log.stationName}</h3>
-                                            <div className="flex items-center gap-3 text-sm text-neutral-400 mt-1">
+                                            <h3 className="text-lg font-bold text-white uppercase tracking-wider">{log.stationName}</h3>
+                                            <div className="flex items-center gap-3 text-[10px] font-mono uppercase tracking-widest text-neutral-500 mt-1">
                                                 <div className="flex items-center gap-1">
-                                                    <Calendar className="h-3.5 w-3.5" />
-                                                    <span>{new Date(log.date).toLocaleDateString()}</span>
+                                                    <Calendar className="h-3 w-3" />
+                                                    <span>{new Date(log.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
                                                 </div>
                                                 <div className="w-1 h-1 rounded-full bg-neutral-700" />
                                                 <div className="flex items-center gap-1">
-                                                    <Gauge className="h-3.5 w-3.5" />
+                                                    <Gauge className="h-3 w-3" />
                                                     <span>{log.odometer.toLocaleString()} {distLabel}</span>
                                                 </div>
                                             </div>
@@ -163,11 +182,11 @@ export default function FuelPage() {
 
                                     <div className="flex items-center justify-between md:justify-end gap-6 pl-16 md:pl-0">
                                         <div className="text-right">
-                                            <p className="text-lg font-medium text-white tracking-tight">{formatCurrency(log.totalCost)}</p>
+                                            <p className="text-lg font-bold font-mono text-[#FF0039] tracking-wider">{formatCurrency(log.totalCost)}</p>
                                             <div className="flex items-center justify-end gap-2 mt-0.5">
-                                                <span className="text-sm text-neutral-500">{log.fuelAmount} {volLabel}</span>
+                                                <span className="text-[10px] font-mono text-neutral-400 uppercase tracking-widest">{log.fuelAmount} {volLabel}</span>
                                                 {log.efficiency && (
-                                                    <Badge variant="outline" className="text-xs border-neutral-700 text-neutral-300 font-mono">
+                                                    <Badge variant="outline" className="text-[9px] border-white/10 text-[#00FF88] bg-[#00FF88]/10 font-mono uppercase tracking-widest px-1.5 py-0">
                                                         {log.efficiency} {distLabel}/{volLabel}
                                                     </Badge>
                                                 )}
@@ -176,7 +195,7 @@ export default function FuelPage() {
                                         <Button
                                             variant="ghost"
                                             size="icon"
-                                            className="h-9 w-9 text-neutral-500 hover:text-red-400 hover:bg-red-950/20 md:opacity-0 md:group-hover:opacity-100 transition-all"
+                                            className="h-9 w-9 text-neutral-500 hover:text-[#FF0039] hover:bg-[#FF0039]/10 md:opacity-0 md:group-hover:opacity-100 transition-all border border-transparent hover:border-[#FF0039]/20"
                                             onClick={(e) => { e.stopPropagation(); handleDelete(log.id); }}
                                         >
                                             <Trash2 className="h-4 w-4" />
@@ -192,16 +211,16 @@ export default function FuelPage() {
                         <div className="h-24 w-24 rounded-full bg-neutral-900 border border-neutral-800 flex items-center justify-center mb-6">
                             <Fuel className="h-10 w-10 text-neutral-500" />
                         </div>
-                        <h2 className="text-2xl font-medium text-white mb-2">No fuel logs yet</h2>
+                        <h2 className="text-2xl font-medium text-white mb-2">No pit stops recorded</h2>
                         <p className="text-neutral-400 max-w-sm mb-8">
-                            Track your fuel consumption, costs, and efficiency by adding your first fill-up.
+                            Track your fuel consumption, costs, and efficiency by logging your first pit stop.
                         </p>
                         <Button
                             size="lg"
                             className="rounded-full px-8 bg-white text-black hover:bg-neutral-200"
                             onClick={() => setIsFormOpen(true)}
                         >
-                            Log Fuel Entry
+                            Log Pit Stop
                         </Button>
                     </div>
                 )}
@@ -216,12 +235,11 @@ export default function FuelPage() {
                 <Plus className="h-6 w-6" />
             </Button>
 
-            {/* Add Fuel Sheet - Keeping existing functional structure but could use styling updates if needed */}
             <Sheet open={isFormOpen} onOpenChange={setIsFormOpen}>
                 <SheetContent side="bottom" className="h-[85vh] overflow-y-auto bg-neutral-950 border-t border-neutral-800 text-white">
                     <SheetHeader className="text-left">
-                        <SheetTitle className="text-white">Log Fuel Entry</SheetTitle>
-                        <SheetDescription className="text-neutral-400">Record your latest fill-up</SheetDescription>
+                        <SheetTitle className="text-white font-heading tracking-tight uppercase">Log Pit Stop</SheetTitle>
+                        <SheetDescription className="text-neutral-400 font-mono text-xs uppercase tracking-widest">Record telemetry for your latest refueling</SheetDescription>
                     </SheetHeader>
                     <form onSubmit={handleSubmit} className="space-y-6 p-4 pt-6">
                         {activeVehicle && (
@@ -314,7 +332,7 @@ export default function FuelPage() {
                             type="submit" size="lg" className="w-full bg-white text-black hover:bg-neutral-200 mt-4 h-12 text-base font-medium"
                             disabled={!newLog.odometer || !newLog.fuelAmount || !newLog.totalCost}
                         >
-                            Save Fuel Log
+                            Save Pit Stop Data
                         </Button>
                     </form>
                 </SheetContent>

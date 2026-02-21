@@ -25,26 +25,44 @@ const defaultIcon = L.icon({
     shadowSize: [41, 41]
 });
 
-// Custom Blue Pulsing Marker for User Location
+// Custom Tracking Marker for User Location
 const userIcon = L.divIcon({
     className: 'custom-user-marker',
-    html: `<div class="relative flex h-4 w-4">
-              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-              <span class="relative inline-flex rounded-full h-4 w-4 bg-blue-500 border-2 border-white"></span>
+    html: `<div class="relative flex h-5 w-5">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00FF88] opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-5 w-5 bg-[#00FF88] border-2 border-[#0A0E1A] shadow-[0_0_10px_rgba(0,255,136,0.8)]"></span>
            </div>`,
-    iconSize: [16, 16],
-    iconAnchor: [8, 8] // Center it
+    iconSize: [20, 20],
+    iconAnchor: [10, 10] // Center it
 });
 
-// Fuel Station Icon
+// Ultra-Premium Telemetry-styled Fuel Station Map Pin
 const stationIcon = L.divIcon({
     className: 'custom-station-marker',
-    html: `<div class="flex items-center justify-center h-8 w-8 rounded-full bg-neutral-900 border-2 border-emerald-500 shadow-lg group hover:scale-110 transition-transform">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-emerald-500"><path d="M3 22v-8a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v8"/><path d="M12 12V2"/><path d="M12 2a5 5 0 0 0-5 5v3"/><path d="M12 2a5 5 0 0 1 5 5v3"/></svg>
-           </div>`,
-    iconSize: [32, 32],
-    iconAnchor: [16, 32],
-    popupAnchor: [0, -32]
+    html: `
+        <div class="relative group cursor-pointer drop-shadow-[0_0_15px_rgba(0,217,255,0.4)] hover:drop-shadow-[0_0_25px_rgba(0,217,255,0.8)] transition-all duration-300 hover:-translate-y-2 origin-bottom">
+            <svg width="40" height="48" viewBox="0 0 40 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Outer Pin Shape -->
+                <path d="M20 0C8.954 0 0 8.954 0 20C0 35 20 48 20 48C20 48 40 35 40 20C40 8.954 31.046 0 20 0Z" fill="#0A0E1A" stroke="#00D9FF" stroke-width="2"/>
+                <!-- Inner Glowing Circle -->
+                <circle cx="20" cy="20" r="14" fill="#00D9FF" fill-opacity="0.15"/>
+                <!-- Inner Thin Ring -->
+                <circle cx="20" cy="20" r="12" fill="none" stroke="#00D9FF" stroke-opacity="0.5" stroke-width="1" stroke-dasharray="2 2" />
+                <!-- Fuel Pump Icon -->
+                <g transform="translate(11, 11)">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#00D9FF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="3" x2="21" y1="22" y2="22"/>
+                        <line x1="4" x2="14" y1="9" y2="9"/>
+                        <path d="M14 22V4a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v18"/>
+                        <path d="M14 13h2a2 2 0 0 1 2 2v2a2 2 0 0 0 2 2a2 2 0 0 0 2-2V9.83a2 2 0 0 0-.59-1.42L18 5"/>
+                    </svg>
+                </g>
+            </svg>
+        </div>
+    `,
+    iconSize: [40, 48],
+    iconAnchor: [20, 48],
+    popupAnchor: [0, -48]
 });
 
 interface FuelMapProps {

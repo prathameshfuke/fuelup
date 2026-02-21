@@ -26,11 +26,11 @@ export function MonthlySpend({ data }: MonthlySpendProps) {
     const maxSpend = Math.max(...data.map(d => d.cost));
 
     return (
-        <GlassCard className="p-6">
-            <div className="flex items-center justify-between mb-6">
+        <GlassCard className="p-6 border-white/5 bg-[#0A0E1A]/40">
+            <div className="flex items-center justify-between mb-8 relative z-10">
                 <div>
-                    <h3 className="text-lg font-medium text-white flex items-center gap-2">
-                        <DollarSign className="h-5 w-5 text-neutral-400" />
+                    <h3 className="text-sm font-heading font-semibold text-neutral-400 mb-1 uppercase tracking-widest flex items-center gap-2">
+                        <div className="w-1.5 h-4 bg-orange-500 rounded-full shadow-[0_0_8px_rgba(249,115,22,0.6)]" />
                         Monthly Spending
                     </h3>
                 </div>
@@ -38,20 +38,21 @@ export function MonthlySpend({ data }: MonthlySpendProps) {
 
             <ChartContainer height={250}>
                 <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={data} margin={{ top: 0, right: 0, left: -20, bottom: 0 }} barSize={32}>
-                        <CartesianGrid strokeDasharray="3 3" stroke={chartColors.grid} vertical={false} />
+                    <BarChart data={data} margin={{ top: 10, right: 10, left: 0, bottom: 0 }} barSize={24}>
+                        {/* Telemetry Grid */}
+                        <CartesianGrid strokeDasharray="3 3" stroke={chartColors.grid} vertical={true} horizontal={true} fill="url(#diagonalHatch)" />
                         <XAxis
                             dataKey="month"
-                            axisLine={false}
+                            axisLine={{ stroke: chartColors.grid, strokeWidth: 2 }}
                             tickLine={false}
-                            tick={{ fill: chartColors.text, fontSize: 12 }}
+                            tick={{ fill: chartColors.text, fontSize: 12, fontFamily: 'var(--font-mono)' }}
                             dy={10}
                         />
                         <YAxis
                             axisLine={false}
                             tickLine={false}
-                            tick={{ fill: chartColors.text, fontSize: 12 }}
-                            tickFormatter={(value) => `$${value}`}
+                            tick={{ fill: chartColors.text, fontSize: 12, fontFamily: 'var(--font-mono)' }}
+                            tickFormatter={(value) => `$${value}`} // TODO: respect currency symbol
                         />
                         <Tooltip
                             content={<CustomTooltip formatter={(val: number) => formatCurrency(Number(val))} />}

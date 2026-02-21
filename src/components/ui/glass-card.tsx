@@ -49,8 +49,9 @@ export function GlassCard({
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
             className={cn(
-                "relative rounded-xl border border-border/50 bg-neutral-900/60 backdrop-blur-sm transition-all duration-200 ease-out",
-                "hover:border-neutral-700 hover:shadow-2xl",
+                "relative rounded-2xl border border-white/5 bg-card/40 backdrop-blur-xl transition-all duration-300 ease-out",
+                "hover:border-white/10 hover:shadow-[0_8px_32px_rgba(0,102,255,0.1)]",
+                "before:absolute before:inset-0 before:-z-10 before:rounded-2xl before:bg-gradient-to-br before:from-white/5 before:to-transparent before:opacity-0 hover:before:opacity-100 before:transition-opacity",
                 className
             )}
             style={{

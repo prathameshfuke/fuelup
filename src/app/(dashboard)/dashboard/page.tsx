@@ -59,8 +59,11 @@ export default function DashboardPage() {
             {/* Header */}
             <motion.div variants={item} className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl md:text-4xl font-light tracking-tight text-white">Dashboard</h1>
-                    <p className="text-neutral-400 mt-1">Overview of your fleet's performance.</p>
+                    <h1 className="text-3xl md:text-4xl font-heading font-bold tracking-tight text-white uppercase flex items-center gap-3">
+                        <div className="w-1.5 h-6 bg-[#A855F7] rounded-full shadow-[0_0_10px_rgba(168,85,247,0.8)]" />
+                        Telemetry Hub
+                    </h1>
+                    <p className="text-sm font-mono text-neutral-500 uppercase tracking-widest mt-2 ml-4">Real-time overview of fleet performance and metrics</p>
                 </div>
                 <Link href="/fuel">
                     <Button className="rounded-full h-10 px-6 bg-white text-black hover:bg-neutral-200 transition-all font-medium">
@@ -72,160 +75,190 @@ export default function DashboardPage() {
 
             {/* Stat Cards */}
             <motion.div variants={item} className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-                <GlassCard className="p-6 relative overflow-hidden group">
-                    <div className="flex justify-between items-start mb-4">
-                        <div className="p-2 rounded-lg bg-neutral-900 border border-neutral-800">
-                            <Gauge className="h-5 w-5 text-white" />
+                <GlassCard className="p-6 relative overflow-hidden group border-white/5 bg-[#0A0E1A]/40">
+                    <div className="absolute top-0 left-0 w-full h-0.5" style={{ background: `linear-gradient(90deg, #00D9FF, transparent)` }} />
+                    <div className="flex justify-between items-start mb-4 relative z-10">
+                        <div className="p-2 rounded-lg bg-white/5 border border-white/5 text-neutral-400 group-hover:bg-white/10 group-hover:text-white transition-colors">
+                            <Gauge className="h-5 w-5" />
                         </div>
                         {avgEfficiency > 14 && (
-                            <Badge variant="outline" className="bg-neutral-900/50 text-green-400 border-green-900/30">
-                                <TrendingUp className="h-3 w-3 mr-1" /> +5.2%
-                            </Badge>
+                            <div className="text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-sm border text-[#00FF88] bg-[#00FF88]/10 border-[#00FF88]/20 shadow-[0_0_8px_rgba(0,255,136,0.1)]">
+                                ↑ +5.2%
+                            </div>
                         )}
                     </div>
-                    <div>
-                        <div className="text-3xl font-light tracking-tighter text-white mb-1">
-                            <AnimatedCounter value={avgEfficiency} />
+                    <div className="relative z-10">
+                        <h4 className="text-[10px] text-neutral-500 font-mono uppercase tracking-widest mb-1">AVG. EFFICIENCY</h4>
+                        <div className="flex items-baseline gap-2">
+                            <span className="text-3xl font-mono font-bold text-white tracking-tighter" style={{ textShadow: `0 0 20px rgba(0,217,255,0.4)` }}>
+                                <AnimatedCounter value={avgEfficiency} />
+                            </span>
+                            <span className="text-xs font-mono text-neutral-500 tracking-wider">({distLabel}/{volLabel})</span>
                         </div>
-                        <p className="text-sm text-neutral-500 font-medium tracking-wide">AVG. EFFICIENCY ({distLabel}/{volLabel})</p>
                     </div>
                     <BorderBeam size={100} duration={8} delay={2} />
                 </GlassCard>
 
-                <GlassCard className="p-6">
-                    <div className="flex justify-between items-start mb-4">
-                        <div className="p-2 rounded-lg bg-neutral-900 border border-neutral-800">
-                            <DollarSign className="h-5 w-5 text-white" />
+                <GlassCard className="p-6 relative overflow-hidden group border-white/5 bg-[#0A0E1A]/40">
+                    <div className="absolute top-0 left-0 w-full h-0.5" style={{ background: `linear-gradient(90deg, #FF0039, transparent)` }} />
+                    <div className="flex justify-between items-start mb-4 relative z-10">
+                        <div className="p-2 rounded-lg bg-white/5 border border-white/5 text-neutral-400 group-hover:bg-white/10 group-hover:text-white transition-colors">
+                            <DollarSign className="h-5 w-5" />
                         </div>
                     </div>
-                    <div>
-                        <div className="text-3xl font-light tracking-tighter text-white mb-1">
-                            {formatCurrency(monthlyCost)}
+                    <div className="relative z-10">
+                        <h4 className="text-[10px] text-neutral-500 font-mono uppercase tracking-widest mb-1">TOTAL SPENT</h4>
+                        <div className="flex items-baseline gap-2">
+                            <span className="text-3xl font-mono font-bold text-white tracking-tighter" style={{ textShadow: `0 0 20px rgba(255,0,57,0.4)` }}>
+                                {formatCurrency(monthlyCost)}
+                            </span>
                         </div>
-                        <p className="text-sm text-neutral-500 font-medium tracking-wide">TOTAL SPENT</p>
-                    </div>
-                </GlassCard>
-
-                <GlassCard className="p-6">
-                    <div className="flex justify-between items-start mb-4">
-                        <div className="p-2 rounded-lg bg-neutral-900 border border-neutral-800">
-                            <Route className="h-5 w-5 text-white" />
-                        </div>
-                    </div>
-                    <div>
-                        <div className="text-3xl font-light tracking-tighter text-white mb-1">
-                            <AnimatedCounter value={totalDistance} />
-                        </div>
-                        <p className="text-sm text-neutral-500 font-medium tracking-wide">TOTAL DISTANCE ({distLabel})</p>
                     </div>
                 </GlassCard>
 
-                <GlassCard className="p-6">
-                    <div className="flex justify-between items-start mb-4">
-                        <div className="p-2 rounded-lg bg-neutral-900 border border-neutral-800">
-                            <Droplets className="h-5 w-5 text-white" />
+                <GlassCard className="p-6 relative overflow-hidden group border-white/5 bg-[#0A0E1A]/40">
+                    <div className="absolute top-0 left-0 w-full h-0.5" style={{ background: `linear-gradient(90deg, #00FF88, transparent)` }} />
+                    <div className="flex justify-between items-start mb-4 relative z-10">
+                        <div className="p-2 rounded-lg bg-white/5 border border-white/5 text-neutral-400 group-hover:bg-white/10 group-hover:text-white transition-colors">
+                            <Route className="h-5 w-5" />
                         </div>
                     </div>
-                    <div>
-                        <div className="text-3xl font-light tracking-tighter text-white mb-1">
-                            <AnimatedCounter value={logs.length} />
+                    <div className="relative z-10">
+                        <h4 className="text-[10px] text-neutral-500 font-mono uppercase tracking-widest mb-1">TOTAL DISTANCE</h4>
+                        <div className="flex items-baseline gap-2">
+                            <span className="text-3xl font-mono font-bold text-white tracking-tighter" style={{ textShadow: `0 0 20px rgba(0,255,136,0.4)` }}>
+                                <AnimatedCounter value={totalDistance} />
+                            </span>
+                            <span className="text-xs font-mono text-neutral-500 tracking-wider">({distLabel})</span>
                         </div>
-                        <p className="text-sm text-neutral-500 font-medium tracking-wide">TOTAL FILL-UPS</p>
+                    </div>
+                </GlassCard>
+
+                <GlassCard className="p-6 relative overflow-hidden group border-white/5 bg-[#0A0E1A]/40">
+                    <div className="absolute top-0 left-0 w-full h-0.5" style={{ background: `linear-gradient(90deg, #A855F7, transparent)` }} />
+                    <div className="flex justify-between items-start mb-4 relative z-10">
+                        <div className="p-2 rounded-lg bg-white/5 border border-white/5 text-neutral-400 group-hover:bg-white/10 group-hover:text-white transition-colors">
+                            <Droplets className="h-5 w-5" />
+                        </div>
+                    </div>
+                    <div className="relative z-10">
+                        <h4 className="text-[10px] text-neutral-500 font-mono uppercase tracking-widest mb-1">TOTAL FILL-UPS</h4>
+                        <div className="flex items-baseline gap-2">
+                            <span className="text-3xl font-mono font-bold text-white tracking-tighter" style={{ textShadow: `0 0 20px rgba(168,85,247,0.4)` }}>
+                                <AnimatedCounter value={logs.length} />
+                            </span>
+                        </div>
                     </div>
                 </GlassCard>
             </motion.div>
 
             {/* Charts Section */}
             <motion.div variants={item} className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <GlassCard className="p-6 flex flex-col h-[350px]">
-                    <div className="flex items-center gap-2 mb-6">
-                        <TrendingUp className="h-4 w-4 text-neutral-400" />
-                        <h3 className="text-lg font-light text-white">Efficiency Trend</h3>
+                <GlassCard className="p-6 flex flex-col h-[350px] border-white/5 bg-[#0A0E1A]/40">
+                    <div className="flex items-center gap-2 mb-6 relative z-10">
+                        <TrendingUp className="h-4 w-4 text-[#00D9FF]" />
+                        <h3 className="text-sm font-heading font-semibold text-neutral-400 uppercase tracking-widest">Efficiency Trend</h3>
                     </div>
-                    <div className="flex-1 w-full min-h-0">
+                    <div className="flex-1 w-full min-h-0 relative z-10">
                         <ResponsiveContainer width="100%" height="100%">
-                            <AreaChart data={chartData}>
+                            <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                                 <defs>
-                                    <linearGradient id="effGradient" x1="0" y1="0" x2="0" y2="1">
-                                        <stop offset="5%" stopColor="#fff" stopOpacity={0.1} />
-                                        <stop offset="95%" stopColor="#fff" stopOpacity={0} />
+                                    <linearGradient id="effGradientDash" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="5%" stopColor="#00D9FF" stopOpacity={0.3} />
+                                        <stop offset="95%" stopColor="#00D9FF" stopOpacity={0} />
                                     </linearGradient>
+                                    <pattern id="diagonalHatchDash" width="4" height="4" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse">
+                                        <line x1="0" y1="0" x2="0" y2="4" stroke="rgba(255,255,255,0.03)" strokeWidth="1" />
+                                    </pattern>
                                 </defs>
-                                <CartesianGrid strokeDasharray="3 3" stroke="#262626" vertical={false} />
+                                <CartesianGrid strokeDasharray="3 3" stroke="#262626" vertical={true} horizontal={true} fill="url(#diagonalHatchDash)" />
                                 <XAxis
                                     dataKey="date"
-                                    stroke="#525252"
-                                    fontSize={12}
+                                    stroke="transparent"
+                                    tick={{ fill: '#737373', fontSize: 10, fontFamily: 'var(--font-mono)' }}
                                     tickLine={false}
-                                    axisLine={false}
+                                    axisLine={{ stroke: '#262626', strokeWidth: 2 }}
                                     dy={10}
                                 />
                                 <YAxis
-                                    stroke="#525252"
-                                    fontSize={12}
+                                    stroke="transparent"
+                                    tick={{ fill: '#737373', fontSize: 10, fontFamily: 'var(--font-mono)' }}
                                     tickLine={false}
                                     axisLine={false}
-                                    dx={-10}
                                 />
                                 <Tooltip
                                     contentStyle={{
-                                        backgroundColor: '#0a0a0a',
-                                        border: '1px solid #262626',
+                                        backgroundColor: 'rgba(10, 14, 26, 0.9)',
+                                        border: '1px solid rgba(255,255,255,0.1)',
                                         borderRadius: '8px',
                                         color: '#fff',
+                                        fontFamily: 'var(--font-mono)',
+                                        backdropFilter: 'blur(12px)',
+                                        textTransform: 'uppercase',
+                                        fontSize: '12px',
+                                        letterSpacing: '0.05em'
                                     }}
-                                    cursor={{ stroke: '#404040' }}
+                                    itemStyle={{ color: '#00D9FF', fontWeight: 'bold' }}
+                                    cursor={{ stroke: '#00D9FF', strokeDasharray: '4 4' }}
                                 />
                                 <Area
                                     type="monotone"
                                     dataKey="efficiency"
-                                    stroke="#fff"
-                                    strokeWidth={2}
-                                    fill="url(#effGradient)"
+                                    stroke="#00D9FF"
+                                    strokeWidth={3}
+                                    fill="url(#effGradientDash)"
+                                    activeDot={{ r: 6, strokeWidth: 0, fill: '#fff', style: { filter: 'drop-shadow(0 0 8px rgba(0,217,255,0.8))' } }}
                                 />
                             </AreaChart>
                         </ResponsiveContainer>
                     </div>
                 </GlassCard>
 
-                <GlassCard className="p-6 flex flex-col h-[350px]">
-                    <div className="flex items-center gap-2 mb-6">
-                        <DollarSign className="h-4 w-4 text-neutral-400" />
-                        <h3 className="text-lg font-light text-white">Fuel Spending</h3>
+                <GlassCard className="p-6 flex flex-col h-[350px] border-white/5 bg-[#0A0E1A]/40">
+                    <div className="flex items-center gap-2 mb-6 relative z-10">
+                        <DollarSign className="h-4 w-4 text-[#FF0039]" />
+                        <h3 className="text-sm font-heading font-semibold text-neutral-400 uppercase tracking-widest">Fuel Spending</h3>
                     </div>
-                    <div className="flex-1 w-full min-h-0">
+                    <div className="flex-1 w-full min-h-0 relative z-10">
                         <ResponsiveContainer width="100%" height="100%">
-                            <BarChart data={chartData}>
-                                <CartesianGrid strokeDasharray="3 3" stroke="#262626" vertical={false} />
+                            <BarChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                                <CartesianGrid strokeDasharray="3 3" stroke="#262626" vertical={true} horizontal={true} fill="url(#diagonalHatchDash)" />
                                 <XAxis
                                     dataKey="date"
-                                    stroke="#525252"
-                                    fontSize={12}
+                                    stroke="transparent"
+                                    tick={{ fill: '#737373', fontSize: 10, fontFamily: 'var(--font-mono)' }}
                                     tickLine={false}
-                                    axisLine={false}
+                                    axisLine={{ stroke: '#262626', strokeWidth: 2 }}
                                     dy={10}
                                 />
                                 <YAxis
-                                    stroke="#525252"
-                                    fontSize={12}
+                                    stroke="transparent"
+                                    tick={{ fill: '#737373', fontSize: 10, fontFamily: 'var(--font-mono)' }}
                                     tickLine={false}
                                     axisLine={false}
-                                    dx={-10}
                                 />
                                 <Tooltip
                                     contentStyle={{
-                                        backgroundColor: '#0a0a0a',
-                                        border: '1px solid #262626',
+                                        backgroundColor: 'rgba(10, 14, 26, 0.9)',
+                                        border: '1px solid rgba(255,255,255,0.1)',
                                         borderRadius: '8px',
                                         color: '#fff',
+                                        fontFamily: 'var(--font-mono)',
+                                        backdropFilter: 'blur(12px)',
+                                        textTransform: 'uppercase',
+                                        fontSize: '12px',
+                                        letterSpacing: '0.05em'
                                     }}
-                                    cursor={{ fill: '#262626' }}
+                                    itemStyle={{ color: '#FF0039', fontWeight: 'bold' }}
+                                    formatter={(value: number | undefined) => [value ? formatCurrency(value) : '', 'Cost']}
+                                    cursor={{ fill: 'rgba(255,255,255,0.05)' }}
                                 />
                                 <Bar
                                     dataKey="cost"
-                                    fill="#e5e5e5"
+                                    fill="#FF0039"
                                     radius={[4, 4, 0, 0]}
-                                    barSize={40}
+                                    barSize={24}
+                                    fillOpacity={0.8}
                                 />
                             </BarChart>
                         </ResponsiveContainer>
@@ -235,79 +268,79 @@ export default function DashboardPage() {
 
             {/* Bottom Row: Recent Logs & Alerts */}
             <motion.div variants={item} className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <GlassCard className="lg:col-span-2 p-6">
-                    <div className="flex items-center justify-between mb-6">
+                <GlassCard className="lg:col-span-2 p-6 border-white/5 bg-[#0A0E1A]/40">
+                    <div className="flex items-center justify-between mb-6 relative z-10">
                         <div className="flex items-center gap-2">
-                            <Fuel className="h-4 w-4 text-neutral-400" />
-                            <h3 className="text-lg font-light text-white">Recent Fill-ups</h3>
+                            <Fuel className="h-4 w-4 text-[#00D9FF]" />
+                            <h3 className="text-sm font-heading font-semibold text-neutral-400 uppercase tracking-widest">Recent Fill-ups</h3>
                         </div>
                         <Link href="/fuel">
-                            <Button variant="ghost" size="sm" className="text-neutral-400 hover:text-white">View All</Button>
+                            <Button variant="ghost" size="sm" className="text-neutral-500 hover:text-[#00D9FF] font-mono uppercase tracking-widest text-[10px]">View All</Button>
                         </Link>
                     </div>
-                    <div className="space-y-4">
+                    <div className="space-y-3 relative z-10">
                         {recentLogs.map((log) => (
                             <div
                                 key={log.id}
-                                className="flex items-center justify-between p-4 rounded-xl border border-neutral-800 bg-neutral-900/30 hover:bg-neutral-800/50 transition-colors"
+                                className="flex items-center justify-between p-4 rounded-lg border border-white/5 bg-neutral-900/50 hover:bg-neutral-800/80 transition-colors backdrop-blur-sm"
                             >
                                 <div className="flex items-center gap-4">
-                                    <div className="h-10 w-10 rounded-full bg-neutral-800 flex items-center justify-center">
-                                        <Fuel className="h-5 w-5 text-neutral-300" />
+                                    <div className="h-10 w-10 rounded-full bg-neutral-950 border border-white/5 flex items-center justify-center shadow-[0_0_10px_rgba(0,0,0,0.5)]">
+                                        <Fuel className="h-4 w-4 text-[#00D9FF]" />
                                     </div>
                                     <div>
-                                        <p className="text-sm font-medium text-white">{log.stationName}</p>
-                                        <p className="text-xs text-neutral-500">
-                                            {new Date(log.date).toLocaleDateString()} · {log.fuelAmount} {volLabel}
+                                        <p className="text-sm font-bold text-white uppercase tracking-wider">{log.stationName}</p>
+                                        <p className="text-[10px] text-neutral-500 font-mono uppercase tracking-widest mt-0.5">
+                                            {new Date(log.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} · <span className="text-neutral-400">{log.fuelAmount} {volLabel}</span>
                                         </p>
                                     </div>
                                 </div>
                                 <div className="text-right">
-                                    <p className="text-sm font-medium text-white font-mono">{formatCurrency(log.totalCost)}</p>
+                                    <p className="text-sm font-bold text-[#FF0039] font-mono tracking-wider">{formatCurrency(log.totalCost)}</p>
                                     {log.efficiency && (
-                                        <p className="text-xs text-neutral-500">{log.efficiency} {distLabel}/{volLabel}</p>
+                                        <p className="text-[10px] text-neutral-500 font-mono tracking-widest uppercase mt-0.5">{log.efficiency} {distLabel}/{volLabel}</p>
                                     )}
                                 </div>
                             </div>
                         ))}
                         {recentLogs.length === 0 && (
-                            <p className="text-center text-neutral-500 py-8">No fuel logs yet</p>
+                            <p className="text-center text-neutral-600 py-8 font-mono text-xs uppercase tracking-widest">No pit stops yet</p>
                         )}
                     </div>
                 </GlassCard>
 
-                <GlassCard className="p-6">
-                    <div className="flex items-center gap-2 mb-6">
-                        <Bell className="h-4 w-4 text-neutral-400" />
-                        <h3 className="text-lg font-light text-white">Service Alerts</h3>
+                <GlassCard className="p-6 border-white/5 bg-[#0A0E1A]/40">
+                    <div className="flex items-center gap-2 mb-6 relative z-10">
+                        <Bell className="h-4 w-4 text-[#00FF88]" />
+                        <h3 className="text-sm font-heading font-semibold text-neutral-400 uppercase tracking-widest">Service Alerts</h3>
                     </div>
-                    <div className="space-y-4">
+                    <div className="space-y-3 relative z-10">
                         {upcoming.slice(0, 3).map((alert) => (
-                            <div key={alert.id} className="flex items-start justify-between p-3 rounded-lg border border-neutral-800 bg-neutral-900/30">
-                                <div>
-                                    <p className="text-sm font-medium text-white">{alert.service}</p>
-                                    <p className="text-xs text-neutral-500 mt-1">
-                                        {alert.dueDate
-                                            ? `Due ${new Date(alert.dueDate).toLocaleDateString()}`
-                                            : alert.dueOdometer
-                                                ? `At ${alert.dueOdometer.toLocaleString()} ${distLabel}`
-                                                : 'No due date'}
-                                    </p>
+                            <div key={alert.id} className="flex flex-col p-3 rounded-lg border border-white/5 bg-neutral-900/50 backdrop-blur-sm gap-2">
+                                <div className="flex justify-between items-start">
+                                    <p className="text-xs font-bold text-white uppercase tracking-wider">{alert.service}</p>
+                                    <Badge variant="outline" className={`text-[9px] uppercase tracking-widest border-white/10 ${alert.priority === 'high' ? 'text-[#FF0039] bg-[#FF0039]/10' : 'text-[#00D9FF] bg-[#00D9FF]/10'}`}>
+                                        {alert.priority}
+                                    </Badge>
                                 </div>
-                                <Badge variant="outline" className="text-xs border-neutral-700 text-neutral-300">
-                                    {alert.priority}
-                                </Badge>
+                                <p className="text-[10px] text-neutral-500 font-mono uppercase tracking-widest">
+                                    {alert.dueDate
+                                        ? `DUE ${new Date(alert.dueDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`
+                                        : alert.dueOdometer
+                                            ? `AT ${alert.dueOdometer.toLocaleString()} ${distLabel}`
+                                            : 'NO DUE DATE'}
+                                </p>
                             </div>
                         ))}
                         {upcoming.length === 0 && (
-                            <div className="flex flex-col items-center justify-center py-8 text-neutral-500">
-                                <Bell className="h-8 w-8 mb-2 opacity-20" />
-                                <p>All clear!</p>
+                            <div className="flex flex-col items-center justify-center py-8 text-neutral-600">
+                                <Bell className="h-6 w-6 mb-3 opacity-20" />
+                                <p className="font-mono text-xs uppercase tracking-widest">All clear</p>
                             </div>
                         )}
                         <Link href="/maintenance">
-                            <Button variant="outline" className="w-full mt-2 border-neutral-800 text-neutral-400 hover:text-white hover:bg-neutral-800">
-                                View All Reminders
+                            <Button variant="outline" className="w-full mt-3 border-white/5 text-neutral-400 hover:text-white hover:bg-white/5 font-mono uppercase tracking-widest text-[10px]">
+                                View All
                             </Button>
                         </Link>
                     </div>

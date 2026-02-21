@@ -33,6 +33,11 @@
   --color-input: hsl(var(--input));
   --color-ring: hsl(var(--ring));
 
+  --font-sans: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-mono), ui-monospace, SFMono-Regular, monospace;
+  --font-heading: var(--font-heading), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-heading), ui-sans-serif, system-ui, sans-serif;
+
   --radius-lg: var(--radius);
   --radius-md: calc(var(--radius) - 2px);
   --radius-sm: calc(var(--radius) - 4px);
@@ -63,50 +68,91 @@
 
 @layer base {
   :root {
-    /* Memoria Light Mode (Inverse of Dark) */
-    --background: 0 0% 100%;
-    --foreground: 0 0% 3.9%;
+    /* Motorsport Light Mode */
+    --background: 210 40% 98%;
+    /* Titanium White #F8FAFC */
+    --foreground: 222.2 84% 4.9%;
+    /* Carbon Black */
     --card: 0 0% 100%;
-    --card-foreground: 0 0% 3.9%;
+    /* Pearl White */
+    --card-foreground: 222.2 84% 4.9%;
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 3.9%;
-    --primary: 0 0% 9%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 0 0% 96.1%;
-    --secondary-foreground: 0 0% 9%;
-    --muted: 0 0% 96.1%;
-    --muted-foreground: 0 0% 45.1%;
-    --accent: 0 0% 96.1%;
-    --accent-foreground: 0 0% 9%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 89.8%;
-    --input: 0 0% 89.8%;
-    --ring: 0 0% 3.9%;
-    --radius: 0.75rem;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    /* Electric Racing Blue */
+    --primary: 216 100% 50%;
+    /* #0066FF */
+    --primary-foreground: 210 40% 98%;
+
+    /* Speed Cyan Accent */
+    --secondary: 189 100% 50%;
+    /* #00D9FF */
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    /* Muted / Chrome Silver */
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    /* Speed Cyan Accent #00D9FF */
+    --accent: 189 100% 50%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+
+    /* Racing Red */
+    --destructive: 346 100% 50%;
+    /* #FF0039 */
+    --destructive-foreground: 210 40% 98%;
+
+    /* Chrome Silver */
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 216 100% 50%;
+    /* Racing Blue Ring */
+
+    --radius: 1rem;
+    /* 16px */
   }
 
   .dark {
-    /* Memoria Dark Mode */
-    --background: 0 0% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 0 0% 9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 0 0% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 0 0% 98%;
-    --primary-foreground: 0 0% 9%;
-    --secondary: 0 0% 14.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 14.9%;
-    --muted-foreground: 0 0% 63.9%;
-    --accent: 0 0% 14.9%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 14.9%;
-    --input: 0 0% 14.9%;
-    --ring: 0 0% 83.1%;
+    /* Motorsport Dark Mode */
+    --background: 226 44% 7%;
+    /* Carbon Black #0A0E1A */
+    --foreground: 210 40% 98%;
+    /* Titanium White */
+    --card: 228 23% 13%;
+    /* Carbon Fiber #1A1D29 */
+    --card-foreground: 210 40% 98%;
+    --popover: 228 23% 13%;
+    --popover-foreground: 210 40% 98%;
+
+    /* Electric Racing Blue */
+    --primary: 216 100% 50%;
+    /* #0066FF */
+    --primary-foreground: 210 40% 98%;
+
+    /* Speed Cyan */
+    --secondary: 189 100% 50%;
+    /* #00D9FF */
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    /* Carbon Fiber accents */
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    /* Speed Cyan Accents */
+    --accent: 189 100% 50%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+
+    /* Racing Red */
+    --destructive: 346 100% 50%;
+    /* #FF0039 */
+    --destructive-foreground: 210 40% 98%;
+
+    /* Carbon Fiber Border / Gunmetal Gray */
+    --border: 217.2 32.6% 17.5%;
+    /* Gunmetal Gray #2D3748 */
+    --input: 217.2 32.6% 17.5%;
+    --ring: 189 100% 50%;
+    /* Speed Cyan Ring */
   }
 
   * {

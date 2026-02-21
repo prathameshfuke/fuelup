@@ -6,6 +6,7 @@ export interface FuelStation {
     brand?: string;
     address?: string;
     distance?: number; // Distance in km from user
+    estimatedPrice?: number;
 }
 
 const OVERPASS_API_URL = 'https://overpass-api.de/api/interpreter';
@@ -20,6 +21,9 @@ interface OverpassElement {
         brand?: string;
         'addr:street'?: string;
         'addr:housenumber'?: string;
+        'addr:suburb'?: string;
+        'addr:city'?: string;
+        operator?: string;
         [key: string]: string | undefined;
     };
 }
@@ -65,17 +69,32 @@ export async function fetchFuelStations(lat: number, lon: number, radiusKm: numb
 
         const stations: FuelStation[] = data.elements.map((element: OverpassElement) => {
             const tags = element.tags || {};
-            // Calculate distance (simple Haversine or similar could be done here, or let the map handle it)
+
+            // Format name to look better
+            let displayName = tags.name || tags.brand || tags.operator || 'Fuel Station';
+
+            // Build a better address using available tags
+            let addressParts: string[] = [];
+            if (tags['addr:housenumber'] && tags['addr:street']) {
+                addressParts.push(`${tags['addr:housenumber']} ${tags['addr:street']}`);
+            } else if (tags['addr:street']) {
+                addressParts.push(tags['addr:street']);
+            }
+            if (tags['addr:suburb']) addressParts.push(tags['addr:suburb']);
+            if (tags['addr:city']) addressParts.push(tags['addr:city']);
+
+            const fullAddress = addressParts.length > 0 ? addressParts.join(', ') : undefined;
+
             return {
                 id: element.id,
-                lat: element.lat || 0, // Note: Ways might not have lat/lon in 'out body' unless using 'out center'
+                lat: element.lat || 0,
                 lon: element.lon || 0,
-                name: tags.name || tags.brand || 'Unknown Station',
-                brand: tags.brand,
-                address: tags['addr:street'] ? `${tags['addr:street']} ${tags['addr:housenumber'] || ''}` : undefined,
+                name: displayName,
+                brand: tags.brand || tags.operator || 'Independent',
+                address: fullAddress,
                 distance: calculateDistance(lat, lon, element.lat || 0, element.lon || 0)
             };
-        }).filter((s: FuelStation) => s.lat !== 0 && s.lon !== 0); // Filter out elements without coordinates (like ways if not using center)
+        }).filter((s: FuelStation) => s.lat !== 0 && s.lon !== 0);
 
         return stations.sort((a, b) => (a.distance || 0) - (b.distance || 0));
 

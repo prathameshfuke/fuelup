@@ -114,61 +114,13 @@ export default function SettingsPage() {
             </motion.div>
 
             <div className="grid gap-8">
-                {/* Preferences */}
+                {/* Regional Preferences */}
                 <motion.div variants={item}>
                     <h3 className="text-lg font-medium text-white mb-4 px-1 flex items-center gap-2">
-                        <Globe className="h-4 w-4 text-neutral-400" /> Preferences
+                        <Globe className="h-4 w-4 text-neutral-400" /> Regional Preferences
                     </h3>
                     <GlassCard className="p-1 space-y-1">
-                        <div className="flex items-center justify-between p-4 hover:bg-white/5 rounded-xl transition-colors">
-                            <div className="flex items-center gap-4">
-                                <div className="p-2 rounded-lg bg-blue-500/10 text-blue-400">
-                                    <MapIcon className="h-5 w-5" />
-                                </div>
-                                <div>
-                                    <Label className="text-base text-white font-medium cursor-pointer">Distance Unit</Label>
-                                    <p className="text-sm text-neutral-500 mt-0.5">Used for odometer and trip distances</p>
-                                </div>
-                            </div>
-                            <Select
-                                value={distanceUnit}
-                                onValueChange={(v) => {
-                                    setDistanceUnit(v as DistanceUnit);
-                                    toast.success(`Distance unit set to ${v === 'km' ? 'Kilometers' : 'Miles'}`);
-                                }}
-                            >
-                                <SelectTrigger className="w-[140px] bg-neutral-900/50 border-neutral-800 text-white"><SelectValue /></SelectTrigger>
-                                <SelectContent className="bg-neutral-950 border-neutral-800 text-white">
-                                    <SelectItem value="km">Kilometers</SelectItem>
-                                    <SelectItem value="mi">Miles</SelectItem>
-                                </SelectContent>
-                            </Select>
-                        </div>
-                        <div className="flex items-center justify-between p-4 hover:bg-white/5 rounded-xl transition-colors">
-                            <div className="flex items-center gap-4">
-                                <div className="p-2 rounded-lg bg-purple-500/10 text-purple-400">
-                                    <Database className="h-5 w-5" />
-                                </div>
-                                <div>
-                                    <Label className="text-base text-white font-medium cursor-pointer">Volume Unit</Label>
-                                    <p className="text-sm text-neutral-500 mt-0.5">Used for fuel amount tracking</p>
-                                </div>
-                            </div>
-                            <Select
-                                value={volumeUnit}
-                                onValueChange={(v) => {
-                                    setVolumeUnit(v as VolumeUnit);
-                                    toast.success(`Volume unit updated`);
-                                }}
-                            >
-                                <SelectTrigger className="w-[140px] bg-neutral-900/50 border-neutral-800 text-white"><SelectValue /></SelectTrigger>
-                                <SelectContent className="bg-neutral-950 border-neutral-800 text-white">
-                                    <SelectItem value="liters">Liters</SelectItem>
-                                    <SelectItem value="gallons_us">US Gallons</SelectItem>
-                                    <SelectItem value="gallons_uk">UK Gallons</SelectItem>
-                                </SelectContent>
-                            </Select>
-                        </div>
+                        {/* Currency */}
                         <div className="flex items-center justify-between p-4 hover:bg-white/5 rounded-xl transition-colors">
                             <div className="flex items-center gap-4">
                                 <div className="p-2 rounded-lg bg-emerald-500/10 text-emerald-400">
@@ -186,15 +138,113 @@ export default function SettingsPage() {
                                     toast.success(`Currency set to ${CURRENCY_CONFIG[v as CurrencyCode].name}`);
                                 }}
                             >
-                                <SelectTrigger className="w-[140px] bg-neutral-900/50 border-neutral-800 text-white"><SelectValue /></SelectTrigger>
-                                <SelectContent className="bg-neutral-950 border-neutral-800 text-white">
+                                <SelectTrigger className="w-[180px] bg-neutral-900/50 border-neutral-800 text-white font-mono"><SelectValue /></SelectTrigger>
+                                <SelectContent className="bg-neutral-950 border-neutral-800 text-white font-mono">
                                     {Object.entries(CURRENCY_CONFIG).map(([code, config]) => (
                                         <SelectItem key={code} value={code}>
-                                            {code.toUpperCase()} ({config.symbol})
+                                            {config.symbol} {code.toUpperCase()} ({config.name})
                                         </SelectItem>
                                     ))}
                                 </SelectContent>
                             </Select>
+                        </div>
+
+                        {/* Distance Unit */}
+                        <div className="flex items-center justify-between p-4 hover:bg-white/5 rounded-xl transition-colors">
+                            <div className="flex items-center gap-4">
+                                <div className="p-2 rounded-lg bg-blue-500/10 text-blue-400">
+                                    <MapIcon className="h-5 w-5" />
+                                </div>
+                                <div>
+                                    <Label className="text-base text-white font-medium cursor-pointer">Distance Unit</Label>
+                                    <p className="text-sm text-neutral-500 mt-0.5">Used for odometer and trip distances</p>
+                                </div>
+                            </div>
+                            <Select
+                                value={distanceUnit}
+                                onValueChange={(v) => {
+                                    setDistanceUnit(v as DistanceUnit);
+                                    toast.success(`Distance unit set to ${v === 'km' ? 'Kilometers' : 'Miles'}`);
+                                }}
+                            >
+                                <SelectTrigger className="w-[180px] bg-neutral-900/50 border-neutral-800 text-white"><SelectValue /></SelectTrigger>
+                                <SelectContent className="bg-neutral-950 border-neutral-800 text-white">
+                                    <SelectItem value="km">Kilometers</SelectItem>
+                                    <SelectItem value="mi">Miles</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+
+                        {/* Volume Unit */}
+                        <div className="flex items-center justify-between p-4 hover:bg-white/5 rounded-xl transition-colors">
+                            <div className="flex items-center gap-4">
+                                <div className="p-2 rounded-lg bg-purple-500/10 text-purple-400">
+                                    <Database className="h-5 w-5" />
+                                </div>
+                                <div>
+                                    <Label className="text-base text-white font-medium cursor-pointer">Fuel Volume Unit</Label>
+                                    <p className="text-sm text-neutral-500 mt-0.5">Used for filling tracking</p>
+                                </div>
+                            </div>
+                            <Select
+                                value={volumeUnit}
+                                onValueChange={(v) => {
+                                    setVolumeUnit(v as VolumeUnit);
+                                    toast.success(`Volume unit updated`);
+                                }}
+                            >
+                                <SelectTrigger className="w-[180px] bg-neutral-900/50 border-neutral-800 text-white"><SelectValue /></SelectTrigger>
+                                <SelectContent className="bg-neutral-950 border-neutral-800 text-white">
+                                    <SelectItem value="liters">Liters</SelectItem>
+                                    <SelectItem value="gallons_us">US Gallons</SelectItem>
+                                    <SelectItem value="gallons_uk">UK Gallons</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+
+                        {/* Efficiency Display */}
+                        <div className="flex items-center justify-between p-4 hover:bg-white/5 rounded-xl transition-colors">
+                            <div className="flex items-center gap-4">
+                                <div className="p-2 rounded-lg bg-cyan-500/10 text-cyan-400">
+                                    <Database className="h-5 w-5" /> {/* TODO: Better Icon */}
+                                </div>
+                                <div>
+                                    <Label className="text-base text-white font-medium cursor-pointer">Efficiency Display</Label>
+                                    <p className="text-sm text-neutral-500 mt-0.5">Format for mileage stats</p>
+                                </div>
+                            </div>
+                            <Select
+                                value={useSettingsStore().efficiencyUnit || 'km/l'}
+                                onValueChange={(v: "km/l" | "l/100km" | "mpg") => {
+                                    useSettingsStore.getState().setEfficiencyUnit(v);
+                                    toast.success(`Efficiency unit updated`);
+                                }}
+                            >
+                                <SelectTrigger className="w-[180px] bg-neutral-900/50 border-neutral-800 text-white"><SelectValue /></SelectTrigger>
+                                <SelectContent className="bg-neutral-950 border-neutral-800 text-white">
+                                    <SelectItem value="km/l">km/L</SelectItem>
+                                    <SelectItem value="l/100km">L/100km</SelectItem>
+                                    <SelectItem value="mpg">MPG</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+
+                        {/* Auto-Detect location */}
+                        <div className="flex items-center justify-between p-4 hover:bg-white/5 rounded-xl transition-colors">
+                            <div className="flex items-center gap-4">
+                                <div className="p-2 rounded-lg bg-neutral-800 text-neutral-400">
+                                    <Globe className="h-5 w-5" />
+                                </div>
+                                <div>
+                                    <Label className="text-base text-white font-medium cursor-pointer">Auto-detect Location</Label>
+                                    <p className="text-sm text-neutral-500 mt-0.5">Use GPS/IP to set locale defaults</p>
+                                </div>
+                            </div>
+                            <Switch
+                                checked={useSettingsStore().autoDetectLocation}
+                                onCheckedChange={(checked) => useSettingsStore.getState().setAutoDetectLocation(checked)}
+                                className="data-[state=checked]:bg-primary"
+                            />
                         </div>
                     </GlassCard>
                 </motion.div>

@@ -7,15 +7,15 @@ import {
     LayoutDashboard,
     Fuel,
     Car,
-    BarChart3,
+    Map as MapIcon,
     Menu,
 } from 'lucide-react';
 
 const bottomNavItems = [
-    { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { href: '/fuel', label: 'Fuel', icon: Fuel },
-    { href: '/vehicles', label: 'Vehicles', icon: Car },
-    { href: '/insights', label: 'Insights', icon: BarChart3 },
+    { href: '/dashboard', label: 'Telemetry', icon: LayoutDashboard },
+    { href: '/fuel', label: 'Pit Stop', icon: Fuel },
+    { href: '/map', label: 'Map', icon: MapIcon },
+    { href: '/vehicles', label: 'Garage', icon: Car },
     { href: '/settings', label: 'More', icon: Menu },
 ];
 

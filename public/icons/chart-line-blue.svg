@@ -1,0 +1,65 @@
+<svg viewBox="0 0 354 228" fill="none" xmlns="http://www.w3.org/2000/svg" id="8e84f9e5" x="0" y="0"><g id="Main Container" data-node-id="1:1253"><g id="Scrollable Content" data-node-id="1:1281" clip-path="url(#clip0_1_1253)"><g id="Section - Telemetry Chart:mask-group" data-node-id="1:1351"><g mask="url(#mask7_1_1253)"><g id="Section - Telemetry Chart" data-node-id="1:1354"><g id="Container_23" data-node-id="1:1361">
+<g id="SVG_9" data-node-id="1:1362">
+<g id="Vector_9" data-node-id="1:1363">
+<path d="M8,89h338z" fill="black"/>
+<path d="M8,89h338h-338" stroke="#2A2D3A" stroke-width="1.28333" stroke-dasharray="5.13 5.13"/>
+</g>
+<g id="Vector_10" data-node-id="1:1364">
+<path d="M8,125h338z" fill="black"/>
+<path d="M8,125h338h-338" stroke="#2A2D3A" stroke-width="1.28333" stroke-dasharray="5.13 5.13"/>
+</g>
+<g id="Vector_11" data-node-id="1:1365">
+<path d="M8,161h338z" fill="black"/>
+<path d="M8,161h338h-338" stroke="#2A2D3A" stroke-width="1.28333" stroke-dasharray="5.13 5.13"/>
+</g>
+<path id="Vector_12" data-node-id="1:1366" d="M8,168.2l33.8,-7.2l33.8,-21.6l33.8,7.2l33.8,-21.6l33.8,7.2l33.8,-21.6l33.8,7.2l33.8,-21.6l33.8,7.2l33.8,-21.6v115.2h-338z" fill="url(#paint0_linear_1_1253)"/>
+<path id="Vector_13" data-node-id="1:1367" d="M8,168.2l33.8,-7.2l33.8,-21.6l33.8,7.2l33.8,-21.6l33.8,7.2l33.8,-21.6l33.8,7.2l33.8,-21.6l33.8,7.2l33.8,-21.6" stroke="#3B5DE8" stroke-width="2.56667"/>
+<g id="Vector_14" data-node-id="1:1368">
+<path d="M73.347,139.4c0,1.59 1.009,2.88 2.253,2.88c1.244,0 2.253,-1.29 2.253,-2.88c0,-1.589 -1.009,-2.88 -2.253,-2.88c-1.244,0 -2.253,1.291 -2.253,2.88z" fill="#111218"/>
+<path d="M73.347,139.4c0,1.59 1.009,2.88 2.253,2.88c1.244,0 2.253,-1.29 2.253,-2.88c0,-1.589 -1.009,-2.88 -2.253,-2.88c-1.244,0 -2.253,1.291 -2.253,2.88v0" stroke="#3B5DE8" stroke-width="1.925"/>
+</g>
+<g id="Vector_15" data-node-id="1:1369">
+<path d="M140.947,125c0,1.59 1.009,2.88 2.253,2.88c1.244,0 2.253,-1.29 2.253,-2.88c0,-1.59 -1.009,-2.88 -2.253,-2.88c-1.244,0 -2.253,1.29 -2.253,2.88z" fill="#111218"/>
+<path d="M140.947,125c0,1.59 1.009,2.88 2.253,2.88c1.244,0 2.253,-1.29 2.253,-2.88c0,-1.59 -1.009,-2.88 -2.253,-2.88c-1.244,0 -2.253,1.29 -2.253,2.88v0" stroke="#3B5DE8" stroke-width="1.925"/>
+</g>
+<g id="Vector_16" data-node-id="1:1370">
+<path d="M208.547,110.6c0,1.59 1.009,2.88 2.253,2.88c1.244,0 2.253,-1.29 2.253,-2.88c0,-1.59 -1.009,-2.88 -2.253,-2.88c-1.244,0 -2.253,1.29 -2.253,2.88z" fill="#111218"/>
+<path d="M208.547,110.6c0,1.59 1.009,2.88 2.253,2.88c1.244,0 2.253,-1.29 2.253,-2.88c0,-1.59 -1.009,-2.88 -2.253,-2.88c-1.244,0 -2.253,1.29 -2.253,2.88v0" stroke="#3B5DE8" stroke-width="1.925"/>
+</g>
+<g id="Vector_17" data-node-id="1:1371">
+<path d="M276.147,96.2c0,1.59 1.009,2.88 2.253,2.88c1.244,0 2.253,-1.29 2.253,-2.88c0,-1.59 -1.009,-2.88 -2.253,-2.88c-1.244,0 -2.253,1.29 -2.253,2.88z" fill="#111218"/>
+<path d="M276.147,96.2c0,1.59 1.009,2.88 2.253,2.88c1.244,0 2.253,-1.29 2.253,-2.88c0,-1.59 -1.009,-2.88 -2.253,-2.88c-1.244,0 -2.253,1.29 -2.253,2.88v0" stroke="#3B5DE8" stroke-width="1.925"/>
+</g>
+<path id="Vector_18" data-node-id="1:1372" d="M342.62,81.8c0,2.384 1.515,4.32 3.38,4.32c1.866,0 3.38,-1.936 3.38,-4.32c0,-2.384 -1.514,-4.32 -3.38,-4.32c-1.865,0 -3.38,1.936 -3.38,4.32z" fill="white"/>
+</g>
+</g><g id="Mask Group_4" data-node-id="1:1373">
+<mask id="mask8_1_1253" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="354" height="228">
+<rect id="Mask" data-node-id="1:1374" x="0" y="0" width="354" height="228" fill="url(#paint1_linear_1_1253)"/>
+</mask>
+<g mask="url(#mask8_1_1253)">
+<g id="Gradient" data-node-id="1:1375" opacity="0.2">
+<rect x="0" y="0" width="354" height="228" fill="url(#paint2_linear_1_1253)"/>
+<rect x="0" y="0" width="354" height="228" fill="url(#paint3_linear_1_1253)"/>
+</g>
+</g>
+</g></g></g></g></g></g><defs><mask id="mask7_1_1253" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="-1" y="-1" width="356" height="230">
+<g id="SVG_8" data-node-id="1:1352">
+<path id="Vector_8" data-node-id="1:1353" d="M9,-1h346v220l-10,10h-346v-220z" fill="black"/>
+</g>
+</mask><mask id="mask8_1_1253" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="56" y="387" width="354" height="228">
+<rect id="Mask" data-node-id="1:1374" x="56" y="387" width="354" height="228" fill="url(#paint1_linear_1_1253)"/>
+</mask><linearGradient id="paint1_linear_1_1253" x1="177" y1="0" x2="177" y2="228" gradientUnits="userSpaceOnUse">
+<stop offset="0.4"/>
+<stop offset="1" stop-opacity="0"/>
+</linearGradient><linearGradient id="paint0_linear_1_1253" x1="8" y1="81.80000000000001" x2="8" y2="197" gradientUnits="userSpaceOnUse">
+<stop stop-color="#3B5DE8" stop-opacity="0.3"/>
+<stop offset="1" stop-color="#3B5DE8" stop-opacity="0"/>
+</linearGradient><linearGradient id="paint2_linear_1_1253" x1="177" y1="0" x2="177" y2="228" gradientUnits="userSpaceOnUse">
+<stop offset="0.05" stop-color="#2A2D3A"/>
+<stop offset="0.05" stop-color="#2A2D3A" stop-opacity="0"/>
+</linearGradient><linearGradient id="paint3_linear_1_1253" x1="0" y1="114" x2="354" y2="114" gradientUnits="userSpaceOnUse">
+<stop offset="0.05" stop-color="#2A2D3A"/>
+<stop offset="0.05" stop-color="#2A2D3A" stop-opacity="0"/>
+</linearGradient><clipPath id="clip0_1_1253">
+<rect width="388" height="700" fill="white" transform="translate(-17, -255)"/>
+</clipPath></defs></svg>

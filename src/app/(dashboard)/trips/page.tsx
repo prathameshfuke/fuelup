@@ -63,8 +63,11 @@ export default function TripsPage() {
         <motion.div variants={container} initial="hidden" animate="show" className="max-w-7xl mx-auto space-y-8">
             <motion.div variants={item} className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl md:text-4xl font-light tracking-tight text-white">Trips</h1>
-                    <p className="text-neutral-400 mt-1">Mileage tracking for tax and reimbursement</p>
+                    <h1 className="text-3xl md:text-4xl font-heading font-bold tracking-tight text-white uppercase flex items-center gap-3">
+                        <div className="w-1.5 h-6 bg-[#00FF88] rounded-full shadow-[0_0_10px_rgba(0,255,136,0.8)]" />
+                        Trip Log
+                    </h1>
+                    <p className="text-sm font-mono text-neutral-500 uppercase tracking-widest mt-2 ml-4">Mileage tracking for tax and reimbursement</p>
                 </div>
                 <Button
                     className="rounded-full h-10 px-6 bg-white text-black hover:bg-neutral-200 transition-all font-medium"
@@ -85,19 +88,19 @@ export default function TripsPage() {
                                 <div className="p-1.5 rounded-md bg-emerald-950/30 border border-emerald-900/30">
                                     <DollarSign className="h-4 w-4 text-emerald-400" />
                                 </div>
-                                <p className="text-sm font-medium text-neutral-400">Estimated Reimbursement</p>
+                                <p className="text-xs font-mono font-medium text-neutral-500 uppercase tracking-widest">Estimated Reimbursement</p>
                             </div>
-                            <div className="text-4xl font-light text-white tracking-tight">
+                            <div className="text-4xl font-mono text-white tracking-tight mt-2">
                                 {formatCurrency(estimatedReimbursement)}
                             </div>
                         </div>
                         <div className="text-left md:text-right">
-                            <p className="text-sm font-medium text-neutral-400 mb-2">Tax Deductible Mileage</p>
-                            <div className="text-2xl font-light text-white tracking-tight flex md:justify-end items-baseline gap-1">
+                            <p className="text-xs font-mono font-medium text-neutral-500 uppercase tracking-widest mb-2">Tax Deductible Mileage</p>
+                            <div className="text-3xl font-mono text-white tracking-tight flex md:justify-end items-baseline gap-1 mt-2">
                                 <AnimatedCounter value={taxDeductibleDistance} />
                                 <span className="text-sm text-neutral-500">{distLabel}</span>
                             </div>
-                            <p className="text-xs text-neutral-500 mt-1">{taxTrips.length} deductible trips logged</p>
+                            <p className="text-xs font-mono text-neutral-500 mt-1 uppercase tracking-widest">{taxTrips.length} deductible trips logged</p>
                         </div>
                     </div>
                 </GlassCard>
@@ -125,7 +128,7 @@ export default function TripsPage() {
                                             </div>
                                             <div>
                                                 <div className="flex items-center gap-2 flex-wrap">
-                                                    <h3 className="text-lg font-medium text-white">
+                                                    <h3 className="text-lg font-heading font-medium tracking-wide text-white uppercase">
                                                         {trip.startLocation} <span className="text-neutral-600 px-1">→</span> {trip.endLocation}
                                                     </h3>
                                                     {trip.isTaxDeductible && (
@@ -151,7 +154,7 @@ export default function TripsPage() {
 
                                         <div className="flex items-center justify-between md:justify-end gap-6 pl-16 md:pl-0">
                                             <div className="text-right">
-                                                <p className="text-lg font-medium text-white tracking-tight">{trip.distance} {distLabel}</p>
+                                                <p className="text-xl font-mono text-white tracking-tight">{trip.distance} <span className="text-sm text-neutral-500">{distLabel}</span></p>
                                                 {trip.isTaxDeductible && (
                                                     <p className="text-xs text-emerald-500 mt-0.5">
                                                         +{formatCurrency(trip.distance * ratePerKm)} est.

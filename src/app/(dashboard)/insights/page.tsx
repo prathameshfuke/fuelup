@@ -138,8 +138,13 @@ export default function InsightsPage() {
         <motion.div variants={container} initial="hidden" animate="show" className="space-y-6 max-w-7xl mx-auto pb-10">
             <motion.div variants={item} className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl md:text-4xl font-light tracking-tight text-white">Analytics</h1>
-                    <p className="text-neutral-400 mt-1">Deep dive into efficiency, costs, and trends.</p>
+                    <h1 className="text-3xl md:text-4xl font-heading font-bold tracking-tight text-white uppercase flex items-center gap-3">
+                        <div className="w-2 h-8 bg-primary rounded-sm shadow-[0_0_10px_rgba(0,102,255,0.8)]" />
+                        Performance Telemetry
+                    </h1>
+                    <p className="text-neutral-400 mt-2 font-mono text-sm tracking-widest uppercase">
+                        Real-time efficiency and cost analysis grid
+                    </p>
                 </div>
             </motion.div>
 
