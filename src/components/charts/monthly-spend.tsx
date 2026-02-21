@@ -52,7 +52,7 @@ export function MonthlySpend({ data }: MonthlySpendProps) {
                             axisLine={false}
                             tickLine={false}
                             tick={{ fill: chartColors.text, fontSize: 12, fontFamily: 'var(--font-mono)' }}
-                            tickFormatter={(value) => `$${value}`} // TODO: respect currency symbol
+                            tickFormatter={(value) => formatCurrency(value)}
                         />
                         <Tooltip
                             content={<CustomTooltip formatter={(val: number) => formatCurrency(Number(val))} />}

@@ -20,7 +20,7 @@ interface CostPerKmProps {
 }
 
 export function CostPerKm({ data }: CostPerKmProps) {
-    const { distanceUnit, volumeUnit, currency } = useSettingsStore();
+    const { distanceUnit, volumeUnit, formatCurrency } = useSettingsStore();
 
     return (
         <GlassCard className="p-6 border-white/5 bg-[#0A0E1A]/40">
@@ -51,7 +51,7 @@ export function CostPerKm({ data }: CostPerKmProps) {
                             axisLine={false}
                             tickLine={false}
                             tick={{ fill: chartColors.text, fontSize: 12, fontFamily: 'var(--font-mono)' }}
-                            tickFormatter={(val) => `${currency === 'inr' ? '₹' : '$'}${val}`} // Simple fallback, custom tooltip handles full format
+                            tickFormatter={(val) => formatCurrency(val)}
                         />
                         <YAxis
                             yAxisId="right"
@@ -59,7 +59,7 @@ export function CostPerKm({ data }: CostPerKmProps) {
                             axisLine={false}
                             tickLine={false}
                             tick={{ fill: chartColors.text, fontSize: 12, fontFamily: 'var(--font-mono)' }}
-                            tickFormatter={(val) => `${currency === 'inr' ? '₹' : '$'}${val}`}
+                            tickFormatter={(val) => formatCurrency(val)}
                         />
                         <Tooltip content={<CustomTooltip />} />
                         <Legend

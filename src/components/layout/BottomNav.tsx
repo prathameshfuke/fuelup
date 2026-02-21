@@ -9,12 +9,13 @@ import {
     Car,
     Map as MapIcon,
     Menu,
+    BarChart3,
 } from 'lucide-react';
 
 const bottomNavItems = [
     { href: '/dashboard', label: 'Telemetry', icon: LayoutDashboard },
+    { href: '/insights', label: 'Performance', icon: BarChart3 },
     { href: '/fuel', label: 'Pit Stop', icon: Fuel },
-    { href: '/map', label: 'Map', icon: MapIcon },
     { href: '/vehicles', label: 'Garage', icon: Car },
     { href: '/settings', label: 'More', icon: Menu },
 ];

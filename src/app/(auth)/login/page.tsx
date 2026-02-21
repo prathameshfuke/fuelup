@@ -11,6 +11,7 @@ import { useAuthStore } from '@/lib/store/authStore';
 import { GlassCard } from '@/components/ui/glass-card';
 import { BorderBeam } from '@/components/ui/border-beam';
 import { motion } from 'framer-motion';
+import { Particles } from '@/components/ui/particles';
 
 export default function LoginPage() {
     const [email, setEmail] = useState('');
@@ -34,7 +35,18 @@ export default function LoginPage() {
     };
 
     return (
-        <div className="flex min-h-screen bg-neutral-950 text-white selection:bg-white/20">
+        <div className="flex min-h-screen bg-neutral-950 text-white selection:bg-white/20 relative">
+            <div className="fixed inset-0 z-0 pointer-events-none opacity-50">
+                <Particles
+                    className="absolute inset-0"
+                    quantity={40}
+                    staticity={60}
+                    ease={40}
+                    size={0.6}
+                    color="#ffffff"
+                    refresh
+                />
+            </div>
             {/* Left side - Form */}
             <div className="flex flex-1 flex-col items-center justify-center p-6 md:p-12 relative z-10">
                 <div className="w-full max-w-md space-y-8">
@@ -65,29 +77,10 @@ export default function LoginPage() {
                         <BorderBeam size={200} duration={8} delay={2} />
 
                         <div className="space-y-4">
-                            <Button
-                                onClick={handleGoogleSignIn}
-                                variant="outline"
-                                className="w-full h-12 text-base gap-3 border-neutral-800 bg-neutral-900/50 text-white hover:bg-neutral-800 hover:text-white transition-all"
-                                size="lg"
-                            >
-                                <Chrome className="h-5 w-5" />
-                                Continue with Google
-                            </Button>
-
-                            <div className="relative py-2">
-                                <div className="absolute inset-0 flex items-center">
-                                    <span className="w-full border-t border-white/10" />
-                                </div>
-                                <div className="relative flex justify-center text-xs uppercase bg-transparent">
-                                    <span className="bg-neutral-900/90 px-3 py-1 rounded-full border border-white/10 text-neutral-500">Or</span>
-                                </div>
-                            </div>
-
                             {!isEmailMode ? (
                                 <Button
                                     variant="ghost"
-                                    className="w-full h-12 gap-3 border border-white/10 hover:bg-white/5 text-neutral-300 hover:text-white transition-all"
+                                    className="w-full h-12 gap-3 border border-white/10 hover:bg-white/5 text-neutral-300 hover:text-white transition-all bg-neutral-900/50"
                                     onClick={() => setIsEmailMode(true)}
                                 >
                                     <Mail className="h-5 w-5" />
