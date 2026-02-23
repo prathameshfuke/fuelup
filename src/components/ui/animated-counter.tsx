@@ -19,13 +19,9 @@ export function AnimatedCounter({
         damping: 100,
         stiffness: 100,
     });
-    const isInView = useInView(ref, { once: true, margin: "-100px" });
-
     useEffect(() => {
-        if (isInView) {
-            motionValue.set(direction === "down" ? 0 : value);
-        }
-    }, [motionValue, isInView, value, direction]);
+        motionValue.set(direction === "down" ? 0 : value);
+    }, [motionValue, value, direction]);
 
     useEffect(() => {
         springValue.on("change", (latest) => {
@@ -39,5 +35,9 @@ export function AnimatedCounter({
         return () => springValue.destroy();
     }, [springValue]);
 
-    return <span className={cn("inline-block tabular-nums", className)} ref={ref} />;
+    return (
+        <span className={cn("inline-block tabular-nums", className)} ref={ref}>
+            {Intl.NumberFormat("en-US").format(value === 0 ? 0 : (direction === "down" ? value : 0))}
+        </span>
+    );
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useState } from "react";
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 
@@ -31,5 +32,3 @@ export function ThemeToggle() {
         </Button>
     );
 }
-
-import { useState } from "react";

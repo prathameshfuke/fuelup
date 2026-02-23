@@ -27,22 +27,32 @@ const INITIAL_ITEMS: MaintenanceItem[] = [
     {
         id: 'm1',
         vehicleId: 'v1',
-        service: 'Oil Change',
-        dueDate: '2024-05-01',
-        dueOdometer: 20000,
+        service: 'Full Synthetic Oil Change',
+        dueDate: '2024-08-15',
+        dueOdometer: 22000,
         priority: 'medium',
         isCompleted: false,
-        notes: 'Standard synthetic oil check',
+        notes: 'Replace filter and use 0W-20',
+    },
+    {
+        id: 'm4',
+        vehicleId: 'v1',
+        service: 'Brake Pad Replacement',
+        dueDate: '2024-05-10',
+        dueOdometer: 18500,
+        priority: 'high',
+        isCompleted: false,
+        notes: 'Front brake pads are wearing thin',
     },
     {
         id: 'm2',
         vehicleId: 'v2',
-        service: 'Chain Lube',
-        dueDate: '2024-02-20',
-        dueOdometer: 6000,
-        priority: 'low',
+        service: 'Chain Clean & Lube',
+        dueDate: '2024-03-01',
+        dueOdometer: 6200,
+        priority: 'medium',
         isCompleted: false,
-        notes: 'Clean and lube chain',
+        notes: 'Use Motul chain lube',
     },
     {
         id: 'm3',
@@ -52,7 +62,17 @@ const INITIAL_ITEMS: MaintenanceItem[] = [
         completedDate: '2023-12-15',
         cost: 45.00,
         priority: 'low',
-        notes: 'Rotated at dealership',
+        notes: 'Rotated at dealership, tread depth 6/32',
+    } as MaintenanceItem,
+    {
+        id: 'm5',
+        vehicleId: 'v1',
+        service: 'Cabin Air Filter',
+        isCompleted: true,
+        completedDate: '2023-10-05',
+        cost: 25.50,
+        priority: 'low',
+        notes: 'DIY replacement, bought from Amazon',
     } as MaintenanceItem,
 ];
 
@@ -76,6 +96,8 @@ export const useMaintenanceStore = create<MaintenanceStore>()(
             getUpcoming: () => get().items.filter((i) => !i.isCompleted),
             getCompleted: () => get().items.filter((i) => i.isCompleted),
         }),
-        { name: 'fuelup-maintenance' }
+        {
+            name: 'fuelup-maintenance-v2' // Bumped version to force realistic mock data load 
+        }
     )
 );

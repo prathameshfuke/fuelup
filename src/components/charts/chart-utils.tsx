@@ -1,55 +1,52 @@
-"use client";
+'use client';
 
 import { TooltipProps } from "recharts";
 import { cn } from "@/lib/utils";
 
-// Theme Colors (Motorsport Fintech)
+// Theme Colors (Premium Minimalist)
 export const chartColors = {
     primary: {
-        stroke: "#00D9FF", // Speed Cyan
-        fill: "#0066FF",   // Electric Racing Blue
-        gradientStart: "#0066FF",
-        gradientEnd: "#00D9FF",
+        stroke: "hsl(var(--primary))",
+        fill: "hsl(var(--primary))",
     },
     secondary: {
-        stroke: "#C0C5CE", // Chrome Silver
-        fill: "#2D3748",   // Gunmetal Gray
+        stroke: "hsl(var(--muted-foreground))",
+        fill: "hsl(var(--secondary))",
     },
     success: {
-        stroke: "#00FF88", // Victory Green
-        fill: "#00FF88",
+        stroke: "hsl(var(--success))",
+        fill: "hsl(var(--success))",
     },
     warning: {
-        stroke: "#FFB800", // Amber Warning
-        fill: "#FFB800",
+        stroke: "hsl(var(--warning))",
+        fill: "hsl(var(--warning))",
     },
     danger: {
-        stroke: "#FF0039", // Racing Red
-        fill: "#FF0039",
+        stroke: "hsl(var(--destructive))",
+        fill: "hsl(var(--destructive))",
     },
-    grid: "rgba(255, 255, 255, 0.05)", // Telemetry Grid
-    text: "#8b949e", // Neutral text
-    tooltipBg: "#0A0E1A", // Carbon Black
-    tooltipBorder: "rgba(255,255,255,0.1)",
+    grid: "hsl(var(--border))",
+    text: "hsl(var(--muted-foreground))",
+    tooltipBg: "hsl(var(--card))",
+    tooltipBorder: "hsl(var(--border))",
 };
 
 export const CustomTooltip = ({ active, payload, label, formatter }: any) => {
     if (active && payload && payload.length) {
         return (
-            <div className="rounded-xl border border-white/10 bg-[#0A0E1A]/90 backdrop-blur-xl p-4 shadow-[0_8px_32px_rgba(0,102,255,0.2)] relative overflow-hidden">
-                <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-[#0066FF] to-[#00D9FF]" />
-                <p className="mb-2 text-sm font-medium text-neutral-400 font-mono tracking-wider uppercase">{label}</p>
-                <div className="space-y-2">
+            <div className="rounded-lg border border-border bg-card p-3 shadow-md">
+                <p className="mb-2 text-xs font-medium text-muted-foreground uppercase tracking-wide">{label}</p>
+                <div className="space-y-1.5">
                     {payload.map((entry: any, index: number) => (
-                        <div key={index} className="flex items-center gap-3 text-sm">
+                        <div key={index} className="flex items-center gap-2 text-sm">
                             <div
                                 className="h-2 w-2 rounded-full"
-                                style={{ backgroundColor: entry.color, boxShadow: `0 0 8px ${entry.color}` }}
+                                style={{ backgroundColor: entry.color }}
                             />
-                            <span className="text-neutral-300 uppercase tracking-wide text-xs">
+                            <span className="text-muted-foreground text-xs">
                                 {entry.name}:
                             </span>
-                            <span className="font-mono font-bold text-white tracking-tight">
+                            <span className="font-medium text-foreground">
                                 {formatter ? formatter(entry.value, entry.name) : entry.value}
                             </span>
                         </div>
@@ -77,27 +74,24 @@ export const ChartContainer = ({
     );
 };
 
-// Common Gradients for Area Charts (Telemetry Style)
+// Common Gradients for Area Charts
 export const ChartGradients = () => (
     <defs>
-        <linearGradient id="primaryGradient" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stopColor="#0066FF" stopOpacity={0.5} />
-            <stop offset="100%" stopColor="#00D9FF" stopOpacity={0.1} />
+        <linearGradient id="primaryGradient" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.2} />
+            <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0} />
         </linearGradient>
         <linearGradient id="secondaryGradient" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#00D9FF" stopOpacity={0.3} />
-            <stop offset="100%" stopColor="#00D9FF" stopOpacity={0.0} />
+            <stop offset="5%" stopColor="hsl(var(--muted-foreground))" stopOpacity={0.1} />
+            <stop offset="95%" stopColor="hsl(var(--muted-foreground))" stopOpacity={0} />
         </linearGradient>
         <linearGradient id="successGradient" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#00FF88" stopOpacity={0.4} />
-            <stop offset="100%" stopColor="#00FF88" stopOpacity={0.0} />
+            <stop offset="5%" stopColor="hsl(var(--success))" stopOpacity={0.2} />
+            <stop offset="95%" stopColor="hsl(var(--success))" stopOpacity={0} />
         </linearGradient>
         <linearGradient id="dangerGradient" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#FF0039" stopOpacity={0.4} />
-            <stop offset="100%" stopColor="#FF0039" stopOpacity={0.0} />
+            <stop offset="5%" stopColor="hsl(var(--destructive))" stopOpacity={0.2} />
+            <stop offset="95%" stopColor="hsl(var(--destructive))" stopOpacity={0} />
         </linearGradient>
-        <pattern id="diagonalHatch" width="4" height="4" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse">
-            <line x1="0" y1="0" x2="0" y2="4" stroke="rgba(255,255,255,0.05)" strokeWidth="1" />
-        </pattern>
     </defs>
 );

@@ -123,11 +123,11 @@ export default function InsightsPage() {
     if (!logs.length) {
         return (
             <motion.div variants={container} initial="hidden" animate="show" className="py-20 text-center">
-                <div className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-neutral-900 mb-4">
-                    <BarChart3 className="h-8 w-8 text-neutral-600" />
+                <div className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-secondary mb-4">
+                    <BarChart3 className="h-8 w-8 text-muted-foreground" />
                 </div>
-                <h3 className="text-lg font-medium text-white">No data available yet</h3>
-                <p className="text-neutral-500 max-w-sm mx-auto mt-2">
+                <h3 className="text-lg font-medium text-foreground">No data available yet</h3>
+                <p className="text-muted-foreground max-w-sm mx-auto mt-2">
                     Start logging your fuel fill-ups to see rich analytics and trends here.
                 </p>
             </motion.div>
@@ -138,11 +138,11 @@ export default function InsightsPage() {
         <motion.div variants={container} initial="hidden" animate="show" className="space-y-6 max-w-7xl mx-auto pb-10">
             <motion.div variants={item} className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl md:text-4xl font-heading font-bold tracking-tight text-white uppercase flex items-center gap-3">
-                        <div className="w-2 h-8 bg-primary rounded-sm shadow-[0_0_10px_rgba(0,102,255,0.8)]" />
+                    <h1 className="text-3xl md:text-4xl font-heading font-medium tracking-tight text-foreground uppercase flex items-center gap-3">
+                        <div className="w-2 h-8 bg-primary rounded-sm shadow-sm" />
                         Performance Telemetry
                     </h1>
-                    <p className="text-neutral-400 mt-2 font-mono text-sm tracking-widest uppercase">
+                    <p className="text-muted-foreground mt-2 font-mono text-sm tracking-widest uppercase">
                         Real-time efficiency and cost analysis grid
                     </p>
                 </div>

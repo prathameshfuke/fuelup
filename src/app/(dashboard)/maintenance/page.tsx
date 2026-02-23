@@ -4,9 +4,9 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, Wrench, AlertTriangle, CheckCircle2, Clock, Trash2, Calendar, Gauge } from 'lucide-react';
 import { GlassCard } from '@/components/ui/glass-card';
-import { AnimatedCounter } from '@/components/ui/animated-counter';
+import { BorderBeam } from '@/components/ui/border-beam';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
@@ -15,16 +15,7 @@ import { toast } from 'sonner';
 import { useMaintenanceStore, type MaintenanceItem } from '@/lib/store/maintenanceStore';
 import { useSettingsStore } from '@/lib/store/settingsStore';
 
-const priorityConfig = {
-    high: { color: 'text-red-400', badge: 'destructive' as const, icon: AlertTriangle, border: 'border-red-900/30', bg: 'bg-red-950/20' },
-    medium: { color: 'text-amber-400', badge: 'warning' as const, icon: Clock, border: 'border-amber-900/30', bg: 'bg-amber-950/20' },
-    low: { color: 'text-blue-400', badge: 'secondary' as const, icon: Wrench, border: 'border-blue-900/30', bg: 'bg-blue-950/20' },
-};
-
-const container = { hidden: { opacity: 0 }, show: { opacity: 1, transition: { staggerChildren: 0.06 } } };
-const item = { hidden: { opacity: 0, y: 15 }, show: { opacity: 1, y: 0 } };
-
-export default function MaintenancePage() {
+export default function ServiceBayPage() {
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [tab, setTab] = useState<'upcoming' | 'completed'>('upcoming');
     const { items, addItem, completeItem, deleteItem, getUpcoming, getCompleted } = useMaintenanceStore();
@@ -50,7 +41,7 @@ export default function MaintenancePage() {
             isCompleted: false,
             notes: newItem.notes,
         });
-        toast.success('Maintenance reminder added!');
+        toast.success('Service record added!');
         setIsFormOpen(false);
         setNewItem({ service: '', dueDate: '', dueOdometer: '', priority: 'medium', notes: '' });
     };
@@ -63,169 +54,112 @@ export default function MaintenancePage() {
     };
 
     return (
-        <motion.div variants={container} initial="hidden" animate="show" className="max-w-7xl mx-auto space-y-8">
-            <motion.div variants={item} className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <motion.div
+            initial={{ opacity: 0, filter: 'blur(10px)' }}
+            animate={{ opacity: 1, filter: 'blur(0px)' }}
+            transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
+            className="container mx-auto p-6 max-w-7xl space-y-8"
+        >
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
                 <div>
-                    <h1 className="text-3xl md:text-4xl font-heading font-bold tracking-tight text-white uppercase flex items-center gap-3">
-                        <div className="w-1.5 h-6 bg-[#FFB800] rounded-full shadow-[0_0_10px_rgba(255,184,0,0.8)]" />
-                        Service Records
+                    <h1 className="text-3xl md:text-4xl font-heading font-medium tracking-tight text-foreground uppercase flex items-center gap-3">
+                        <div className="w-2 h-8 bg-primary rounded-sm shadow-sm" />
+                        Service Bay
                     </h1>
-                    <p className="text-sm font-mono text-neutral-500 uppercase tracking-widest mt-2 ml-4">Track maintenance events and vehicle health</p>
+                    <p className="text-muted-foreground mt-2 font-mono text-sm tracking-widest uppercase">
+                        Track service history and upcoming maintenance
+                    </p>
                 </div>
                 <Button
-                    className="rounded-full h-10 px-6 bg-white text-black hover:bg-neutral-200 transition-all font-medium"
+                    className="h-10 px-6 bg-primary text-primary-foreground hover:bg-primary/90 transition-colors font-medium rounded-lg"
                     onClick={() => setIsFormOpen(true)}
                 >
                     <Plus className="h-4 w-4 mr-2" />
                     Log Service
                 </Button>
-            </motion.div>
-
-            {/* Summary */}
-            <motion.div variants={item} className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <GlassCard className="p-6 relative overflow-hidden">
-                    <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-red-500/50 to-red-900/50" />
-                    <div className="flex items-center gap-3 mb-2">
-                        <div className="p-2 rounded-lg bg-red-950/30 border border-red-900/30">
-                            <AlertTriangle className="h-4 w-4 text-red-400" />
-                        </div>
-                        <p className="text-xs font-mono font-medium text-neutral-500 uppercase tracking-widest">Urgent Actions</p>
-                    </div>
-                    <div className="text-3xl font-mono text-white tracking-tight mt-2">
-                        <AnimatedCounter value={upcoming.filter(i => i.priority === 'high').length} />
-                    </div>
-                </GlassCard>
-
-                <GlassCard className="p-6 relative overflow-hidden">
-                    <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-500/50 to-amber-900/50" />
-                    <div className="flex items-center gap-3 mb-2">
-                        <div className="p-2 rounded-lg bg-amber-950/30 border border-amber-900/30">
-                            <Clock className="h-4 w-4 text-amber-400" />
-                        </div>
-                        <p className="text-xs font-mono font-medium text-neutral-500 uppercase tracking-widest">Upcoming</p>
-                    </div>
-                    <div className="text-3xl font-mono text-white tracking-tight mt-2">
-                        <AnimatedCounter value={upcoming.length} />
-                    </div>
-                </GlassCard>
-
-                <GlassCard className="p-6 relative overflow-hidden">
-                    <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-green-500/50 to-green-900/50" />
-                    <div className="flex items-center gap-3 mb-2">
-                        <div className="p-2 rounded-lg bg-green-950/30 border border-green-900/30">
-                            <CheckCircle2 className="h-4 w-4 text-green-400" />
-                        </div>
-                        <p className="text-xs font-mono font-medium text-neutral-500 uppercase tracking-widest">Completed</p>
-                    </div>
-                    <div className="text-3xl font-mono text-white tracking-tight mt-2">
-                        <AnimatedCounter value={completed.length} />
-                    </div>
-                </GlassCard>
-            </motion.div>
+            </div>
 
             {/* Tabs */}
-            <motion.div variants={item} className="p-1 rounded-full bg-neutral-900 border border-neutral-800 flex relative max-w-md">
+            <div className="flex gap-2 mb-6">
                 <button
-                    className={`flex-1 py-1.5 px-4 rounded-full text-sm font-medium transition-all relative z-10 ${tab === 'upcoming' ? 'text-black' : 'text-neutral-500 hover:text-white'}`}
+                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 border ${tab === 'upcoming' ? 'bg-secondary border-border text-foreground' : 'bg-transparent border-transparent text-muted-foreground hover:text-foreground hover:bg-secondary/50'}`}
                     onClick={() => setTab('upcoming')}
                 >
                     Upcoming ({upcoming.length})
                 </button>
                 <button
-                    className={`flex-1 py-1.5 px-4 rounded-full text-sm font-medium transition-all relative z-10 ${tab === 'completed' ? 'text-black' : 'text-neutral-500 hover:text-white'}`}
+                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 border ${tab === 'completed' ? 'bg-secondary border-border text-foreground' : 'bg-transparent border-transparent text-muted-foreground hover:text-foreground hover:bg-secondary/50'}`}
                     onClick={() => setTab('completed')}
                 >
                     Completed ({completed.length})
                 </button>
-                <motion.div
-                    className="absolute top-1 bottom-1 bg-white rounded-full z-0 shadow-sm"
-                    initial={false}
-                    animate={{
-                        left: tab === 'upcoming' ? '4px' : '50%',
-                        width: 'calc(50% - 4px)',
-                        x: tab === 'completed' ? 0 : 0
-                    }}
-                    transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                />
-            </motion.div>
+            </div>
 
-            {/* Items List */}
-            <motion.div variants={item} className="space-y-4">
+            {/* Service Items */}
+            <div className="grid gap-4">
                 <AnimatePresence mode="wait">
-                    {displayItems.map((mItem) => {
-                        const config = priorityConfig[mItem.priority];
-                        const Icon = config.icon;
+                    {displayItems.map((item, index) => {
                         return (
                             <motion.div
-                                key={mItem.id}
-                                initial={{ opacity: 0, y: 10 }}
+                                key={item.id}
+                                initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                exit={{ opacity: 0, x: -50 }}
-                                layout
+                                exit={{ opacity: 0, scale: 0.95 }}
+                                transition={{ delay: index * 0.05 }}
                             >
-                                <GlassCard className={`p-0 overflow-hidden group hover:bg-neutral-900/50 transition-colors ${mItem.isCompleted ? 'opacity-60 grayscale' : ''}`}>
-                                    <div className="p-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
-                                        <div className="flex items-center gap-4">
-                                            <div className={`h-12 w-12 rounded-2xl flex items-center justify-center border ${config.bg} ${config.border}`}>
-                                                {mItem.isCompleted ? <CheckCircle2 className="h-5 w-5 text-green-500" /> : <Icon className={`h-5 w-5 ${config.color}`} />}
-                                            </div>
-                                            <div>
-                                                <div className="flex items-center gap-2">
-                                                    <h3 className={`text-lg font-heading font-medium tracking-wide text-white ${mItem.isCompleted ? 'line-through decoration-neutral-500 text-neutral-500' : ''}`}>{mItem.service}</h3>
-                                                    {!mItem.isCompleted && (
-                                                        <Badge variant="outline" className={`text-xs border transition-colors ${mItem.priority === 'high' ? 'border-red-900 text-red-400' : mItem.priority === 'medium' ? 'border-amber-900 text-amber-400' : 'border-blue-900 text-blue-400'}`}>
-                                                            {mItem.priority}
-                                                        </Badge>
-                                                    )}
-                                                </div>
-
-                                                <div className="flex flex-wrap items-center gap-3 text-sm text-neutral-400 mt-1">
-                                                    {mItem.dueDate && (
-                                                        <div className="flex items-center gap-1.5">
-                                                            <Calendar className="h-3.5 w-3.5" />
-                                                            <span>{new Date(mItem.dueDate).toLocaleDateString()}</span>
-                                                        </div>
-                                                    )}
-                                                    {mItem.dueOdometer && (
-                                                        <div className="flex items-center gap-1.5">
-                                                            <Gauge className="h-3.5 w-3.5" />
-                                                            <span>{mItem.dueOdometer.toLocaleString()} {distLabel}</span>
-                                                        </div>
-                                                    )}
-                                                    {mItem.isCompleted && mItem.completedDate && (
-                                                        <div className="flex items-center gap-1.5 text-green-500/80">
-                                                            <CheckCircle2 className="h-3.5 w-3.5" />
-                                                            <span>Done {new Date(mItem.completedDate).toLocaleDateString()}</span>
-                                                        </div>
-                                                    )}
-                                                    {mItem.notes && (
-                                                        <span className="text-neutral-500 italic"> — {mItem.notes}</span>
-                                                    )}
+                                <GlassCard className="relative overflow-hidden group hover:border-neutral-700 transition-colors z-10 w-full">
+                                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl overflow-hidden pointer-events-none z-0">
+                                        <BorderBeam size={200} duration={8} delay={0} borderWidth={1.5} colorFrom="rgba(255,255,255,0.4)" colorTo="rgba(255,255,255,0)" />
+                                    </div>
+                                    <div className="relative z-10 p-6">
+                                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                            <div className="flex items-center gap-4">
+                                                <div className={`h-2 w-2 rounded-full ${item.isCompleted ? 'bg-success/70' : item.priority === 'high' ? 'bg-destructive/70' : item.priority === 'medium' ? 'bg-warning/70' : 'bg-primary/70'}`} />
+                                                <div>
+                                                    <div className="flex items-center gap-2">
+                                                        <h3 className={`font-medium text-foreground ${item.isCompleted ? 'line-through text-muted-foreground' : ''}`}>
+                                                            {item.service}
+                                                        </h3>
+                                                        {!item.isCompleted && (
+                                                            <span className="text-[10px] text-muted-foreground uppercase tracking-wide border border-border px-2 py-0.5 rounded">
+                                                                {item.priority}
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                    <div className="flex flex-wrap gap-4 text-xs text-muted-foreground mt-2">
+                                                        {item.dueDate && (
+                                                            <span className="flex items-center gap-1.5"><Calendar className="h-3 w-3" /> Due {new Date(item.dueDate).toLocaleDateString()}</span>
+                                                        )}
+                                                        {item.dueOdometer && (
+                                                            <span className="flex items-center gap-1.5"><Gauge className="h-3 w-3" /> {item.dueOdometer.toLocaleString()} {distLabel}</span>
+                                                        )}
+                                                        {item.isCompleted && item.completedDate && (
+                                                            <span className="flex items-center gap-1.5 text-success/80"><CheckCircle2 className="h-3 w-3" /> Done {new Date(item.completedDate).toLocaleDateString()}</span>
+                                                        )}
+                                                        {item.notes && <span className="italic">"{item.notes}"</span>}
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
 
-                                        <div className="flex items-center justify-end gap-3 pl-16 md:pl-0">
-                                            {mItem.isCompleted && mItem.cost && (
-                                                <span className="text-lg font-mono font-medium text-white mr-4">{formatCurrency(mItem.cost)}</span>
-                                            )}
-
-                                            {!mItem.isCompleted && (
+                                            <div className="flex items-center justify-end gap-4">
+                                                {item.isCompleted && item.cost && (
+                                                    <span className="text-sm font-medium text-foreground">{formatCurrency(item.cost)}</span>
+                                                )}
+                                                {!item.isCompleted && (
+                                                    <Button
+                                                        variant="ghost" size="sm" className="text-success hover:text-success/90 hover:bg-success/10"
+                                                        onClick={() => handleComplete(item.id)}
+                                                    >
+                                                        Complete
+                                                    </Button>
+                                                )}
                                                 <Button
-                                                    variant="ghost" size="icon" className="h-9 w-9 text-green-500 hover:text-green-400 hover:bg-green-950/20"
-                                                    onClick={() => handleComplete(mItem.id)}
-                                                    title="Mark complete"
+                                                    variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10"
+                                                    onClick={() => { deleteItem(item.id); toast.success('Removed'); }}
                                                 >
-                                                    <CheckCircle2 className="h-5 w-5" />
+                                                    <Trash2 className="h-4 w-4" />
                                                 </Button>
-                                            )}
-                                            <Button
-                                                variant="ghost" size="icon"
-                                                className="h-9 w-9 text-neutral-600 hover:text-red-400 hover:bg-red-950/20 md:opacity-0 group-hover:opacity-100 transition-all"
-                                                onClick={() => { deleteItem(mItem.id); toast.success('Removed'); }}
-                                            >
-                                                <Trash2 className="h-4 w-4" />
-                                            </Button>
+                                            </div>
                                         </div>
                                     </div>
                                 </GlassCard>
@@ -233,23 +167,23 @@ export default function MaintenancePage() {
                         );
                     })}
                 </AnimatePresence>
+
                 {displayItems.length === 0 && (
-                    <div className="flex flex-col items-center justify-center py-20 text-center">
-                        <div className="h-24 w-24 rounded-full bg-neutral-900 border border-neutral-800 flex items-center justify-center mb-6">
-                            <Wrench className="h-10 w-10 text-neutral-500" />
+                    <div className="flex flex-col items-center justify-center py-16 text-center">
+                        <div className="w-16 h-16 rounded-2xl bg-secondary/50 border border-border/40 flex items-center justify-center mb-4">
+                            <Wrench className="h-8 w-8 text-muted-foreground/50" />
                         </div>
-                        <h2 className="text-2xl font-medium text-white mb-2">
+                        <p className="text-base font-light text-foreground mb-2">
                             {tab === 'upcoming' ? 'No upcoming maintenance' : 'No completed services'}
-                        </h2>
-                        <p className="text-neutral-400 max-w-sm mb-8">
+                        </p>
+                        <p className="text-sm text-muted-foreground max-w-sm">
                             {tab === 'upcoming'
                                 ? 'Keep your vehicle running smoothly by tracking service records and reminders.'
                                 : 'Completed maintenance tasks will appear here for your history.'}
                         </p>
                         {tab === 'upcoming' && (
                             <Button
-                                size="lg"
-                                className="rounded-full px-8 bg-white text-black hover:bg-neutral-200"
+                                className="mt-6 px-6 py-2 bg-primary text-primary-foreground rounded-lg"
                                 onClick={() => setIsFormOpen(true)}
                             >
                                 Add Reminder
@@ -257,12 +191,12 @@ export default function MaintenancePage() {
                         )}
                     </div>
                 )}
-            </motion.div>
+            </div>
 
             {/* Mobile FAB */}
             <Button
-                size="lg"
-                className="fixed bottom-24 right-6 h-14 w-14 rounded-full shadow-2xl md:hidden z-40 bg-white text-black hover:bg-neutral-200"
+                size="icon"
+                className="fixed bottom-24 right-6 h-14 w-14 shadow-md md:hidden rounded-full bg-primary text-primary-foreground z-40 hover:bg-primary/90"
                 onClick={() => setIsFormOpen(true)}
             >
                 <Plus className="h-6 w-6" />
@@ -270,63 +204,63 @@ export default function MaintenancePage() {
 
             {/* Add Maintenance Sheet */}
             <Sheet open={isFormOpen} onOpenChange={setIsFormOpen}>
-                <SheetContent side="bottom" className="h-[75vh] overflow-y-auto bg-neutral-950 border-t border-neutral-800 text-white">
-                    <SheetHeader className="text-left">
-                        <SheetTitle className="text-white">Add Maintenance Reminder</SheetTitle>
-                        <SheetDescription className="text-neutral-400">Track upcoming vehicle services</SheetDescription>
+                <SheetContent side="bottom" className="sm:max-w-md mx-auto rounded-t-xl bg-card border-border sm:h-auto h-[85vh] overflow-y-auto">
+                    <SheetHeader className="text-left mb-6">
+                        <SheetTitle className="text-foreground">Add Service Record</SheetTitle>
+                        <SheetDescription className="text-muted-foreground">Track upcoming vehicle services</SheetDescription>
                     </SheetHeader>
-                    <form onSubmit={handleSubmit} className="space-y-6 p-4 pt-6">
+                    <form onSubmit={handleSubmit} className="space-y-4">
                         <div className="space-y-2">
-                            <Label className="text-neutral-300">Service Name *</Label>
+                            <Label className="text-foreground">Service Name *</Label>
                             <Input
                                 placeholder="Oil Change, Tire Rotation..." value={newItem.service}
                                 onChange={(e) => setNewItem({ ...newItem, service: e.target.value })}
-                                className="bg-neutral-900 border-neutral-800 text-white placeholder:text-neutral-600 focus:border-neutral-600" required
+                                className="bg-secondary/30 border-border text-foreground focus:border-border/60" required
                             />
                         </div>
                         <div className="grid grid-cols-2 gap-4">
                             <div className="space-y-2">
-                                <Label className="text-neutral-300">Due Date</Label>
+                                <Label className="text-foreground">Due Date</Label>
                                 <Input
                                     type="date" value={newItem.dueDate}
                                     onChange={(e) => setNewItem({ ...newItem, dueDate: e.target.value })}
-                                    className="bg-neutral-900 border-neutral-800 text-white placeholder:text-neutral-600 focus:border-neutral-600"
+                                    className="bg-secondary/30 border-border text-foreground focus:border-border/60"
                                 />
                             </div>
                             <div className="space-y-2">
-                                <Label className="text-neutral-300">Due Odometer ({distLabel})</Label>
+                                <Label className="text-foreground">Due Odometer ({distLabel})</Label>
                                 <Input
                                     type="number" placeholder="30000" value={newItem.dueOdometer}
                                     onChange={(e) => setNewItem({ ...newItem, dueOdometer: e.target.value })}
-                                    className="bg-neutral-900 border-neutral-800 text-white placeholder:text-neutral-600 focus:border-neutral-600"
+                                    className="bg-secondary/30 border-border text-foreground focus:border-border/60"
                                 />
                             </div>
                         </div>
                         <div className="space-y-2">
-                            <Label className="text-neutral-300">Priority</Label>
+                            <Label className="text-foreground">Priority</Label>
                             <Select value={newItem.priority} onValueChange={(v) => setNewItem({ ...newItem, priority: v as MaintenanceItem['priority'] })}>
-                                <SelectTrigger className="bg-neutral-900 border-neutral-800 text-white focus:border-neutral-600"><SelectValue /></SelectTrigger>
-                                <SelectContent className="bg-neutral-900 border-neutral-800 text-white">
-                                    <SelectItem value="high" className="focus:bg-neutral-800 focus:text-white">High Priority</SelectItem>
-                                    <SelectItem value="medium" className="focus:bg-neutral-800 focus:text-white">Medium Priority</SelectItem>
-                                    <SelectItem value="low" className="focus:bg-neutral-800 focus:text-white">Low Priority</SelectItem>
+                                <SelectTrigger className="bg-secondary/30 border-border text-foreground focus:border-border/60"><SelectValue /></SelectTrigger>
+                                <SelectContent className="bg-card border-border text-foreground">
+                                    <SelectItem value="high">High Priority</SelectItem>
+                                    <SelectItem value="medium">Medium Priority</SelectItem>
+                                    <SelectItem value="low">Low Priority</SelectItem>
                                 </SelectContent>
                             </Select>
                         </div>
                         <div className="space-y-2">
-                            <Label className="text-neutral-300">Notes (Optional)</Label>
+                            <Label className="text-foreground">Notes (Optional)</Label>
                             <Input
                                 placeholder="Use synthetic 5W-30..." value={newItem.notes}
                                 onChange={(e) => setNewItem({ ...newItem, notes: e.target.value })}
-                                className="bg-neutral-900 border-neutral-800 text-white placeholder:text-neutral-600 focus:border-neutral-600"
+                                className="bg-secondary/30 border-border text-foreground focus:border-border/60"
                             />
                         </div>
-                        <Button type="submit" size="lg" className="w-full bg-white text-black hover:bg-neutral-200 mt-4 h-12 text-base font-medium" disabled={!newItem.service}>
+                        <Button type="submit" className="w-full bg-primary text-primary-foreground hover:bg-primary/90 mt-6 h-11 rounded-lg font-medium" disabled={!newItem.service}>
                             Save Reminder
                         </Button>
                     </form>
                 </SheetContent>
             </Sheet>
-        </motion.div>
+        </motion.div >
     );
 }

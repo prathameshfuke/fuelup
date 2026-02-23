@@ -7,16 +7,15 @@ import {
     LayoutDashboard,
     Fuel,
     Car,
-    Map as MapIcon,
     Menu,
     BarChart3,
 } from 'lucide-react';
 
 const bottomNavItems = [
-    { href: '/dashboard', label: 'Telemetry', icon: LayoutDashboard },
-    { href: '/insights', label: 'Performance', icon: BarChart3 },
-    { href: '/fuel', label: 'Pit Stop', icon: Fuel },
-    { href: '/vehicles', label: 'Garage', icon: Car },
+    { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+    { href: '/insights', label: 'Insights', icon: BarChart3 },
+    { href: '/fuel', label: 'Fuel', icon: Fuel },
+    { href: '/vehicles', label: 'Vehicles', icon: Car },
     { href: '/settings', label: 'More', icon: Menu },
 ];
 
@@ -24,7 +23,7 @@ export function BottomNav() {
     const pathname = usePathname();
 
     return (
-        <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 border-t border-neutral-800 bg-neutral-950/80 backdrop-blur-lg">
+        <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 border-t border-border bg-background/80 backdrop-blur-lg">
             <div className="flex items-center justify-around h-[56px] pb-safe">
                 {bottomNavItems.map((item) => {
                     const isActive =
@@ -34,10 +33,10 @@ export function BottomNav() {
                             key={item.href}
                             href={item.href}
                             className={cn(
-                                'flex flex-col items-center justify-center gap-0.5 px-3 py-1.5 text-xs font-medium transition-colors duration-200 min-w-[56px]',
+                                'flex flex-col items-center justify-center gap-0.5 px-3 py-1.5 text-[10px] font-medium transition-colors duration-200 min-w-[56px]',
                                 isActive
-                                    ? 'text-white'
-                                    : 'text-neutral-500 hover:text-white'
+                                    ? 'text-primary'
+                                    : 'text-muted-foreground hover:text-foreground'
                             )}
                         >
                             <item.icon

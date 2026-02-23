@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { Navigation, Search, Map as MapIcon, Fuel, TrendingUp } from 'lucide-react';
 import { GlassCard } from '@/components/ui/glass-card';
 import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { BorderBeam } from '@/components/ui/border-beam';
@@ -17,8 +18,8 @@ const FuelMap = dynamic(
     () => import('@/components/map/FuelMap'),
     {
         loading: () => (
-            <div className="h-full w-full flex items-center justify-center bg-neutral-950/50">
-                <div className="h-8 w-8 rounded-full border-2 border-neutral-800 border-t-emerald-500 animate-spin" />
+            <div className="h-full w-full flex items-center justify-center bg-background/50">
+                <div className="h-8 w-8 rounded-full border-2 border-border border-t-primary animate-spin" />
             </div>
         ),
         ssr: false
@@ -31,7 +32,7 @@ export default function MapPage() {
     const [searchQuery, setSearchQuery] = useState('');
     const [stations, setStations] = useState<FuelStation[]>([]);
     const [livePrice, setLivePrice] = useState<{ petrol: string, diesel: string } | null>(null);
-    const { formatCurrency } = useSettingsStore();
+    const { formatCurrency, distanceUnit, volumeUnit } = useSettingsStore();
 
     useEffect(() => {
         // Fetch live fuel prices
@@ -78,40 +79,41 @@ export default function MapPage() {
         <motion.div initial="hidden" animate="show" transition={{ staggerChildren: 0.06 }} className="max-w-7xl mx-auto space-y-6 flex flex-col lg:h-[calc(100vh-40px)] pb-24 md:pb-6">
             <motion.div variants={anim} className="flex flex-col md:flex-row md:items-center justify-between gap-4 shrink-0">
                 <div>
-                    <h1 className="text-3xl md:text-4xl font-heading font-bold tracking-tight text-white uppercase flex items-center gap-3">
-                        <div className="w-1.5 h-6 bg-[#00D9FF] rounded-full shadow-[0_0_10px_rgba(0,217,255,0.8)]" />
+                    <h1 className="text-3xl md:text-4xl font-heading font-medium tracking-tight text-foreground uppercase flex items-center gap-3">
+                        <div className="w-2 h-8 bg-primary rounded-sm shadow-sm" />
                         Fuel Map
                     </h1>
-                    <p className="text-sm font-mono text-neutral-500 uppercase tracking-widest mt-2 ml-4">Find nearby stations and compare prices</p>
+                    <p className="text-muted-foreground mt-2 font-mono text-sm tracking-widest uppercase">
+                        Find nearby stations and compare prices
+                    </p>
                 </div>
 
                 {livePrice && (
-                    <div className="flex items-center gap-3 bg-[#0A0E1A]/40 border border-white/5 rounded-xl p-3 backdrop-blur-sm">
-                        <div className="p-2 rounded-lg bg-[#FF0039]/10 border border-[#FF0039]/20 shadow-[0_0_10px_rgba(255,0,57,0.2)]">
-                            <TrendingUp className="h-5 w-5 text-[#FF0039]" />
+                    <div className="flex items-center gap-3 bg-card border border-border rounded-xl p-3 shadow-sm">
+                        <div className="p-2 rounded-lg bg-destructive/10 text-destructive">
+                            <TrendingUp className="h-5 w-5" />
                         </div>
                         <div className="flex gap-4">
                             <div>
-                                <p className="text-[9px] font-mono text-neutral-500 uppercase tracking-widest leading-tight">Live Petrol</p>
-                                <p className="font-mono text-white font-bold">{formatCurrency(parseFloat(livePrice.petrol))}/L</p>
+                                <p className="text-xs font-medium text-muted-foreground">Live Petrol</p>
+                                <p className="text-sm text-foreground font-bold">{formatCurrency(parseFloat(livePrice.petrol))}/{volumeUnit === 'liters' ? 'L' : 'G'}</p>
                             </div>
-                            <div className="w-px bg-white/10" />
+                            <div className="w-px bg-border my-1" />
                             <div>
-                                <p className="text-[9px] font-mono text-neutral-500 uppercase tracking-widest leading-tight">Live Diesel</p>
-                                <p className="font-mono text-[#00D9FF] font-bold">{formatCurrency(parseFloat(livePrice.diesel))}/L</p>
+                                <p className="text-xs font-medium text-muted-foreground">Live Diesel</p>
+                                <p className="text-sm text-primary font-bold">{formatCurrency(parseFloat(livePrice.diesel))}/{volumeUnit === 'liters' ? 'L' : 'G'}</p>
                             </div>
                         </div>
                     </div>
                 )}
             </motion.div>
 
-            <motion.div variants={anim} className="flex gap-2 shrink-0 border border-white/5 bg-[#0A0E1A]/40 rounded-xl p-2 relative overflow-hidden backdrop-blur-sm">
-                <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#00D9FF]/50" />
+            <motion.div variants={anim} className="flex gap-2 shrink-0 border border-border bg-card rounded-xl p-2 relative overflow-hidden shadow-sm">
                 <div className="relative flex-1">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-500" />
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     <Input
-                        placeholder="SEARCH LOADED STATIONS..."
-                        className="pl-10 h-11 bg-transparent border-none text-white placeholder:text-neutral-600 focus-visible:ring-0 shadow-none font-mono text-sm tracking-wider uppercase"
+                        placeholder="Search stations..."
+                        className="pl-10 h-11 bg-transparent border-none text-foreground placeholder:text-muted-foreground focus-visible:ring-0 shadow-none font-medium text-sm"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                     />
@@ -121,65 +123,69 @@ export default function MapPage() {
             <div className="flex-1 grid grid-cols-1 lg:grid-cols-3 gap-6 lg:min-h-0">
                 {/* Map */}
                 <motion.div variants={anim} className="lg:col-span-2 h-[450px] lg:h-full z-0 order-start shrink-0">
-                    <GlassCard className="p-0 overflow-hidden h-full relative group flex items-center justify-center bg-[#0A0E1A]/60 border-white/5">
-                        <BorderBeam size={250} duration={12} delay={9} />
-                        <div className="absolute inset-0 z-10">
+                    <GlassCard className="p-0 overflow-hidden h-full relative group flex items-center justify-center border-border shadow-sm">
+                        <div className="absolute inset-0 z-10 bg-muted/20">
                             <FuelMap onStationsFound={setStations} />
                         </div>
                     </GlassCard>
                 </motion.div>
 
                 {/* Station List */}
-                <motion.div variants={anim} className="h-[400px] lg:h-full flex flex-col lg:min-h-0 bg-[#0A0E1A]/40 rounded-2xl border border-white/5 overflow-hidden backdrop-blur-sm shrink-0">
-                    <div className="flex items-center justify-between p-4 border-b border-white/5 shrink-0 bg-[#0A0E1A]/80">
-                        <h2 className="text-sm font-heading font-semibold text-neutral-400 uppercase tracking-widest flex items-center gap-2">
-                            <Fuel className="h-4 w-4 text-[#00D9FF]" />
+                <motion.div variants={anim} className="h-[400px] lg:h-full flex flex-col lg:min-h-0 bg-card rounded-2xl border border-border overflow-hidden shadow-sm shrink-0">
+                    <div className="flex items-center justify-between p-4 border-b border-border shrink-0 bg-secondary/30">
+                        <h2 className="text-sm font-semibold text-foreground flex items-center gap-2">
+                            <Fuel className="h-4 w-4 text-primary" />
                             Nearby Stations
                         </h2>
-                        <Badge variant="outline" className="bg-[#00D9FF]/10 border-[#00D9FF]/30 text-[#00D9FF] font-mono">{filteredStations.length}</Badge>
+                        <Badge variant="secondary" className="font-medium bg-primary/10 text-primary hover:bg-primary/20">{filteredStations.length}</Badge>
                     </div>
 
                     {filteredStations.length === 0 ? (
-                        <div className="flex-1 flex flex-col items-center justify-center text-center p-6 bg-[#0A0E1A]/20">
-                            <div className="h-12 w-12 rounded-xl bg-neutral-900 border border-white/5 flex items-center justify-center mb-4 shadow-[inset_0_0_10px_rgba(0,0,0,0.5)]">
-                                <Search className="h-5 w-5 text-neutral-600" />
+                        <div className="flex-1 flex flex-col items-center justify-center text-center p-6 bg-secondary/20">
+                            <div className="h-12 w-12 rounded-xl bg-card border border-border flex items-center justify-center mb-4">
+                                <Search className="h-5 w-5 text-muted-foreground" />
                             </div>
-                            <p className="text-neutral-500 font-mono text-xs uppercase tracking-widest">No stations found</p>
+                            <p className="text-muted-foreground text-sm font-medium">No stations found</p>
                         </div>
                     ) : (
-                        <div className="overflow-y-auto custom-scrollbar flex-1 p-3 space-y-3 bg-[#0A0E1A]/20">
+                        <div className="overflow-y-auto custom-scrollbar flex-1 p-3 space-y-3 bg-secondary/10">
                             {filteredStations.map((s, i) => (
                                 <motion.div
                                     key={s.id}
-                                    initial={{ opacity: 0, x: -10 }}
-                                    animate={{ opacity: 1, x: 0 }}
-                                    transition={{ delay: i * 0.05 }}
-                                    className="p-4 rounded-xl border border-white/5 bg-neutral-900/50 hover:bg-[#00D9FF]/5 hover:border-[#00D9FF]/30 transition-all cursor-pointer group relative overflow-hidden backdrop-blur-sm"
+                                    initial={{ opacity: 0, filter: 'blur(5px)', x: -10 }}
+                                    animate={{ opacity: 1, filter: 'blur(0px)', x: 0 }}
+                                    transition={{ duration: 0.4, delay: i * 0.1 }}
                                 >
-                                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-[#00D9FF] to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                                    <div className="flex justify-between items-start mb-2 relative z-10">
-                                        <h3 className="font-bold text-white uppercase tracking-wider text-sm group-hover:text-[#00D9FF] transition-colors">{s.name}</h3>
-                                        <span className="text-[10px] font-mono text-[#00D9FF] bg-[#00D9FF]/10 border border-[#00D9FF]/20 px-1.5 py-0.5 rounded uppercase tracking-widest">{s.distance?.toFixed(1)} km</span>
-                                    </div>
-                                    <p className="text-[10px] font-mono text-neutral-500 uppercase tracking-widest truncate mb-3 relative z-10">{s.address}</p>
-
-                                    {livePrice && (
-                                        <div className="mb-4 relative z-10 flex items-center gap-2 bg-[#0A0E1A]/80 border border-white/5 rounded-md p-1.5 w-fit">
-                                            <span className="text-[9px] font-mono text-neutral-500 uppercase tracking-widest">Est. Petrol</span>
-                                            <span className="text-[11px] font-mono font-bold text-[#00FF88] shadow-[0_0_10px_rgba(0,255,136,0.2)]">{formatCurrency(getEstimatedPrice(s.brand)!)}/L</span>
+                                    <GlassCard className="relative overflow-hidden group hover:border-neutral-700 transition-colors z-10 w-full mb-3">
+                                        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl overflow-hidden pointer-events-none z-0">
+                                            <BorderBeam size={200} duration={8} delay={0} borderWidth={1.5} colorFrom="rgba(255,255,255,0.4)" colorTo="rgba(255,255,255,0)" />
                                         </div>
-                                    )}
+                                        <div className="relative z-10 p-4 flex flex-col gap-2">
+                                            <div className="flex justify-between items-start mb-2">
+                                                <h3 className="font-medium text-foreground tracking-wide text-sm group-hover:text-primary transition-colors">{s.name}</h3>
+                                                <span className="text-xs font-medium text-primary bg-primary/10 px-2 py-0.5 rounded-full">{s.distance?.toFixed(1)} {distanceUnit}</span>
+                                            </div>
+                                            <p className="text-xs text-muted-foreground truncate mb-4">{s.address}</p>
 
-                                    <div className="flex gap-2 relative z-10">
-                                        <a
-                                            href={`https://www.google.com/maps/dir/?api=1&destination=${s.lat},${s.lon}`}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="flex-1 border border-white/10 hover:border-[#00D9FF]/50 hover:bg-[#00D9FF]/10 text-neutral-300 hover:text-[#00D9FF] text-[10px] uppercase tracking-widest font-mono font-bold py-2 rounded-lg text-center transition-all"
-                                        >
-                                            Navigate
-                                        </a>
-                                    </div>
+                                            {livePrice && (
+                                                <div className="mb-4 relative z-10 flex items-center gap-2 bg-secondary border border-border rounded-md p-2 w-fit">
+                                                    <span className="text-xs font-medium text-muted-foreground">Est. Petrol</span>
+                                                    <span className="text-sm font-bold text-success">{formatCurrency(getEstimatedPrice(s.brand)!)}/{volumeUnit === 'liters' ? 'L' : 'G'}</span>
+                                                </div>
+                                            )}
+
+                                            <div className="flex gap-2 relative z-10">
+                                                <a
+                                                    href={`https://www.google.com/maps/dir/?api=1&destination=${s.lat},${s.lon}`}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="flex-1 border border-border hover:border-primary/50 hover:bg-primary/10 text-muted-foreground hover:text-primary text-xs font-medium py-2 rounded-lg text-center transition-all shadow-sm"
+                                                >
+                                                    Navigate
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </GlassCard>
                                 </motion.div>
                             ))}
                         </div>

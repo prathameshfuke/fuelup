@@ -68,91 +68,101 @@
 
 @layer base {
   :root {
-    /* Motorsport Light Mode */
-    --background: 210 40% 98%;
-    /* Titanium White #F8FAFC */
-    --foreground: 222.2 84% 4.9%;
-    /* Carbon Black */
+    /* Memoria Minimalist Light Mode - Monochromatic */
+    --background: 0 0% 98%;
+    /* Very light gray/off-white background */
+    --foreground: 0 0% 9%;
+    /* Near black text for high contrast */
+
     --card: 0 0% 100%;
-    /* Pearl White */
-    --card-foreground: 222.2 84% 4.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    /* Pure white cards */
+    --card-foreground: 0 0% 9%;
+    /* Near black card text */
 
-    /* Electric Racing Blue */
-    --primary: 216 100% 50%;
-    /* #0066FF */
-    --primary-foreground: 210 40% 98%;
+    --primary: 0 0% 9%;
+    /* Deep gray/black instead of blue for modern feel */
+    --primary-foreground: 0 0% 98%;
+    /* White text on primary buttons */
 
-    /* Speed Cyan Accent */
-    --secondary: 189 100% 50%;
-    /* #00D9FF */
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 0 0% 94%;
+    /* Soft gray for secondary buttons/surfaces */
+    --secondary-foreground: 0 0% 20%;
+    /* Dark text on secondary */
 
-    /* Muted / Chrome Silver */
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 0 0% 96%;
+    /* Very subtle backgrounds */
+    --muted-foreground: 0 0% 40%;
+    /* Medium gray for secondary text */
 
-    /* Speed Cyan Accent #00D9FF */
-    --accent: 189 100% 50%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 0 0% 94%;
+    /* Hover states and accents */
+    --accent-foreground: 0 0% 9%;
 
-    /* Racing Red */
-    --destructive: 346 100% 50%;
-    /* #FF0039 */
-    --destructive-foreground: 210 40% 98%;
+    --border: 0 0% 91%;
+    /* Light, crisp borders */
+    --input: 0 0% 91%;
+    /* Input borders */
+    --ring: 0 0% 9%;
+    /* Black focus rings */
 
-    /* Chrome Silver */
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 216 100% 50%;
-    /* Racing Blue Ring */
+    --destructive: 0 84% 60%;
+    /* Clear red for destructive actions */
+    --destructive-foreground: 0 0% 100%;
 
-    --radius: 1rem;
-    /* 16px */
+    --success: 142 76% 36%;
+    /* Professional green for discrete states */
+    --warning: 38 92% 50%;
+    /* Clear amber for discrete states */
+
+    --radius: 0.75rem;
+    /* 12px rounded corners */
   }
 
   .dark {
-    /* Motorsport Dark Mode */
-    --background: 226 44% 7%;
-    /* Carbon Black #0A0E1A */
-    --foreground: 210 40% 98%;
-    /* Titanium White */
-    --card: 228 23% 13%;
-    /* Carbon Fiber #1A1D29 */
-    --card-foreground: 210 40% 98%;
-    --popover: 228 23% 13%;
-    --popover-foreground: 210 40% 98%;
+    /* Memoria Dark Mode - Monochromatic (#0a0a0a scale) */
+    --background: 0 0% 4%;
+    /* #0a0a0a */
+    --foreground: 0 0% 100%;
+    /* Almost pure white text */
 
-    /* Electric Racing Blue */
-    --primary: 216 100% 50%;
-    /* #0066FF */
-    --primary-foreground: 210 40% 98%;
+    --card: 0 0% 6%;
+    /* Slightly lighter than bg for elevation */
+    --card-foreground: 0 0% 100%;
 
-    /* Speed Cyan */
-    --secondary: 189 100% 50%;
-    /* #00D9FF */
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --primary: 0 0% 98%;
+    /* White as primary accent */
+    --primary-foreground: 0 0% 9%;
+    /* Black text on primary */
 
-    /* Carbon Fiber accents */
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --secondary: 0 0% 12%;
+    /* Dark gray for secondary surfaces */
+    --secondary-foreground: 0 0% 98%;
+    /* Light gray text on secondary */
 
-    /* Speed Cyan Accents */
-    --accent: 189 100% 50%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --muted: 0 0% 12%;
+    /* Subtle backgrounds */
+    --muted-foreground: 0 0% 63%;
+    /* Medium gray for secondary text */
 
-    /* Racing Red */
-    --destructive: 346 100% 50%;
-    /* #FF0039 */
-    --destructive-foreground: 210 40% 98%;
+    --accent: 0 0% 15%;
+    /* Hover states */
+    --accent-foreground: 0 0% 100%;
 
-    /* Carbon Fiber Border / Gunmetal Gray */
-    --border: 217.2 32.6% 17.5%;
-    /* Gunmetal Gray #2D3748 */
-    --input: 217.2 32.6% 17.5%;
-    --ring: 189 100% 50%;
-    /* Speed Cyan Ring */
+    --border: 0 0% 15%;
+    /* Subtle dark borders */
+    --input: 0 0% 15%;
+    /* Input borders */
+    --ring: 0 0% 60%;
+    /* Gray focus rings */
+
+    --destructive: 0 62% 40%;
+    /* Muted red for dark mode */
+    --destructive-foreground: 0 0% 100%;
+
+    --success: 142 70% 40%;
+    /* Muted green */
+    --warning: 38 90% 55%;
+    /* Muted amber */
   }
 
   * {
@@ -163,6 +173,7 @@
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
+    antialiased: true;
   }
 }
 

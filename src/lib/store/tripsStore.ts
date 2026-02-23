@@ -25,7 +25,7 @@ const INITIAL_TRIPS: Trip[] = [
     {
         id: 't1',
         vehicleId: 'v1',
-        date: '2024-02-13',
+        date: '2024-02-21',
         startLocation: 'Home',
         endLocation: 'Office',
         distance: 25.4,
@@ -36,24 +36,46 @@ const INITIAL_TRIPS: Trip[] = [
     {
         id: 't2',
         vehicleId: 'v1',
-        date: '2024-02-11',
+        date: '2024-02-20',
         startLocation: 'Office',
         endLocation: 'Client Site',
-        distance: 12.8,
+        distance: 18.2,
         purpose: 'business',
         isTaxDeductible: true,
-        notes: 'Meeting with potential lead',
+        notes: 'Quarterly review meeting',
     },
     {
         id: 't3',
-        vehicleId: 'v2',
-        date: '2024-02-10',
+        vehicleId: 'v1',
+        date: '2024-02-18',
         startLocation: 'Home',
-        endLocation: 'Mountain Cafe',
-        distance: 85.0,
+        endLocation: 'Hardware Store',
+        distance: 5.8,
         purpose: 'personal',
         isTaxDeductible: false,
-        notes: 'Weekend canyon run',
+        notes: '',
+    },
+    {
+        id: 't4',
+        vehicleId: 'v1',
+        date: '2024-02-15',
+        startLocation: 'Home',
+        endLocation: 'Medical Center',
+        distance: 12.1,
+        purpose: 'medical',
+        isTaxDeductible: true,
+        notes: 'Annual checkup',
+    },
+    {
+        id: 't5',
+        vehicleId: 'v2',
+        date: '2024-02-18',
+        startLocation: 'Home',
+        endLocation: 'Mountain Pass',
+        distance: 120.5,
+        purpose: 'personal',
+        isTaxDeductible: false,
+        notes: 'Weekend canyon sweep',
     },
 ];
 
@@ -69,6 +91,8 @@ export const useTripsStore = create<TripsStore>()(
             getTaxDeductibleTrips: () => get().trips.filter((t) => t.isTaxDeductible),
             getTotalDistance: () => get().trips.reduce((sum, t) => sum + t.distance, 0),
         }),
-        { name: 'fuelup-trips' }
+        {
+            name: 'fuelup-trips-v2' // Bumped version to force realistic mock data load
+        }
     )
 );
