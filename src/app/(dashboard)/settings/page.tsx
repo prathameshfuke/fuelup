@@ -28,26 +28,31 @@ export default function SettingsPage() {
 
     const handleSignOut = () => {
         authSignOut();
-        toast.success('App reset successfully');
+        toast.success('Logged out');
         router.push('/');
     };
 
     const handleExportData = () => {
-        const data = {
-            settings: { currency, distanceUnit, volumeUnit },
-            fuelLogs: JSON.parse(localStorage.getItem('fuelup-fuel-logs-v3') || '{}'),
-            vehicles: JSON.parse(localStorage.getItem('fuelup-vehicles') || '{}'),
-            trips: JSON.parse(localStorage.getItem('fuelup-trips-v2') || '{}'),
-            maintenance: JSON.parse(localStorage.getItem('fuelup-maintenance-v2') || '{}'),
-        };
-        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `fuelup-export-${new Date().toISOString().split('T')[0]}.json`;
-        a.click();
-        URL.revokeObjectURL(url);
-        toast.success('Data exported successfully!');
+        try {
+            const data = {
+                settings: { currency, distanceUnit, volumeUnit },
+                fuelLogs: JSON.parse(localStorage.getItem('fuelup-fuel-logs-v3') || '{}'),
+                vehicles: JSON.parse(localStorage.getItem('fuelup-vehicles') || '{}'),
+                trips: JSON.parse(localStorage.getItem('fuelup-trips-v2') || '{}'),
+                maintenance: JSON.parse(localStorage.getItem('fuelup-maintenance-v2') || '{}'),
+                vehicleStore: JSON.parse(localStorage.getItem('fuelup-vehicle-store') || '{}'),
+            };
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `fuelup-export-${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            toast.success('Data exported successfully!');
+        } catch {
+            toast.error('Export failed. Data may be corrupted.');
+        }
     };
 
     const handleClearData = () => {
@@ -232,9 +237,7 @@ export default function SettingsPage() {
                         </h2>
                         <div className="space-y-1">
                             {([
-                                { key: 'maintenance' as const, label: 'Maintenance Reminders', desc: 'Get notified before services are due' },
-                                { key: 'priceDrops' as const, label: 'Price Drop Alerts', desc: 'Nearby fuel station price drops' },
-                                { key: 'weeklySummary' as const, label: 'Weekly Summary', desc: 'Weekly efficiency and cost report' },
+                                { key: 'maintenance' as const, label: 'Maintenance Reminders', desc: 'Check for upcoming services when you open the app' },
                             ] as const).map((n) => (
                                 <div key={n.key} className="flex items-center justify-between p-2 rounded-lg hover:bg-secondary/30 transition-colors">
                                     <div>

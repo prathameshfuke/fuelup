@@ -7,7 +7,6 @@ import { GlassCard } from '@/components/ui/glass-card';
 import { BorderBeam } from '@/components/ui/border-beam';
 import { BlurReveal } from '@/components/ui/blur-reveal';
 import { Button } from '@/components/ui/button';
-import { CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
@@ -15,16 +14,19 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from '
 import { toast } from 'sonner';
 import { useMaintenanceStore, type MaintenanceItem } from '@/lib/store/maintenanceStore';
 import { useSettingsStore } from '@/lib/store/settingsStore';
+import { useVehicleStore } from '@/lib/store/vehicleStore';
 
 export default function ServiceBayPage() {
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [tab, setTab] = useState<'upcoming' | 'completed'>('upcoming');
-    const { items, addItem, completeItem, deleteItem, getUpcoming, getCompleted } = useMaintenanceStore();
+    const { addItem, completeItem, deleteItem, getUpcomingByVehicle, getCompletedByVehicle } = useMaintenanceStore();
     const { formatCurrency, distanceUnit } = useSettingsStore();
+    const { activeVehicleId } = useVehicleStore();
     const distLabel = distanceUnit === 'km' ? 'km' : 'mi';
+    const vehicleId = activeVehicleId || '';
 
-    const upcoming = getUpcoming();
-    const completed = getCompleted();
+    const upcoming = getUpcomingByVehicle(vehicleId);
+    const completed = getCompletedByVehicle(vehicleId);
     const displayItems = tab === 'upcoming' ? upcoming : completed;
 
     const [newItem, setNewItem] = useState({
@@ -34,7 +36,7 @@ export default function ServiceBayPage() {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         addItem({
-            vehicleId: 'v1',
+            vehicleId: vehicleId,
             service: newItem.service,
             dueDate: newItem.dueDate || undefined,
             dueOdometer: newItem.dueOdometer ? parseFloat(newItem.dueOdometer) : undefined,

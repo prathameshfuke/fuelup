@@ -1,7 +1,7 @@
 'use client';
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, Car, Fuel as FuelIcon, Gauge, Calendar, Trash2, MoreVertical } from 'lucide-react';
+import { Plus, Car, Fuel as FuelIcon, Gauge, Calendar, Trash2 } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
@@ -23,8 +23,9 @@ const item = { hidden: { opacity: 0, y: 15 }, show: { opacity: 1, y: 0 } };
 export default function VehiclesPage() {
     const { vehicles, deleteVehicle } = useVehiclesStore();
     const { logs } = useFuelStore();
-    const { formatCurrency, distanceUnit } = useSettingsStore();
+    const { formatCurrency, distanceUnit, volumeUnit } = useSettingsStore();
     const distLabel = distanceUnit === 'km' ? 'km' : 'mi';
+    const volLabel = volumeUnit === 'liters' ? 'L' : 'gal';
 
     const getVehicleStats = (vehicleId: string) => {
         const vehicleLogs = logs.filter((l) => l.vehicleId === vehicleId);
@@ -74,7 +75,7 @@ export default function VehiclesPage() {
                         My Vehicles
                     </h1>
                     <p className="text-muted-foreground mt-2 font-mono text-sm tracking-widest uppercase">
-                        Manage your fleet and track performance
+                        Manage your vehicles and track performance
                     </p>
                 </div>
                 <Link href="/vehicles/add">
@@ -149,7 +150,7 @@ export default function VehiclesPage() {
                                                     <p className="text-lg font-light text-foreground mt-1">
                                                         {stats.avgEfficiency > 0 ? (
                                                             <>
-                                                                {stats.avgEfficiency.toFixed(1)} <span className="text-[10px] text-muted-foreground">{distLabel}/L</span>
+                                                                {stats.avgEfficiency.toFixed(1)} <span className="text-[10px] text-muted-foreground">{distLabel}/{volLabel}</span>
                                                             </>
                                                         ) : 'N/A'}
                                                     </p>
@@ -169,7 +170,7 @@ export default function VehiclesPage() {
                                                     <p className="text-lg font-light text-foreground mt-1">
                                                         {stats.totalDistance > 0 ? (
                                                             <>
-                                                                {(stats.totalDistance / 1000).toFixed(1)}k <span className="text-[10px] text-muted-foreground">{distLabel}</span>
+                                                                {stats.totalDistance.toLocaleString()} <span className="text-[10px] text-muted-foreground">{distLabel}</span>
                                                             </>
                                                         ) : 'N/A'}
                                                     </p>

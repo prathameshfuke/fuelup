@@ -7,7 +7,6 @@ import { Button } from '@/components/ui/button';
 import { GlassCard } from '@/components/ui/glass-card';
 import { BorderBeam } from '@/components/ui/border-beam';
 import { BlurReveal } from '@/components/ui/blur-reveal';
-import { CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
@@ -16,6 +15,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from '
 import { toast } from 'sonner';
 import { useTripsStore, type Trip } from '@/lib/store/tripsStore';
 import { useSettingsStore, CURRENCY_CONFIG } from '@/lib/store/settingsStore';
+import { useVehicleStore } from '@/lib/store/vehicleStore';
 
 const purposeConfig: Record<Trip['purpose'], { icon: React.ElementType }> = {
     commute: { icon: CarIcon },
@@ -27,27 +27,30 @@ const purposeConfig: Record<Trip['purpose'], { icon: React.ElementType }> = {
 export default function TripsPage() {
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [filter, setFilter] = useState<'all' | Trip['purpose']>('all');
-    const { trips, addTrip, deleteTrip, getTaxDeductibleTrips, getTotalDistance } = useTripsStore();
+    const { addTrip, deleteTrip, getTripsByVehicle } = useTripsStore();
     const { formatCurrency, distanceUnit, currency } = useSettingsStore();
+    const { activeVehicleId } = useVehicleStore();
     const currencySymbol = CURRENCY_CONFIG[currency].symbol;
     const distLabel = distanceUnit === 'km' ? 'km' : 'mi';
     const ratePerKm = 0.655; // IRS standard mileage rate approximation
+    const vehicleId = activeVehicleId || '';
 
     const [newTrip, setNewTrip] = useState({
         startLocation: '', endLocation: '', distance: '', purpose: 'commute' as Trip['purpose'],
         isTaxDeductible: false, notes: '',
     });
 
-    const taxTrips = getTaxDeductibleTrips();
+    const vehicleTrips = getTripsByVehicle(vehicleId);
+    const taxTrips = vehicleTrips.filter(t => t.isTaxDeductible);
     const taxDeductibleDistance = taxTrips.reduce((s, t) => s + t.distance, 0);
     const estimatedReimbursement = taxDeductibleDistance * ratePerKm;
 
-    const displayTrips = filter === 'all' ? trips : trips.filter(t => t.purpose === filter);
+    const displayTrips = filter === 'all' ? vehicleTrips : vehicleTrips.filter(t => t.purpose === filter);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         addTrip({
-            vehicleId: 'v1',
+            vehicleId: vehicleId,
             date: new Date().toISOString().split('T')[0],
             startLocation: newTrip.startLocation,
             endLocation: newTrip.endLocation,
@@ -196,7 +199,7 @@ export default function TripsPage() {
                     })}
                 </AnimatePresence>
 
-                {trips.length === 0 && (
+                {vehicleTrips.length === 0 && (
                     <div className="flex flex-col items-center justify-center py-16 text-center">
                         <div className="w-16 h-16 rounded-2xl bg-secondary/50 border border-border/40 flex items-center justify-center mb-4">
                             <Route className="h-8 w-8 text-muted-foreground/50" />

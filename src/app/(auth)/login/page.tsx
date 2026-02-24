@@ -63,11 +63,7 @@ export default function LoginPage() {
                         </div>
                     </div>
 
-                    <p className="text-center sm:text-left text-xs text-muted-foreground mt-6 leading-relaxed">
-                        By continuing, you agree to our{' '}
-                        <Link href="#" className="text-foreground hover:underline underline-offset-4">Terms of Service</Link> and{' '}
-                        <Link href="#" className="text-foreground hover:underline underline-offset-4">Privacy Policy</Link>.
-                    </p>
+
                 </div>
             </div>
 

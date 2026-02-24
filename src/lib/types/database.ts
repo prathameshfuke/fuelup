@@ -1,5 +1,5 @@
 // ============================================
-// DATABASE TYPES - Matching Supabase Schema
+// DATABASE TYPES - Application Data Models
 // ============================================
 
 export type UnitSystem = 'metric' | 'imperial';
