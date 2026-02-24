@@ -7,6 +7,8 @@ import { useTripsStore } from '@/lib/store/tripsStore';
 import { useMaintenanceStore } from '@/lib/store/maintenanceStore';
 import { useSettingsStore } from '@/lib/store/settingsStore';
 import { format, differenceInDays } from 'date-fns';
+import { BlurReveal } from '@/components/ui/blur-reveal';
+import { HyperspaceBackground } from '@/components/ui/hyperspace-background';
 
 import { EfficiencyTrend } from '@/components/charts/efficiency-trend';
 import { MonthlySpend } from '@/components/charts/monthly-spend';
@@ -135,78 +137,81 @@ export default function InsightsPage() {
     }
 
     return (
-        <motion.div variants={container} initial="hidden" animate="show" className="space-y-6 max-w-7xl mx-auto pb-10">
-            <motion.div variants={item} className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                <div>
-                    <h1 className="text-3xl md:text-4xl font-heading font-medium tracking-tight text-foreground uppercase flex items-center gap-3">
-                        <div className="w-2 h-8 bg-primary rounded-sm shadow-sm" />
-                        Performance Telemetry
-                    </h1>
-                    <p className="text-muted-foreground mt-2 font-mono text-sm tracking-widest uppercase">
-                        Real-time efficiency and cost analysis grid
-                    </p>
-                </div>
-            </motion.div>
+        <>
+            <HyperspaceBackground className="fixed inset-0 -z-10" starCount={120} speed={0.3} interactive={false} />
+            <motion.div variants={container} initial="hidden" animate="show" className="relative space-y-6 max-w-7xl mx-auto pb-10 px-6 py-8 z-10">
+                <motion.div variants={item}>
+                    <BlurReveal as="div">
+                        <h1 className="text-3xl md:text-4xl font-heading font-medium tracking-tight text-foreground uppercase flex items-center gap-3">
+                            <div className="w-2 h-8 bg-primary rounded-sm shadow-sm" />
+                            Performance Telemetry
+                        </h1>
+                        <p className="text-muted-foreground mt-2 font-mono text-sm tracking-widest uppercase">
+                            Real-time efficiency and cost analysis grid
+                        </p>
+                    </BlurReveal>
+                </motion.div>
 
-            {/* Hero Chart: Efficiency */}
-            <motion.div variants={item}>
-                <EfficiencyTrend
-                    data={efficiencyData}
-                    currentEfficiency={getAverageEfficiency()}
-                />
-            </motion.div>
+                {/* Hero Chart: Efficiency */}
+                <motion.div variants={item}>
+                    <EfficiencyTrend
+                        data={efficiencyData}
+                        currentEfficiency={getAverageEfficiency()}
+                    />
+                </motion.div>
 
-            {/* Micro Stats Row */}
-            <motion.div variants={item} className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                <StatCardPremium
-                    title="Avg Fill Amount"
-                    value={`${avgFillAmount.toFixed(1)} ${volumeUnit === 'liters' ? 'L' : 'G'}`}
-                    icon={Droplets}
-                    data={fillAmountData}
-                    color="primary"
-                />
-                <StatCardPremium
-                    title="Days Between Fills"
-                    value={`${Math.round(avgDaysBetween)} days`}
-                    icon={Calendar}
-                    data={daysBetweenData}
-                    color="secondary"
-                />
-                <StatCardPremium
-                    title="Efficiency Trend"
-                    value={`${getAverageEfficiency().toFixed(1)} ${unitLabel}`}
-                    icon={Zap}
-                    trend="up"
-                    trendValue="3%"
-                    color="success"
-                />
-                <StatCardPremium
-                    title="Cost Efficiency"
-                    value={costPerKmData.length ? formatCurrency(costPerKmData[costPerKmData.length - 1].costPerDist) : '-'}
-                    subValue={`/${distanceUnit}`}
-                    icon={TrendingUp}
-                    color="warning"
-                />
-            </motion.div>
+                {/* Micro Stats Row */}
+                <motion.div variants={item} className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                    <StatCardPremium
+                        title="Avg Fill Amount"
+                        value={`${avgFillAmount.toFixed(1)} ${volumeUnit === 'liters' ? 'L' : 'G'}`}
+                        icon={Droplets}
+                        data={fillAmountData}
+                        color="primary"
+                    />
+                    <StatCardPremium
+                        title="Days Between Fills"
+                        value={`${Math.round(avgDaysBetween)} days`}
+                        icon={Calendar}
+                        data={daysBetweenData}
+                        color="secondary"
+                    />
+                    <StatCardPremium
+                        title="Efficiency Trend"
+                        value={`${getAverageEfficiency().toFixed(1)} ${unitLabel}`}
+                        icon={Zap}
+                        trend="up"
+                        trendValue="3%"
+                        color="success"
+                    />
+                    <StatCardPremium
+                        title="Cost Efficiency"
+                        value={costPerKmData.length ? formatCurrency(costPerKmData[costPerKmData.length - 1].costPerDist) : '-'}
+                        subValue={`/${distanceUnit}`}
+                        icon={TrendingUp}
+                        color="warning"
+                    />
+                </motion.div>
 
-            {/* Main Grid: Spend & Trips */}
-            <motion.div variants={item} className="grid grid-cols-1 lg:grid-cols-5 gap-6">
-                <div className="lg:col-span-3">
-                    <MonthlySpend data={monthlyData} />
-                </div>
-                <div className="lg:col-span-2">
-                    <TripDistribution trips={trips} />
-                </div>
-            </motion.div>
+                {/* Main Grid: Spend & Trips */}
+                <motion.div variants={item} className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+                    <div className="lg:col-span-3">
+                        <MonthlySpend data={monthlyData} />
+                    </div>
+                    <div className="lg:col-span-2">
+                        <TripDistribution trips={trips} />
+                    </div>
+                </motion.div>
 
-            <motion.div variants={item} className="grid grid-cols-1 gap-6">
-                <CostPerKm data={costPerKmData} />
-            </motion.div>
+                <motion.div variants={item} className="grid grid-cols-1 gap-6">
+                    <CostPerKm data={costPerKmData} />
+                </motion.div>
 
-            {/* Heatmap */}
-            <motion.div variants={item}>
-                <FillupHeatmap logs={logs} />
+                {/* Heatmap */}
+                <motion.div variants={item}>
+                    <FillupHeatmap logs={logs} />
+                </motion.div>
             </motion.div>
-        </motion.div>
+        </>
     );
 }

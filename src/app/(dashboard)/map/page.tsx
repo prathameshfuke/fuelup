@@ -9,6 +9,7 @@ import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { BorderBeam } from '@/components/ui/border-beam';
+import { BlurReveal } from '@/components/ui/blur-reveal';
 import dynamic from 'next/dynamic';
 import { FuelStation } from '@/lib/api/places';
 import { useSettingsStore } from '@/lib/store/settingsStore';
@@ -78,7 +79,7 @@ export default function MapPage() {
     return (
         <motion.div initial="hidden" animate="show" transition={{ staggerChildren: 0.06 }} className="max-w-7xl mx-auto space-y-6 flex flex-col lg:h-[calc(100vh-40px)] pb-24 md:pb-6">
             <motion.div variants={anim} className="flex flex-col md:flex-row md:items-center justify-between gap-4 shrink-0">
-                <div>
+                <BlurReveal as="div">
                     <h1 className="text-3xl md:text-4xl font-heading font-medium tracking-tight text-foreground uppercase flex items-center gap-3">
                         <div className="w-2 h-8 bg-primary rounded-sm shadow-sm" />
                         Fuel Map
@@ -86,7 +87,7 @@ export default function MapPage() {
                     <p className="text-muted-foreground mt-2 font-mono text-sm tracking-widest uppercase">
                         Find nearby stations and compare prices
                     </p>
-                </div>
+                </BlurReveal>
 
                 {livePrice && (
                     <div className="flex items-center gap-3 bg-card border border-border rounded-xl p-3 shadow-sm">
@@ -156,9 +157,9 @@ export default function MapPage() {
                                     animate={{ opacity: 1, filter: 'blur(0px)', x: 0 }}
                                     transition={{ duration: 0.4, delay: i * 0.1 }}
                                 >
-                                    <GlassCard className="relative overflow-hidden group hover:border-neutral-700 transition-colors z-10 w-full mb-3">
+                                    <GlassCard className="relative overflow-hidden group hover:border-border transition-colors z-10 w-full mb-3">
                                         <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl overflow-hidden pointer-events-none z-0">
-                                            <BorderBeam size={200} duration={8} delay={0} borderWidth={1.5} colorFrom="rgba(255,255,255,0.4)" colorTo="rgba(255,255,255,0)" />
+                                            <BorderBeam size={200} duration={8} delay={0} borderWidth={1.5} />
                                         </div>
                                         <div className="relative z-10 p-4 flex flex-col gap-2">
                                             <div className="flex justify-between items-start mb-2">

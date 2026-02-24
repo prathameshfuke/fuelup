@@ -7,6 +7,8 @@ import {
 } from 'lucide-react';
 import { GlassCard } from '@/components/ui/glass-card';
 import { BorderBeam } from '@/components/ui/border-beam';
+import { BlurReveal } from '@/components/ui/blur-reveal';
+import { MEMORIA_EASING } from '@/lib/animations/easing';
 import { Card, CardContent } from '@/components/ui/card';
 import { AnimatedCounter } from '@/components/ui/animated-counter';
 import { Button } from '@/components/ui/button';
@@ -59,13 +61,17 @@ export default function DashboardPage() {
             {/* Header */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl md:text-4xl font-heading font-medium tracking-tight text-foreground uppercase flex items-center gap-3">
-                        <div className="w-2 h-8 bg-primary rounded-sm shadow-sm" />
-                        Dashboard
-                    </h1>
-                    <p className="text-muted-foreground mt-2 font-mono text-sm tracking-widest uppercase">
-                        Overview of vehicle performance and metrics
-                    </p>
+                    <BlurReveal as="h1" className="mb-2">
+                        <h1 className="text-3xl md:text-4xl font-heading font-medium tracking-tight text-foreground uppercase flex items-center gap-3">
+                            <div className="w-2 h-8 bg-primary rounded-sm shadow-sm" />
+                            Dashboard
+                        </h1>
+                    </BlurReveal>
+                    <BlurReveal delay={0.1}>
+                        <p className="text-muted-foreground font-mono text-sm tracking-widest uppercase">
+                            Overview of vehicle performance and metrics
+                        </p>
+                    </BlurReveal>
                 </div>
                 <Link href="/fuel">
                     <Button className="h-10 px-6 bg-primary text-primary-foreground hover:bg-primary/90 transition-colors font-medium rounded-lg">
@@ -175,15 +181,17 @@ export default function DashboardPage() {
 
             {/* Charts Section */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <GlassCard className="relative flex flex-col h-[350px] overflow-hidden group hover:border-neutral-700 transition-colors z-10">
+                <GlassCard className="relative flex flex-col h-[350px] overflow-hidden group hover:border-border transition-colors z-10">
                     <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl overflow-hidden pointer-events-none z-0">
-                        <BorderBeam size={300} duration={12} delay={0} borderWidth={1.5} colorFrom="rgba(255,255,255,0.3)" colorTo="rgba(255,255,255,0)" />
+                        <BorderBeam size={300} duration={12} delay={0} borderWidth={1.5} />
                     </div>
                     <div className="relative z-10 p-6 flex-1 flex flex-col">
-                        <div className="flex items-center gap-2 mb-6">
-                            <TrendingUp className="h-4 w-4 text-neutral-400" />
-                            <h3 className="text-sm font-medium text-neutral-500 uppercase tracking-widest">Efficiency Trend</h3>
+                    <BlurReveal delay={0.2} className="mb-6">
+                        <div className="flex items-center gap-2">
+                            <TrendingUp className="h-4 w-4 text-muted-foreground" />
+                            <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-widest">Efficiency Trend</h3>
                         </div>
+                    </BlurReveal>
                         <div className="flex-1 w-full min-h-0">
                             <ResponsiveContainer width="100%" height="100%">
                                 <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
@@ -233,15 +241,17 @@ export default function DashboardPage() {
                     </div>
                 </GlassCard>
 
-                <GlassCard className="relative flex flex-col h-[350px] overflow-hidden group hover:border-neutral-700 transition-colors z-10">
+                <GlassCard className="relative flex flex-col h-[350px] overflow-hidden group hover:border-border transition-colors z-10">
                     <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl overflow-hidden pointer-events-none z-0">
-                        <BorderBeam size={300} duration={12} delay={0} borderWidth={1.5} colorFrom="rgba(255,255,255,0.3)" colorTo="rgba(255,255,255,0)" />
+                        <BorderBeam size={300} duration={12} delay={0} borderWidth={1.5} />
                     </div>
                     <div className="relative z-10 p-6 flex-1 flex flex-col">
-                        <div className="flex items-center gap-2 mb-6">
-                            <DollarSign className="h-4 w-4 text-neutral-400" />
-                            <h3 className="text-sm font-medium text-neutral-500 uppercase tracking-widest">Fuel Spending</h3>
+                    <BlurReveal delay={0.2} className="mb-6">
+                        <div className="flex items-center gap-2">
+                            <DollarSign className="h-4 w-4 text-muted-foreground" />
+                            <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-widest">Fuel Spending</h3>
                         </div>
+                    </BlurReveal>
                         <div className="flex-1 w-full min-h-0">
                             <ResponsiveContainer width="100%" height="100%">
                                 <BarChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
@@ -288,22 +298,24 @@ export default function DashboardPage() {
 
             {/* Bottom Row: Recent Logs & Alerts */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <GlassCard className="relative overflow-hidden group hover:border-neutral-700 transition-colors z-10 lg:col-span-2">
+                <GlassCard className="relative overflow-hidden group hover:border-border transition-colors z-10 lg:col-span-2">
                     <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl overflow-hidden pointer-events-none z-0">
-                        <BorderBeam size={400} duration={14} delay={0} borderWidth={1.5} colorFrom="rgba(255,255,255,0.3)" colorTo="rgba(255,255,255,0)" />
+                        <BorderBeam size={400} duration={14} delay={0} borderWidth={1.5} />
                     </div>
                     <div className="relative z-10 p-6">
-                        <div className="flex items-center justify-between mb-6">
-                            <div className="flex items-center gap-2">
-                                <Fuel className="h-4 w-4 text-neutral-400" />
-                                <h3 className="text-sm font-medium text-neutral-500 uppercase tracking-widest">Recent Fill-ups</h3>
+                        <BlurReveal delay={0.2} className="mb-6">
+                            <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-2">
+                                    <Fuel className="h-4 w-4 text-muted-foreground" />
+                                    <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-widest">Recent Fill-ups</h3>
+                                </div>
+                                <Link href="/fuel">
+                                    <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground text-xs font-medium uppercase tracking-widest px-2 group/btn transition-colors">
+                                        View All <ArrowRight className="ml-1 h-3 w-3 opacity-0 group-hover/btn:opacity-100 transition-opacity" />
+                                    </Button>
+                                </Link>
                             </div>
-                            <Link href="/fuel">
-                                <Button variant="ghost" size="sm" className="text-neutral-400 hover:text-white text-xs font-medium uppercase tracking-widest px-2 group/btn">
-                                    View All <ArrowRight className="ml-1 h-3 w-3 opacity-0 group-hover/btn:opacity-100 transition-opacity" />
-                                </Button>
-                            </Link>
-                        </div>
+                        </BlurReveal>
                         <div className="space-y-0">
                             {recentLogs.map((log, index) => (
                                 <motion.div
@@ -311,15 +323,15 @@ export default function DashboardPage() {
                                     animate={{ opacity: 1, filter: 'blur(0px)', y: 0 }}
                                     transition={{ duration: 0.4, delay: index * 0.1 }}
                                     key={log.id}
-                                    className="flex items-center justify-between p-4 border-b border-neutral-800/50 last:border-b-0 hover:bg-neutral-800/30 transition-colors"
+                                    className="flex items-center justify-between p-4 border-b border-border/50 last:border-b-0 hover:bg-secondary/30 transition-colors"
                                 >
                                     <div className="flex items-center gap-4">
-                                        <div className="h-10 w-10 rounded-xl bg-neutral-900/50 border border-neutral-800 flex items-center justify-center">
-                                            <Fuel className="h-4 w-4 text-neutral-500" />
+                                        <div className="h-10 w-10 rounded-xl bg-secondary/50 border border-border flex items-center justify-center">
+                                            <Fuel className="h-4 w-4 text-muted-foreground" />
                                         </div>
                                         <div>
                                             <p className="text-sm font-medium text-foreground capitalize">{log.stationName}</p>
-                                            <p className="text-xs text-neutral-500 mt-0.5">
+                                            <p className="text-xs text-muted-foreground mt-0.5">
                                                 {new Date(log.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} · {log.fuelAmount} {volLabel}
                                             </p>
                                         </div>
@@ -327,27 +339,29 @@ export default function DashboardPage() {
                                     <div className="text-right">
                                         <p className="text-sm font-medium text-foreground">{formatCurrency(log.totalCost)}</p>
                                         {log.efficiency && (
-                                            <p className="text-xs text-neutral-500 mt-0.5">{log.efficiency} {distLabel}/{volLabel}</p>
+                                            <p className="text-xs text-muted-foreground mt-0.5">{log.efficiency} {distLabel}/{volLabel}</p>
                                         )}
                                     </div>
                                 </motion.div>
                             ))}
                             {recentLogs.length === 0 && (
-                                <p className="text-center text-neutral-500 py-8 text-sm">No pit stops yet</p>
+                                <p className="text-center text-muted-foreground py-8 text-sm">No pit stops yet</p>
                             )}
                         </div>
                     </div>
                 </GlassCard>
 
-                <GlassCard className="relative overflow-hidden group hover:border-neutral-700 transition-colors z-10">
+                <GlassCard className="relative overflow-hidden group hover:border-border transition-colors z-10">
                     <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl overflow-hidden pointer-events-none z-0">
-                        <BorderBeam size={300} duration={12} delay={0} borderWidth={1.5} colorFrom="rgba(255,255,255,0.3)" colorTo="rgba(255,255,255,0)" />
+                        <BorderBeam size={300} duration={12} delay={0} borderWidth={1.5} />
                     </div>
                     <div className="relative z-10 p-6">
-                        <div className="flex items-center gap-2 mb-6">
-                            <Bell className="h-4 w-4 text-neutral-400" />
-                            <h3 className="text-sm font-medium text-neutral-500 uppercase tracking-widest">Service Alerts</h3>
-                        </div>
+                        <BlurReveal delay={0.2} className="mb-6">
+                            <div className="flex items-center gap-2">
+                                <Bell className="h-4 w-4 text-muted-foreground" />
+                                <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-widest">Service Alerts</h3>
+                            </div>
+                        </BlurReveal>
                         <div className="space-y-0">
                             {upcoming.slice(0, 3).map((alert, index) => (
                                 <motion.div
@@ -355,15 +369,15 @@ export default function DashboardPage() {
                                     animate={{ opacity: 1, filter: 'blur(0px)', y: 0 }}
                                     transition={{ duration: 0.4, delay: 0.2 + (index * 0.1) }}
                                     key={alert.id}
-                                    className="flex flex-col p-4 border-b border-neutral-800/50 last:border-b-0 hover:bg-neutral-800/30 gap-2 transition-colors"
+                                    className="flex flex-col p-4 border-b border-border/50 last:border-b-0 hover:bg-secondary/30 gap-2 transition-colors"
                                 >
                                     <div className="flex justify-between items-start">
                                         <p className="text-sm font-medium text-foreground capitalize">{alert.service}</p>
-                                        <Badge variant="outline" className={`text-[10px] uppercase tracking-widest px-2 py-0 border ${alert.priority === 'high' ? 'text-white border-white/30 bg-white/10' : alert.priority === 'medium' ? 'text-neutral-300 border-neutral-500/30 bg-neutral-500/10' : 'text-neutral-400 border-neutral-700/50 bg-neutral-800/30'}`}>
+                                        <Badge variant="outline" className={`text-[10px] uppercase tracking-widest px-2 py-0 border ${alert.priority === 'high' ? 'text-destructive border-destructive/30 bg-destructive/10' : alert.priority === 'medium' ? 'text-primary border-primary/30 bg-primary/10' : 'text-muted-foreground border-border/50 bg-secondary/30'}`}>
                                             {alert.priority}
                                         </Badge>
                                     </div>
-                                    <p className="text-xs text-neutral-500">
+                                    <p className="text-xs text-muted-foreground">
                                         {alert.dueDate
                                             ? `Due ${new Date(alert.dueDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`
                                             : alert.dueOdometer
@@ -373,13 +387,13 @@ export default function DashboardPage() {
                                 </motion.div>
                             ))}
                             {upcoming.length === 0 && (
-                                <div className="flex flex-col items-center justify-center py-8 text-neutral-600">
+                                <div className="flex flex-col items-center justify-center py-8 text-muted-foreground">
                                     <Bell className="h-6 w-6 mb-3 opacity-20" />
                                     <p className="text-sm">All clear</p>
                                 </div>
                             )}
                             <Link href="/maintenance" className="block mt-4">
-                                <Button variant="outline" className="w-full text-xs text-neutral-400 hover:text-white border-neutral-800 bg-transparent hover:bg-neutral-900/50 tracking-widest uppercase">
+                                <Button variant="outline" className="w-full text-xs text-muted-foreground hover:text-foreground border-border bg-transparent hover:bg-secondary/50 tracking-widest uppercase transition-colors">
                                     View All
                                 </Button>
                             </Link>

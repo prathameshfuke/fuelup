@@ -25,6 +25,14 @@ interface ParticlesProps {
     refresh?: boolean;
 }
 
+const getThemeColor = () => {
+    if (typeof window !== "undefined") {
+        const isDark = document.documentElement.classList.contains("dark");
+        return isDark ? "rgba(255, 255, 255, 0.6)" : "rgba(0, 0, 0, 0.3)";
+    }
+    return "rgba(255, 255, 255, 0.6)";
+};
+
 export function Particles({
     className,
     variant = "default",
@@ -35,16 +43,31 @@ export function Particles({
     staticity = 50,
     ease = 50,
     size = 0.4,
-    color = "#ffffff",
+    color,
     refresh = false,
 }: ParticlesProps) {
     const [init, setInit] = useState(false);
+    const [particleColor, setParticleColor] = useState(color || getThemeColor());
 
     useEffect(() => {
         initParticlesEngine(async (engine: Engine) => {
             await loadSlim(engine);
         }).then(() => setInit(true));
     }, []);
+
+    useEffect(() => {
+        setParticleColor(color || getThemeColor());
+        
+        // Listen for theme changes
+        const observer = new MutationObserver(() => {
+            if (!color) {
+                setParticleColor(getThemeColor());
+            }
+        });
+
+        observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+        return () => observer.disconnect();
+    }, [color]);
 
     const particlesLoaded = async (container?: Container): Promise<void> => {
         // console.log("Particles loaded", container);
@@ -54,15 +77,15 @@ export function Particles({
         const baseOptions = {
             fpsLimit: 120,
             particles: {
-                color: { value: color || style.color || "#ffffff" },
+                color: { value: particleColor },
                 links: {
                     enable: variant === "default",
                     shadow: {
                         enable: true,
-                        color: "#000000",
+                        color: document.documentElement.classList.contains("dark") ? "rgba(0, 0, 0, 0.5)" : "rgba(0, 0, 0, 0.1)",
                         blur: 5,
                     },
-                    color: color || style.color || "#ffffff",
+                    color: particleColor,
                     distance: 120,
                     opacity: 0.15,
                 },

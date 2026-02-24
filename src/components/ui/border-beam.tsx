@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 
 interface BorderBeamProps {
@@ -19,10 +20,42 @@ export function BorderBeam({
     duration = 15,
     anchor = 90,
     borderWidth = 1.5,
-    colorFrom = "#a3a3a3", // neutral-400
-    colorTo = "#525252",   // neutral-600
+    colorFrom,
+    colorTo,
     delay = 0,
 }: BorderBeamProps) {
+    const [isDark, setIsDark] = useState(false);
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        const isDarkMode = document.documentElement.classList.contains("dark");
+        setIsDark(isDarkMode);
+        setMounted(true);
+
+        const observer = new MutationObserver(() => {
+            const isDarkMode = document.documentElement.classList.contains("dark");
+            setIsDark(isDarkMode);
+        });
+
+        observer.observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ["class"],
+        });
+
+        return () => observer.disconnect();
+    }, []);
+
+    // Default colors based on theme
+    const defaultColorFrom = isDark ? "rgba(255,255,255,0.3)" : "rgba(0,0,0,0.2)";
+    const defaultColorTo = isDark ? "rgba(255,255,255,0)" : "rgba(0,0,0,0)";
+
+    const finalColorFrom = colorFrom || defaultColorFrom;
+    const finalColorTo = colorTo || defaultColorTo;
+
+    // Use light mode colors as default to prevent hydration mismatch
+    const displayColorFrom = colorFrom || (mounted && isDark ? "rgba(255,255,255,0.3)" : "rgba(0,0,0,0.2)");
+    const displayColorTo = colorTo || (mounted && isDark ? "rgba(255,255,255,0)" : "rgba(0,0,0,0)");
+
     return (
         <div
             style={
@@ -31,8 +64,8 @@ export function BorderBeam({
                     "--duration": duration,
                     "--anchor": anchor,
                     "--border-width": borderWidth,
-                    "--color-from": colorFrom,
-                    "--color-to": colorTo,
+                    "--color-from": displayColorFrom,
+                    "--color-to": displayColorTo,
                     "--delay": delay,
                 } as React.CSSProperties
             }

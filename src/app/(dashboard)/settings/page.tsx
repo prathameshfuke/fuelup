@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { User, Bell, Globe, Shield, LogOut, ChevronRight, Check, Settings, Wallet, Smartphone, Database, Lock, Map as MapIcon, Moon } from 'lucide-react';
 import { GlassCard } from '@/components/ui/glass-card';
 import { BorderBeam } from '@/components/ui/border-beam';
+import { BlurReveal } from '@/components/ui/blur-reveal';
 import { CardContent } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
@@ -73,27 +74,25 @@ export default function SettingsPage() {
         >
             {/* Header */}
             <div className="mb-8">
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                    <div>
-                        <h1 className="text-3xl md:text-4xl font-heading font-medium tracking-tight text-foreground uppercase flex items-center gap-3">
-                            <div className="w-2 h-8 bg-primary rounded-sm shadow-sm" />
-                            Settings
-                        </h1>
-                        <p className="text-muted-foreground mt-2 font-mono text-sm tracking-widest uppercase">
-                            Manage your preferences and account settings
-                        </p>
-                    </div>
-                </div>
+                <BlurReveal as="div">
+                    <h1 className="text-3xl md:text-4xl font-heading font-medium tracking-tight text-foreground uppercase flex items-center gap-3">
+                        <div className="w-2 h-8 bg-primary rounded-sm shadow-sm" />
+                        Settings
+                    </h1>
+                    <p className="text-muted-foreground mt-2 font-mono text-sm tracking-widest uppercase">
+                        Manage your preferences and account settings
+                    </p>
+                </BlurReveal>
             </div>
 
-            {/* Profile Section */}
-            <GlassCard className="relative overflow-hidden group hover:border-neutral-700 transition-colors z-10 w-full">
+                {/* Profile Section */}
+                <GlassCard className="relative overflow-hidden group hover:border-border transition-colors z-10 w-full">
                 <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl overflow-hidden pointer-events-none z-0">
                     <BorderBeam size={300} duration={12} delay={0} borderWidth={1.5} colorFrom="rgba(255,255,255,0.3)" colorTo="rgba(255,255,255,0)" />
                 </div>
                 <div className="relative z-10 p-6 md:p-8">
                     <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
-                        <Avatar className="h-20 w-20 shadow-sm border border-neutral-800">
+                        <Avatar className="h-20 w-20 shadow-sm border border-border">
                             <AvatarFallback className="bg-secondary text-foreground text-2xl font-light">
                                 {initial}
                             </AvatarFallback>
@@ -121,12 +120,12 @@ export default function SettingsPage() {
             <div className="space-y-6">
 
                 {/* Appearance */}
-                <GlassCard className="relative overflow-hidden group hover:border-neutral-700 transition-colors z-10 w-full">
+                <GlassCard className="relative overflow-hidden group hover:border-border transition-colors z-10 w-full">
                     <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl overflow-hidden pointer-events-none z-0">
-                        <BorderBeam size={300} duration={12} delay={0} borderWidth={1.5} colorFrom="rgba(255,255,255,0.3)" colorTo="rgba(255,255,255,0)" />
+                        <BorderBeam size={300} duration={12} delay={0} borderWidth={1.5} />
                     </div>
                     <div className="relative z-10 p-6">
-                        <h2 className="text-xs font-medium text-neutral-500 mb-4 uppercase tracking-widest">
+                        <h2 className="text-xs font-medium text-muted-foreground mb-4 uppercase tracking-widest">
                             Appearance
                         </h2>
                         <div className="space-y-4">
@@ -147,12 +146,12 @@ export default function SettingsPage() {
                 </GlassCard>
 
                 {/* Regional Preferences */}
-                <GlassCard className="relative overflow-hidden group hover:border-neutral-700 transition-colors z-10 w-full">
+                <GlassCard className="relative overflow-hidden group hover:border-border transition-colors z-10 w-full">
                     <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl overflow-hidden pointer-events-none z-0">
-                        <BorderBeam size={300} duration={12} delay={0} borderWidth={1.5} colorFrom="rgba(255,255,255,0.3)" colorTo="rgba(255,255,255,0)" />
+                        <BorderBeam size={300} duration={12} delay={0} borderWidth={1.5} />
                     </div>
                     <div className="relative z-10 p-6">
-                        <h2 className="text-xs font-medium text-neutral-500 mb-4 uppercase tracking-widest">
+                        <h2 className="text-xs font-medium text-muted-foreground mb-4 uppercase tracking-widest">
                             Regional Preferences
                         </h2>
 
@@ -227,12 +226,12 @@ export default function SettingsPage() {
                 </GlassCard>
 
                 {/* Notifications */}
-                <GlassCard className="relative overflow-hidden group hover:border-neutral-700 transition-colors z-10 w-full">
+                <GlassCard className="relative overflow-hidden group hover:border-border transition-colors z-10 w-full">
                     <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl overflow-hidden pointer-events-none z-0">
-                        <BorderBeam size={300} duration={12} delay={0} borderWidth={1.5} colorFrom="rgba(255,255,255,0.3)" colorTo="rgba(255,255,255,0)" />
+                        <BorderBeam size={300} duration={12} delay={0} borderWidth={1.5} />
                     </div>
                     <div className="relative z-10 p-6">
-                        <h2 className="text-xs font-medium text-neutral-500 mb-4 uppercase tracking-widest">
+                        <h2 className="text-xs font-medium text-muted-foreground mb-4 uppercase tracking-widest">
                             Notifications
                         </h2>
                         <div className="space-y-1">
@@ -257,12 +256,12 @@ export default function SettingsPage() {
                 </GlassCard>
 
                 {/* Data & Privacy */}
-                <GlassCard className="relative overflow-hidden group hover:border-neutral-700 transition-colors z-10 w-full mb-8">
+                <GlassCard className="relative overflow-hidden group hover:border-border transition-colors z-10 w-full mb-8">
                     <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl overflow-hidden pointer-events-none z-0">
-                        <BorderBeam size={300} duration={12} delay={0} borderWidth={1.5} colorFrom="rgba(255,255,255,0.3)" colorTo="rgba(255,255,255,0)" />
+                        <BorderBeam size={300} duration={12} delay={0} borderWidth={1.5} />
                     </div>
                     <div className="relative z-10 p-6">
-                        <h2 className="text-xs font-medium text-neutral-500 mb-4 uppercase tracking-widest">
+                        <h2 className="text-xs font-medium text-muted-foreground mb-4 uppercase tracking-widest">
                             Account & Data
                         </h2>
 

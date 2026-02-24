@@ -7,8 +7,11 @@ import { motion } from 'framer-motion';
 import { ArrowRight, BarChart3, Fuel, ShieldCheck, Zap, Car } from 'lucide-react';
 import { AnimatedCounter } from '@/components/ui/animated-counter';
 import { Particles } from '@/components/ui/particles';
+import { BlurReveal } from '@/components/ui/blur-reveal';
+import { HyperspaceBackground } from '@/components/ui/hyperspace-background';
+import { MEMORIA_EASING } from '@/lib/animations/easing';
 
-const memoriaEase: [number, number, number, number] = [0.25, 0.46, 0.45, 0.94];
+const memoriaEase = MEMORIA_EASING.smooth;
 
 export default function LandingPage() {
   return (
@@ -37,7 +40,7 @@ export default function LandingPage() {
 
       {/* Hero Section */}
       <section className="relative pt-32 pb-20 px-6 min-h-[90vh] flex flex-col items-center justify-center text-center overflow-hidden z-10">
-        <Particles className="absolute inset-0 z-0" quantity={120} staticity={30} color="#888888" refresh />
+        <HyperspaceBackground className="absolute inset-0 z-0" starCount={150} speed={0.5} interactive={true} />
 
         <div className="relative z-10 max-w-5xl mx-auto flex flex-col items-center">
           <motion.div
@@ -53,24 +56,18 @@ export default function LandingPage() {
             Introducing the new FuelUp Experience
           </motion.div>
 
-          <motion.h1
-            initial={{ opacity: 0, y: 20, filter: 'blur(10px)' }}
-            animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-            transition={{ duration: 0.7, ease: memoriaEase, delay: 0.2 }}
-            className="text-5xl md:text-7xl lg:text-8xl font-light tracking-tight mb-6 text-foreground max-w-4xl mx-auto leading-tight text-center"
-          >
-            Numbers are heroes. <br />
-            <span className="text-muted-foreground font-light tracking-tight">Labels are whispers.</span>
-          </motion.h1>
+          <BlurReveal as="h1" delay={0.2} className="mb-6">
+            <h1 className="text-5xl md:text-7xl lg:text-8xl font-light tracking-tight text-foreground max-w-4xl mx-auto leading-tight text-center">
+              Numbers are heroes. <br />
+              <span className="text-muted-foreground font-light tracking-tight">Labels are whispers.</span>
+            </h1>
+          </BlurReveal>
 
-          <motion.p
-            initial={{ opacity: 0, y: 20, filter: 'blur(10px)' }}
-            animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-            transition={{ duration: 0.7, ease: memoriaEase, delay: 0.3 }}
-            className="text-base md:text-lg tracking-wide text-neutral-400 max-w-2xl mx-auto mb-10 leading-relaxed font-normal"
-          >
-            A premium platform to track fuel costs, monitor performance trends, and manage vehicles with absolute clarity. Built for modern drivers.
-          </motion.p>
+          <BlurReveal delay={0.3} className="mb-10">
+            <p className="text-base md:text-lg tracking-wide text-neutral-400 max-w-2xl mx-auto leading-relaxed font-normal">
+              A premium platform to track fuel costs, monitor performance trends, and manage vehicles with absolute clarity. Built for modern drivers.
+            </p>
+          </BlurReveal>
 
           <motion.div
             initial={{ opacity: 0, y: 20, filter: 'blur(10px)' }}
@@ -167,8 +164,12 @@ export default function LandingPage() {
       <section id="features" className="py-24 px-6 bg-secondary/30">
         <div className="max-w-6xl mx-auto">
           <div className="mb-16 text-center">
-            <h2 className="text-3xl md:text-4xl font-medium tracking-tight text-foreground mb-4">Intelligent by design</h2>
-            <p className="text-muted-foreground max-w-xl mx-auto text-lg">Everything you need to effortlessly manage your vehicles.</p>
+            <BlurReveal as="h2" className="mb-4">
+              <h2 className="text-3xl md:text-4xl font-medium tracking-tight text-foreground">Intelligent by design</h2>
+            </BlurReveal>
+            <BlurReveal delay={0.1}>
+              <p className="text-muted-foreground max-w-xl mx-auto text-lg">Everything you need to effortlessly manage your vehicles.</p>
+            </BlurReveal>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -226,8 +227,12 @@ export default function LandingPage() {
       {/* CTA Section */}
       <section className="py-24 px-6 relative z-10 bg-background border-y border-border">
         <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-4xl md:text-5xl font-medium tracking-tight text-foreground mb-6">Drive with clarity.</h2>
-          <p className="text-lg text-muted-foreground mb-10">Stop guessing about fuel economy and expenses. Start tracking properly today.</p>
+          <BlurReveal as="h2" className="mb-6">
+            <h2 className="text-4xl md:text-5xl font-medium tracking-tight text-foreground">Drive with clarity.</h2>
+          </BlurReveal>
+          <BlurReveal delay={0.1} className="mb-10">
+            <p className="text-lg text-muted-foreground">Stop guessing about fuel economy and expenses. Start tracking properly today.</p>
+          </BlurReveal>
           <Link href="/login">
             <Button className="h-14 px-10 rounded-full bg-primary text-primary-foreground hover:bg-primary/90 transition-all text-lg font-medium shadow-lg">
               Create Account

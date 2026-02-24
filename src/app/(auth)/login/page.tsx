@@ -12,6 +12,8 @@ import { GlassCard } from '@/components/ui/glass-card';
 import { BorderBeam } from '@/components/ui/border-beam';
 import { motion } from 'framer-motion';
 import { Particles } from '@/components/ui/particles';
+import { GlowingStarsBackgroundCard } from '@/components/ui/glowing-stars-background-card';
+import { BlurReveal } from '@/components/ui/blur-reveal';
 
 export default function LoginPage() {
     const [email, setEmail] = useState('');
@@ -49,16 +51,12 @@ export default function LoginPage() {
                                 FuelUp
                             </span>
                         </Link>
-                        <motion.div
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.5 }}
-                        >
+                    <BlurReveal as="div">
                             <h1 className="text-3xl font-semibold tracking-tight text-foreground mb-2">Welcome back</h1>
                             <p className="text-muted-foreground text-base">
                                 Manage your fleet with precision and style.
                             </p>
-                        </motion.div>
+                        </BlurReveal>
                     </div>
 
                     {/* Auth Card */}
@@ -141,36 +139,46 @@ export default function LoginPage() {
             {/* Right side - Visual (desktop only) */}
             <div className="hidden lg:flex flex-1 relative overflow-hidden bg-secondary items-center justify-center p-12 border-l border-border">
                 {/* Ambient Particles Effect */}
-                <Particles className="absolute inset-0 z-0" quantity={80} ease={80} color="#888888" refresh />
-
-                {/* Subtle abstract background pattern for right side */}
-                <div className="absolute inset-0 opacity-20 z-0" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, hsl(var(--border)) 1px, transparent 0)', backgroundSize: '32px 32px' }}></div>
+                <Particles className="absolute inset-0 z-0" quantity={60} ease={80} refresh />
 
                 <div className="relative z-10 max-w-lg w-full">
-                    <div className="grid grid-cols-1 gap-4">
-                        {[
-                            { icon: BarChart3, title: 'Real-time Analytics', desc: 'Monitor fuel efficiency, track costs per distance, and spot trends over time.' },
-                            { icon: Bell, title: 'Smart Reminders', desc: 'Never miss a maintenance service with automated alerts based on time or distance.' },
-                            { icon: Lock, title: 'Secure Data', desc: 'Your fleet data is yours. Export it at any time or clear it completely with one click.' },
-                        ].map((item, i) => (
-                            <motion.div
-                                key={i}
-                                initial={{ opacity: 0, x: 20 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                transition={{ delay: 0.2 + (i * 0.1), duration: 0.5 }}
-                                className="p-6 bg-card border border-border rounded-2xl shadow-sm hover:shadow-md transition-shadow"
-                            >
-                                <div className="flex items-start gap-4">
-                                    <div className="p-3 rounded-lg bg-primary/10 text-primary shrink-0">
-                                        <item.icon className="h-6 w-6" />
-                                    </div>
-                                    <div>
-                                        <h3 className="text-base font-semibold text-foreground mb-1">{item.title}</h3>
-                                        <p className="text-sm text-muted-foreground leading-relaxed">{item.desc}</p>
-                                    </div>
+                    <div className="space-y-6">
+                        {/* Feature Cards with Glowing Stars Background */}
+                        <GlowingStarsBackgroundCard className="p-6">
+                            <div className="flex items-start gap-4">
+                                <div className="p-3 rounded-lg bg-primary/10 text-primary shrink-0">
+                                    <BarChart3 className="h-6 w-6" />
                                 </div>
-                            </motion.div>
-                        ))}
+                                <div>
+                                    <h3 className="text-base font-semibold text-foreground mb-1">Real-time Analytics</h3>
+                                    <p className="text-sm text-muted-foreground leading-relaxed">Monitor fuel efficiency, track costs per distance, and spot trends over time.</p>
+                                </div>
+                            </div>
+                        </GlowingStarsBackgroundCard>
+
+                        <GlowingStarsBackgroundCard className="p-6">
+                            <div className="flex items-start gap-4">
+                                <div className="p-3 rounded-lg bg-primary/10 text-primary shrink-0">
+                                    <Bell className="h-6 w-6" />
+                                </div>
+                                <div>
+                                    <h3 className="text-base font-semibold text-foreground mb-1">Smart Reminders</h3>
+                                    <p className="text-sm text-muted-foreground leading-relaxed">Never miss a maintenance service with automated alerts based on time or distance.</p>
+                                </div>
+                            </div>
+                        </GlowingStarsBackgroundCard>
+
+                        <GlowingStarsBackgroundCard className="p-6">
+                            <div className="flex items-start gap-4">
+                                <div className="p-3 rounded-lg bg-primary/10 text-primary shrink-0">
+                                    <Lock className="h-6 w-6" />
+                                </div>
+                                <div>
+                                    <h3 className="text-base font-semibold text-foreground mb-1">Secure Data</h3>
+                                    <p className="text-sm text-muted-foreground leading-relaxed">Your fleet data is yours. Export it at any time or clear it completely with one click.</p>
+                                </div>
+                            </div>
+                        </GlowingStarsBackgroundCard>
                     </div>
                 </div>
             </div>
