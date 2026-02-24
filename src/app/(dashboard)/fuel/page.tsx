@@ -3,12 +3,11 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-    Plus, Fuel, Calendar, MapPin, Droplets, Gauge, Trash2
+    Plus, Fuel, Calendar, MapPin, Droplets, Gauge, Trash2, Pencil
 } from 'lucide-react';
 import { GlassCard } from '@/components/ui/glass-card';
 import { BorderBeam } from '@/components/ui/border-beam';
 import { BlurReveal } from '@/components/ui/blur-reveal';
-import { CardContent } from '@/components/ui/card';
 import { AnimatedCounter } from '@/components/ui/animated-counter';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -17,14 +16,15 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from '
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { toast } from 'sonner';
-import { useFuelStore } from '@/lib/store/fuelStore';
+import { useFuelStore, type FuelLog } from '@/lib/store/fuelStore';
 import { useVehiclesStore } from '@/lib/store/vehiclesStore';
 import { useVehicleStore } from '@/lib/store/vehicleStore';
 import { useSettingsStore, CURRENCY_CONFIG } from '@/lib/store/settingsStore';
 
 export default function FuelPage() {
     const [isFormOpen, setIsFormOpen] = useState(false);
-    const { logs, addLog, deleteLog, getLogsByVehicle, getTotalSpentByVehicle, getTotalFuelByVehicle, getAverageEfficiencyByVehicle } = useFuelStore();
+    const [editingLog, setEditingLog] = useState<FuelLog | null>(null);
+    const { logs, addLog, updateLog, deleteLog, getLogsByVehicle, getTotalSpentByVehicle, getTotalFuelByVehicle, getAverageEfficiencyByVehicle } = useFuelStore();
     const { vehicles } = useVehiclesStore();
     const { activeVehicleId } = useVehicleStore();
     const { formatCurrency, distanceUnit, volumeUnit, currency } = useSettingsStore();
@@ -35,7 +35,7 @@ export default function FuelPage() {
     const vehicleId = activeVehicleId || '';
     const vehicleLogs = getLogsByVehicle(vehicleId);
 
-    const [newLog, setNewLog] = useState({
+    const emptyForm = {
         odometer: '',
         fuelAmount: '',
         totalCost: '',
@@ -43,12 +43,35 @@ export default function FuelPage() {
         isFullTank: true,
         notes: '',
         date: new Date().toISOString().split('T')[0],
-    });
+    };
 
+    const [newLog, setNewLog] = useState(emptyForm);
     const [errors, setErrors] = useState<Record<string, string>>({});
 
     const volLabel = volumeUnit === 'liters' ? 'L' : 'gal';
     const distLabel = distanceUnit === 'km' ? 'km' : 'mi';
+
+    const openAdd = () => {
+        setEditingLog(null);
+        setNewLog(emptyForm);
+        setErrors({});
+        setIsFormOpen(true);
+    };
+
+    const openEdit = (log: FuelLog) => {
+        setEditingLog(log);
+        setNewLog({
+            odometer: log.odometer.toString(),
+            fuelAmount: log.fuelAmount.toString(),
+            totalCost: log.totalCost.toString(),
+            stationName: log.stationName,
+            isFullTank: log.isFullTank,
+            notes: log.notes,
+            date: log.date,
+        });
+        setErrors({});
+        setIsFormOpen(true);
+    };
 
     const validate = () => {
         const errs: Record<string, string> = {};
@@ -56,14 +79,16 @@ export default function FuelPage() {
         const fuel = parseFloat(newLog.fuelAmount);
         const cost = parseFloat(newLog.totalCost);
 
-        if (isNaN(odo) || odo <= 0) errs.odometer = 'Enter a valid odometer reading';
-        if (isNaN(fuel) || fuel <= 0) errs.fuelAmount = 'Enter a valid fuel amount';
-        if (isNaN(cost) || cost <= 0) errs.totalCost = 'Enter a valid cost';
+        if (!newLog.odometer || isNaN(odo) || odo <= 0) errs.odometer = 'Enter a valid odometer reading';
+        if (!newLog.fuelAmount || isNaN(fuel) || fuel <= 0) errs.fuelAmount = 'Enter a valid fuel amount';
+        if (!newLog.totalCost || isNaN(cost) || cost <= 0) errs.totalCost = 'Enter a valid cost';
 
-        // Check odometer is greater than last reading for this vehicle
-        const lastLog = vehicleLogs.sort((a, b) => b.odometer - a.odometer)[0];
-        if (lastLog && odo <= lastLog.odometer) {
-            errs.odometer = `Must be greater than last reading (${lastLog.odometer.toLocaleString()} ${distLabel})`;
+        // Check odometer is greater than last reading for this vehicle (only for new logs)
+        if (!editingLog) {
+            const lastLog = vehicleLogs.sort((a, b) => b.odometer - a.odometer)[0];
+            if (lastLog && odo <= lastLog.odometer) {
+                errs.odometer = `Must be greater than last reading (${lastLog.odometer.toLocaleString()} ${distLabel})`;
+            }
         }
 
         setErrors(errs);
@@ -78,19 +103,33 @@ export default function FuelPage() {
         }
         if (!validate()) return;
 
-        addLog({
-            vehicleId: activeVehicle.id,
-            date: newLog.date,
-            odometer: parseFloat(newLog.odometer),
-            fuelAmount: parseFloat(newLog.fuelAmount),
-            totalCost: parseFloat(newLog.totalCost),
-            stationName: newLog.stationName || 'Unknown Station',
-            isFullTank: newLog.isFullTank,
-            notes: newLog.notes,
-        });
-        toast.success('Fuel entry saved!');
+        if (editingLog) {
+            updateLog(editingLog.id, {
+                date: newLog.date,
+                odometer: parseFloat(newLog.odometer),
+                fuelAmount: parseFloat(newLog.fuelAmount),
+                totalCost: parseFloat(newLog.totalCost),
+                stationName: newLog.stationName || 'Unknown Station',
+                isFullTank: newLog.isFullTank,
+                notes: newLog.notes,
+            });
+            toast.success('Fuel entry updated!');
+        } else {
+            addLog({
+                vehicleId: activeVehicle.id,
+                date: newLog.date,
+                odometer: parseFloat(newLog.odometer),
+                fuelAmount: parseFloat(newLog.fuelAmount),
+                totalCost: parseFloat(newLog.totalCost),
+                stationName: newLog.stationName || 'Unknown Station',
+                isFullTank: newLog.isFullTank,
+                notes: newLog.notes,
+            });
+            toast.success('Fuel entry saved!');
+        }
         setIsFormOpen(false);
-        setNewLog({ odometer: '', fuelAmount: '', totalCost: '', stationName: '', isFullTank: true, notes: '', date: new Date().toISOString().split('T')[0] });
+        setEditingLog(null);
+        setNewLog(emptyForm);
         setErrors({});
     };
 
@@ -102,6 +141,8 @@ export default function FuelPage() {
     const totalCost = getTotalSpentByVehicle(vehicleId);
     const totalFuel = getTotalFuelByVehicle(vehicleId);
     const avgEfficiency = getAverageEfficiencyByVehicle(vehicleId);
+
+    const isFormDisabled = !newLog.odometer || !newLog.fuelAmount || !newLog.totalCost;
 
     return (
         <motion.div
@@ -123,7 +164,7 @@ export default function FuelPage() {
                 </BlurReveal>
                 <Button
                     className="h-10 px-6 bg-primary text-primary-foreground hover:bg-primary/90 transition-colors font-medium rounded-lg"
-                    onClick={() => setIsFormOpen(true)}
+                    onClick={openAdd}
                 >
                     <Plus className="h-4 w-4 mr-2" />
                     Log Fuel
@@ -246,14 +287,26 @@ export default function FuelPage() {
                                                 )}
                                             </div>
                                         </div>
-                                        <Button
-                                            variant="ghost"
-                                            size="icon"
-                                            className="h-8 w-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10"
-                                            onClick={(e) => { e.stopPropagation(); handleDelete(log.id); }}
-                                        >
-                                            <Trash2 className="h-4 w-4" />
-                                        </Button>
+                                        <div className="flex items-center gap-1">
+                                            <Button
+                                                variant="ghost"
+                                                size="icon"
+                                                className="h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-secondary/80"
+                                                onClick={(e) => { e.stopPropagation(); openEdit(log); }}
+                                                title="Edit entry"
+                                            >
+                                                <Pencil className="h-4 w-4" />
+                                            </Button>
+                                            <Button
+                                                variant="ghost"
+                                                size="icon"
+                                                className="h-8 w-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10"
+                                                onClick={(e) => { e.stopPropagation(); handleDelete(log.id); }}
+                                                title="Delete entry"
+                                            >
+                                                <Trash2 className="h-4 w-4" />
+                                            </Button>
+                                        </div>
                                     </div>
                                 </div>
                             </GlassCard>
@@ -271,7 +324,7 @@ export default function FuelPage() {
                         </p>
                         <Button
                             className="px-6 py-2 bg-primary text-primary-foreground rounded-lg"
-                            onClick={() => setIsFormOpen(true)}
+                            onClick={openAdd}
                         >
                             Log Fuel
                         </Button>
@@ -283,12 +336,12 @@ export default function FuelPage() {
             <Button
                 size="icon"
                 className="fixed bottom-24 right-6 h-14 w-14 shadow-md md:hidden rounded-full bg-primary text-primary-foreground z-40 hover:bg-primary/90"
-                onClick={() => setIsFormOpen(true)}
+                onClick={openAdd}
             >
                 <Plus className="h-6 w-6" />
             </Button>
 
-            <Sheet open={isFormOpen} onOpenChange={setIsFormOpen}>
+            <Sheet open={isFormOpen} onOpenChange={(open) => { setIsFormOpen(open); if (!open) { setEditingLog(null); setErrors({}); } }}>
                 <SheetContent side="bottom" className="w-[min(560px,96vw)] inset-auto left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-border p-0 max-h-[88vh] flex flex-col overflow-hidden shadow-2xl">
 
                     {/* Header */}
@@ -298,8 +351,12 @@ export default function FuelPage() {
                                 <Fuel className="h-4 w-4 text-foreground" />
                             </div>
                             <div className="text-left">
-                                <SheetTitle className="text-foreground text-base font-medium leading-tight">Log Fuel Entry</SheetTitle>
-                                <SheetDescription className="text-muted-foreground text-xs mt-0.5">Record your latest refueling details</SheetDescription>
+                                <SheetTitle className="text-foreground text-base font-medium leading-tight">
+                                    {editingLog ? 'Edit Fuel Entry' : 'Log Fuel Entry'}
+                                </SheetTitle>
+                                <SheetDescription className="text-muted-foreground text-xs mt-0.5">
+                                    {editingLog ? 'Update your refueling details' : 'Record your latest refueling details'}
+                                </SheetDescription>
                             </div>
                         </div>
                     </SheetHeader>
@@ -328,13 +385,13 @@ export default function FuelPage() {
                             <div className="space-y-1.5">
                                 <Label htmlFor="odometer" className="text-[11px] uppercase tracking-wider text-muted-foreground font-medium">Odometer ({distLabel}) *</Label>
                                 <Input
-                                    id="odometer" type="number" placeholder="25500" min="0"
+                                    id="odometer" type="number" placeholder="25500" min="1" step="1"
                                     value={newLog.odometer}
                                     onChange={(e) => { setNewLog({ ...newLog, odometer: e.target.value }); setErrors(prev => ({ ...prev, odometer: '' })); }}
                                     className={`bg-secondary/30 border-border/60 ${errors.odometer ? 'border-destructive' : ''}`} required
                                 />
                                 {errors.odometer && <p className="text-xs text-destructive mt-1">{errors.odometer}</p>}
-                                {vehicleLogs[0] && !errors.odometer && (
+                                {vehicleLogs[0] && !errors.odometer && !editingLog && (
                                     <p className="text-xs text-muted-foreground">Last: {vehicleLogs.sort((a, b) => b.odometer - a.odometer)[0]?.odometer.toLocaleString()} {distLabel}</p>
                                 )}
                             </div>
@@ -342,7 +399,7 @@ export default function FuelPage() {
                                 <div className="space-y-1.5">
                                     <Label htmlFor="fuelAmount" className="text-[11px] uppercase tracking-wider text-muted-foreground font-medium">Fuel ({volLabel}) *</Label>
                                     <Input
-                                        id="fuelAmount" type="number" step="0.01" placeholder="35.50" min="0"
+                                        id="fuelAmount" type="number" step="0.01" placeholder="35.50" min="0.01"
                                         value={newLog.fuelAmount}
                                         onChange={(e) => { setNewLog({ ...newLog, fuelAmount: e.target.value }); setErrors(prev => ({ ...prev, fuelAmount: '' })); }}
                                         className={`bg-secondary/30 border-border/60 ${errors.fuelAmount ? 'border-destructive' : ''}`} required
@@ -352,7 +409,7 @@ export default function FuelPage() {
                                 <div className="space-y-1.5">
                                     <Label htmlFor="totalCost" className="text-[11px] uppercase tracking-wider text-muted-foreground font-medium">Cost ({currencySymbol}) *</Label>
                                     <Input
-                                        id="totalCost" type="number" step="0.01" placeholder="52.80" min="0"
+                                        id="totalCost" type="number" step="0.01" placeholder="52.80" min="0.01"
                                         value={newLog.totalCost}
                                         onChange={(e) => { setNewLog({ ...newLog, totalCost: e.target.value }); setErrors(prev => ({ ...prev, totalCost: '' })); }}
                                         className={`bg-secondary/30 border-border/60 ${errors.totalCost ? 'border-destructive' : ''}`} required
@@ -360,7 +417,7 @@ export default function FuelPage() {
                                     {errors.totalCost && <p className="text-xs text-destructive mt-1">{errors.totalCost}</p>}
                                 </div>
                             </div>
-                            {newLog.fuelAmount && newLog.totalCost && (
+                            {newLog.fuelAmount && newLog.totalCost && parseFloat(newLog.fuelAmount) > 0 && (
                                 <motion.div
                                     initial={{ opacity: 0, scale: 0.95 }}
                                     animate={{ opacity: 1, scale: 1 }}
@@ -410,9 +467,9 @@ export default function FuelPage() {
                         <Button
                             type="submit" form="fuel-form"
                             className="w-full bg-primary text-primary-foreground hover:bg-primary/90 h-11 rounded-xl font-medium tracking-wide"
-                            disabled={!newLog.odometer || !newLog.fuelAmount || !newLog.totalCost}
+                            disabled={isFormDisabled}
                         >
-                            Save Fuel Entry
+                            {editingLog ? 'Update Fuel Entry' : 'Save Fuel Entry'}
                         </Button>
                     </div>
                 </SheetContent>

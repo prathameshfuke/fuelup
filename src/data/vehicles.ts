@@ -1,6 +1,7 @@
 export const VEHICLE_DATA = [
     {
         make: "Toyota",
+        vehicleTypes: ["car", "suv", "truck", "van"],
         models: [
             { name: "Camry", type: "Sedan", fuelType: "Hybrid" },
             { name: "Corolla", type: "Sedan", fuelType: "Gasoline" },
@@ -16,6 +17,7 @@ export const VEHICLE_DATA = [
     },
     {
         make: "Honda",
+        vehicleTypes: ["car", "suv", "truck", "van"],
         models: [
             { name: "Civic", type: "Sedan", fuelType: "Gasoline" },
             { name: "Accord", type: "Sedan", fuelType: "Hybrid" },
@@ -30,6 +32,7 @@ export const VEHICLE_DATA = [
     },
     {
         make: "Ford",
+        vehicleTypes: ["car", "suv", "truck"],
         models: [
             { name: "F-150", type: "Truck", fuelType: "Gasoline" },
             { name: "Mustang", type: "Coupe", fuelType: "Gasoline" },
@@ -44,6 +47,7 @@ export const VEHICLE_DATA = [
     },
     {
         make: "Chevrolet",
+        vehicleTypes: ["car", "suv", "truck"],
         models: [
             { name: "Silverado", type: "Truck", fuelType: "Gasoline" },
             { name: "Equinox", type: "SUV", fuelType: "Gasoline" },
@@ -58,6 +62,7 @@ export const VEHICLE_DATA = [
     },
     {
         make: "Tesla",
+        vehicleTypes: ["car", "suv", "truck"],
         models: [
             { name: "Model 3", type: "Sedan", fuelType: "Electric" },
             { name: "Model Y", type: "SUV", fuelType: "Electric" },
@@ -68,6 +73,7 @@ export const VEHICLE_DATA = [
     },
     {
         make: "BMW",
+        vehicleTypes: ["car", "suv"],
         models: [
             { name: "3 Series", type: "Sedan", fuelType: "Gasoline" },
             { name: "5 Series", type: "Sedan", fuelType: "Gasoline" },
@@ -82,6 +88,7 @@ export const VEHICLE_DATA = [
     },
     {
         make: "Mercedes-Benz",
+        vehicleTypes: ["car", "suv"],
         models: [
             { name: "C-Class", type: "Sedan", fuelType: "Gasoline" },
             { name: "E-Class", type: "Sedan", fuelType: "Gasoline" },
@@ -95,6 +102,7 @@ export const VEHICLE_DATA = [
     },
     {
         make: "Audi",
+        vehicleTypes: ["car", "suv"],
         models: [
             { name: "A3", type: "Sedan", fuelType: "Gasoline" },
             { name: "A4", type: "Sedan", fuelType: "Gasoline" },
@@ -109,6 +117,7 @@ export const VEHICLE_DATA = [
     },
     {
         make: "Hyundai",
+        vehicleTypes: ["car", "suv"],
         models: [
             { name: "Elantra", type: "Sedan", fuelType: "Hybrid" },
             { name: "Sonata", type: "Sedan", fuelType: "Hybrid" },
@@ -122,6 +131,7 @@ export const VEHICLE_DATA = [
     },
     {
         make: "Kia",
+        vehicleTypes: ["car", "suv"],
         models: [
             { name: "Forte", type: "Sedan", fuelType: "Gasoline" },
             { name: "K5", type: "Sedan", fuelType: "Gasoline" },
@@ -136,6 +146,7 @@ export const VEHICLE_DATA = [
     },
     {
         make: "Yamaha",
+        vehicleTypes: ["motorcycle"],
         models: [
             { name: "MT-07", type: "Motorcycle", fuelType: "Gasoline" },
             { name: "MT-09", type: "Motorcycle", fuelType: "Gasoline" },
@@ -146,6 +157,7 @@ export const VEHICLE_DATA = [
     },
     {
         make: "Honda Motorcycles",
+        vehicleTypes: ["motorcycle"],
         models: [
             { name: "CBR600RR", type: "Motorcycle", fuelType: "Gasoline" },
             { name: "CBR1000RR", type: "Motorcycle", fuelType: "Gasoline" },
@@ -156,6 +168,7 @@ export const VEHICLE_DATA = [
     },
     {
         make: "Kawasaki",
+        vehicleTypes: ["motorcycle"],
         models: [
             { name: "Ninja 400", type: "Motorcycle", fuelType: "Gasoline" },
             { name: "Ninja ZX-6R", type: "Motorcycle", fuelType: "Gasoline" },
@@ -163,14 +176,90 @@ export const VEHICLE_DATA = [
             { name: "Z900", type: "Motorcycle", fuelType: "Gasoline" },
             { name: "KLR650", type: "Motorcycle", fuelType: "Gasoline" }
         ]
+    },
+    {
+        make: "Suzuki",
+        vehicleTypes: ["motorcycle"],
+        models: [
+            { name: "GSX-R750", type: "Motorcycle", fuelType: "Gasoline" },
+            { name: "V-Strom 650", type: "Motorcycle", fuelType: "Gasoline" },
+            { name: "Hayabusa", type: "Motorcycle", fuelType: "Gasoline" },
+            { name: "SV650", type: "Motorcycle", fuelType: "Gasoline" }
+        ]
+    },
+    {
+        make: "Honda Scooters",
+        vehicleTypes: ["scooter"],
+        models: [
+            { name: "Activa 6G", type: "Scooter", fuelType: "Gasoline" },
+            { name: "Dio", type: "Scooter", fuelType: "Gasoline" },
+            { name: "Grazia", type: "Scooter", fuelType: "Gasoline" },
+            { name: "Aviator", type: "Scooter", fuelType: "Gasoline" }
+        ]
+    },
+    {
+        make: "TVS",
+        vehicleTypes: ["scooter"],
+        models: [
+            { name: "Jupiter", type: "Scooter", fuelType: "Gasoline" },
+            { name: "NTORQ 125", type: "Scooter", fuelType: "Gasoline" },
+            { name: "Zest 110", type: "Scooter", fuelType: "Gasoline" },
+            { name: "iQube", type: "Scooter", fuelType: "Electric" }
+        ]
+    },
+    {
+        make: "Suzuki Scooters",
+        vehicleTypes: ["scooter"],
+        models: [
+            { name: "Access 125", type: "Scooter", fuelType: "Gasoline" },
+            { name: "Burgman Street", type: "Scooter", fuelType: "Gasoline" }
+        ]
+    },
+    {
+        make: "Hero",
+        vehicleTypes: ["scooter"],
+        models: [
+            { name: "Maestro Edge", type: "Scooter", fuelType: "Gasoline" },
+            { name: "Pleasure Plus", type: "Scooter", fuelType: "Gasoline" },
+            { name: "Destini 125", type: "Scooter", fuelType: "Gasoline" }
+        ]
+    },
+    {
+        make: "Ola Electric",
+        vehicleTypes: ["scooter"],
+        models: [
+            { name: "S1 Pro", type: "Scooter", fuelType: "Electric" },
+            { name: "S1 Air", type: "Scooter", fuelType: "Electric" }
+        ]
+    },
+    {
+        make: "Ford Vans",
+        vehicleTypes: ["van"],
+        models: [
+            { name: "Transit", type: "Van", fuelType: "Gasoline" },
+            { name: "Transit Connect", type: "Van", fuelType: "Gasoline" }
+        ]
+    },
+    {
+        make: "Mercedes Vans",
+        vehicleTypes: ["van"],
+        models: [
+            { name: "Sprinter", type: "Van", fuelType: "Gasoline" },
+            { name: "Metris", type: "Van", fuelType: "Gasoline" }
+        ]
     }
 ];
 
 export type Make = typeof VEHICLE_DATA[number]['make'];
 export type Model = typeof VEHICLE_DATA[number]['models'][number]['name'];
+export type VehicleTypeCategory = 'car' | 'motorcycle' | 'scooter' | 'truck' | 'suv' | 'van';
 
-export function getMakes() {
-    return VEHICLE_DATA.map(v => v.make).sort();
+export function getMakes(vehicleType?: VehicleTypeCategory) {
+    if (!vehicleType) return VEHICLE_DATA.map(v => v.make).sort();
+    return VEHICLE_DATA
+        .filter(v => v.vehicleTypes.includes(vehicleType))
+        .map(v => v.make)
+        .sort();
 }
 
 export function getModels(makeName: string) {

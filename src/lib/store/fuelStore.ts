@@ -18,6 +18,7 @@ export interface FuelLog {
 interface FuelStore {
     logs: FuelLog[];
     addLog: (log: Omit<FuelLog, 'id' | 'pricePerUnit' | 'efficiency'>) => void;
+    updateLog: (id: string, updates: Partial<Omit<FuelLog, 'id' | 'pricePerUnit' | 'efficiency'>>) => void;
     deleteLog: (id: string) => void;
     getLogsByVehicle: (vehicleId: string) => FuelLog[];
     getTotalSpent: () => number;
@@ -144,6 +145,28 @@ export const useFuelStore = create<FuelStore>()(
                     efficiency: efficiency ? Math.round(efficiency * 10) / 10 : undefined,
                 };
                 set({ logs: [newLog, ...logs] });
+            },
+            updateLog: (id, updates) => {
+                const logs = get().logs;
+                const updatedLogs = logs.map((l) => {
+                    if (l.id !== id) return l;
+                    const merged = { ...l, ...updates };
+                    const pricePerUnit = merged.fuelAmount > 0 ? merged.totalCost / merged.fuelAmount : l.pricePerUnit;
+                    // Recalculate efficiency: find previous log for this vehicle by odometer
+                    const vehicleLogs = logs
+                        .filter((x) => x.vehicleId === merged.vehicleId && x.id !== id)
+                        .sort((a, b) => b.odometer - a.odometer);
+                    const prevLog = vehicleLogs.find((x) => x.odometer < merged.odometer);
+                    const efficiency = prevLog
+                        ? (merged.odometer - prevLog.odometer) / merged.fuelAmount
+                        : undefined;
+                    return {
+                        ...merged,
+                        pricePerUnit: Math.round(pricePerUnit * 1000) / 1000,
+                        efficiency: efficiency ? Math.round(efficiency * 10) / 10 : merged.efficiency,
+                    };
+                });
+                set({ logs: updatedLogs });
             },
             deleteLog: (id) => set((state) => ({ logs: state.logs.filter((l) => l.id !== id) })),
             getLogsByVehicle: (vehicleId) => get().logs.filter((l) => l.vehicleId === vehicleId),

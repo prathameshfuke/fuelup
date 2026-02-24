@@ -17,6 +17,7 @@ export interface MaintenanceItem {
 interface MaintenanceStore {
     items: MaintenanceItem[];
     addItem: (item: Omit<MaintenanceItem, 'id'>) => void;
+    updateItem: (id: string, updates: Partial<Omit<MaintenanceItem, 'id'>>) => void;
     completeItem: (id: string, cost?: number) => void;
     deleteItem: (id: string) => void;
     getUpcoming: () => MaintenanceItem[];
@@ -85,6 +86,10 @@ export const useMaintenanceStore = create<MaintenanceStore>()(
             addItem: (itemData) =>
                 set((state) => ({
                     items: [{ ...itemData, id: 'm' + Date.now() }, ...state.items],
+                })),
+            updateItem: (id, updates) =>
+                set((state) => ({
+                    items: state.items.map((i) => (i.id === id ? { ...i, ...updates } : i)),
                 })),
             completeItem: (id, cost) =>
                 set((state) => ({

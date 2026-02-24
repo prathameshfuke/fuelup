@@ -16,6 +16,7 @@ export interface Trip {
 interface TripsStore {
     trips: Trip[];
     addTrip: (trip: Omit<Trip, 'id'>) => void;
+    updateTrip: (id: string, updates: Partial<Omit<Trip, 'id'>>) => void;
     deleteTrip: (id: string) => void;
     getTaxDeductibleTrips: () => Trip[];
     getTotalDistance: () => number;
@@ -88,6 +89,10 @@ export const useTripsStore = create<TripsStore>()(
             addTrip: (tripData) =>
                 set((state) => ({
                     trips: [{ ...tripData, id: 't' + Date.now() }, ...state.trips],
+                })),
+            updateTrip: (id, updates) =>
+                set((state) => ({
+                    trips: state.trips.map((t) => (t.id === id ? { ...t, ...updates } : t)),
                 })),
             deleteTrip: (id) => set((state) => ({ trips: state.trips.filter((t) => t.id !== id) })),
             getTaxDeductibleTrips: () => get().trips.filter((t) => t.isTaxDeductible),

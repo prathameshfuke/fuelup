@@ -40,7 +40,7 @@ const userIcon = L.divIcon({
 const stationIcon = L.divIcon({
     className: 'custom-station-marker',
     html: `
-        <div class="relative group cursor-pointer drop-shadow-[0_0_15px_rgba(0,217,255,0.4)] hover:drop-shadow-[0_0_25px_rgba(0,217,255,0.8)] transition-all duration-300 hover:-translate-y-2 origin-bottom">
+        <div class="relative cursor-pointer drop-shadow-[0_0_15px_rgba(0,217,255,0.4)]">
             <svg width="40" height="48" viewBox="0 0 40 48" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <!-- Outer Pin Shape -->
                 <path d="M20 0C8.954 0 0 8.954 0 20C0 35 20 48 20 48C20 48 40 35 40 20C40 8.954 31.046 0 20 0Z" fill="#0A0E1A" stroke="#00D9FF" stroke-width="2"/>

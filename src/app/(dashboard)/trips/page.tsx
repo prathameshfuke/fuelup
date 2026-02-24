@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, Route, MapPin, Briefcase, Heart, Stethoscope, Car as CarIcon, Trash2, Calendar } from 'lucide-react';
+import { Plus, Route, MapPin, Briefcase, Heart, Stethoscope, Car as CarIcon, Trash2, Calendar, Pencil } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { GlassCard } from '@/components/ui/glass-card';
 import { BorderBeam } from '@/components/ui/border-beam';
@@ -26,19 +26,28 @@ const purposeConfig: Record<Trip['purpose'], { icon: React.ElementType }> = {
 
 export default function TripsPage() {
     const [isFormOpen, setIsFormOpen] = useState(false);
+    const [editingTrip, setEditingTrip] = useState<Trip | null>(null);
     const [filter, setFilter] = useState<'all' | Trip['purpose']>('all');
-    const { addTrip, deleteTrip, getTripsByVehicle } = useTripsStore();
+    const [tripErrors, setTripErrors] = useState<Record<string, string>>({});
+    const { addTrip, updateTrip, deleteTrip, getTripsByVehicle } = useTripsStore();
     const { formatCurrency, distanceUnit, currency } = useSettingsStore();
     const { activeVehicleId } = useVehicleStore();
     const currencySymbol = CURRENCY_CONFIG[currency].symbol;
     const distLabel = distanceUnit === 'km' ? 'km' : 'mi';
-    const ratePerKm = 0.655; // IRS standard mileage rate approximation
+    const ratePerKm = 0.655;
     const vehicleId = activeVehicleId || '';
 
-    const [newTrip, setNewTrip] = useState({
-        startLocation: '', endLocation: '', distance: '', purpose: 'commute' as Trip['purpose'],
-        isTaxDeductible: false, notes: '',
-    });
+    const emptyTripForm = {
+        startLocation: '',
+        endLocation: '',
+        distance: '',
+        purpose: 'commute' as Trip['purpose'],
+        isTaxDeductible: false,
+        notes: '',
+        date: new Date().toISOString().split('T')[0],
+    };
+
+    const [newTrip, setNewTrip] = useState(emptyTripForm);
 
     const vehicleTrips = getTripsByVehicle(vehicleId);
     const taxTrips = vehicleTrips.filter(t => t.isTaxDeductible);
@@ -47,21 +56,70 @@ export default function TripsPage() {
 
     const displayTrips = filter === 'all' ? vehicleTrips : vehicleTrips.filter(t => t.purpose === filter);
 
+    const openAdd = () => {
+        setEditingTrip(null);
+        setNewTrip(emptyTripForm);
+        setTripErrors({});
+        setIsFormOpen(true);
+    };
+
+    const openEdit = (trip: Trip) => {
+        setEditingTrip(trip);
+        setNewTrip({
+            startLocation: trip.startLocation,
+            endLocation: trip.endLocation,
+            distance: trip.distance.toString(),
+            purpose: trip.purpose,
+            isTaxDeductible: trip.isTaxDeductible,
+            notes: trip.notes,
+            date: trip.date,
+        });
+        setTripErrors({});
+        setIsFormOpen(true);
+    };
+
+    const validateTrip = () => {
+        const errs: Record<string, string> = {};
+        const dist = parseFloat(newTrip.distance);
+        if (!newTrip.startLocation.trim()) errs.startLocation = 'Start location is required';
+        if (!newTrip.endLocation.trim()) errs.endLocation = 'End location is required';
+        if (!newTrip.distance || isNaN(dist) || dist <= 0) errs.distance = 'Enter a valid positive distance';
+        setTripErrors(errs);
+        return Object.keys(errs).length === 0;
+    };
+
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        addTrip({
-            vehicleId: vehicleId,
-            date: new Date().toISOString().split('T')[0],
-            startLocation: newTrip.startLocation,
-            endLocation: newTrip.endLocation,
-            distance: parseFloat(newTrip.distance),
-            purpose: newTrip.purpose,
-            isTaxDeductible: newTrip.isTaxDeductible,
-            notes: newTrip.notes,
-        });
-        toast.success('Trip logged!');
+        if (!validateTrip()) return;
+
+        if (editingTrip) {
+            updateTrip(editingTrip.id, {
+                startLocation: newTrip.startLocation,
+                endLocation: newTrip.endLocation,
+                distance: parseFloat(newTrip.distance),
+                purpose: newTrip.purpose,
+                isTaxDeductible: newTrip.isTaxDeductible,
+                notes: newTrip.notes,
+                date: newTrip.date,
+            });
+            toast.success('Trip updated!');
+        } else {
+            addTrip({
+                vehicleId: vehicleId,
+                date: newTrip.date,
+                startLocation: newTrip.startLocation,
+                endLocation: newTrip.endLocation,
+                distance: parseFloat(newTrip.distance),
+                purpose: newTrip.purpose,
+                isTaxDeductible: newTrip.isTaxDeductible,
+                notes: newTrip.notes,
+            });
+            toast.success('Trip logged!');
+        }
         setIsFormOpen(false);
-        setNewTrip({ startLocation: '', endLocation: '', distance: '', purpose: 'commute', isTaxDeductible: false, notes: '' });
+        setEditingTrip(null);
+        setNewTrip(emptyTripForm);
+        setTripErrors({});
     };
 
     return (
@@ -83,7 +141,7 @@ export default function TripsPage() {
                 </BlurReveal>
                 <Button
                     className="h-10 px-6 bg-primary text-primary-foreground hover:bg-primary/90 transition-colors font-medium rounded-lg"
-                    onClick={() => setIsFormOpen(true)}
+                    onClick={openAdd}
                 >
                     <Plus className="h-4 w-4 mr-2" />
                     Log Trip
@@ -185,12 +243,22 @@ export default function TripsPage() {
                                                     </p>
                                                 )}
                                             </div>
-                                            <Button
-                                                variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10"
-                                                onClick={() => { deleteTrip(trip.id); toast.success('Trip deleted'); }}
-                                            >
-                                                <Trash2 className="h-4 w-4" />
-                                            </Button>
+                                            <div className="flex items-center gap-1">
+                                                <Button
+                                                    variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-secondary/80"
+                                                    onClick={() => openEdit(trip)}
+                                                    title="Edit trip"
+                                                >
+                                                    <Pencil className="h-4 w-4" />
+                                                </Button>
+                                                <Button
+                                                    variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10"
+                                                    onClick={() => { deleteTrip(trip.id); toast.success('Trip deleted'); }}
+                                                    title="Delete trip"
+                                                >
+                                                    <Trash2 className="h-4 w-4" />
+                                                </Button>
+                                            </div>
                                         </div>
                                     </div>
                                 </GlassCard>
@@ -208,7 +276,7 @@ export default function TripsPage() {
                         <p className="text-sm text-muted-foreground max-w-sm mb-6">
                             Start tracking your mileage for tax deductions and reimbursement.
                         </p>
-                        <Button className="px-6 py-2 bg-primary text-primary-foreground rounded-lg" onClick={() => setIsFormOpen(true)}>
+                        <Button className="px-6 py-2 bg-primary text-primary-foreground rounded-lg" onClick={openAdd}>
                             Log Trip
                         </Button>
                     </div>
@@ -219,13 +287,13 @@ export default function TripsPage() {
             <Button
                 size="icon"
                 className="fixed bottom-24 right-6 h-14 w-14 shadow-md md:hidden rounded-full bg-primary text-primary-foreground z-40 hover:bg-primary/90"
-                onClick={() => setIsFormOpen(true)}
+                onClick={openAdd}
             >
                 <Plus className="h-6 w-6" />
             </Button>
 
-            {/* Add Trip Sheet */}
-            <Sheet open={isFormOpen} onOpenChange={setIsFormOpen}>
+            {/* Add / Edit Trip Sheet */}
+            <Sheet open={isFormOpen} onOpenChange={(open) => { setIsFormOpen(open); if (!open) { setEditingTrip(null); setTripErrors({}); } }}>
                 <SheetContent side="bottom" className="w-[min(560px,96vw)] inset-auto left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-border p-0 max-h-[88vh] flex flex-col overflow-hidden shadow-2xl">
 
                     {/* Header */}
@@ -235,40 +303,56 @@ export default function TripsPage() {
                                 <Route className="h-4 w-4 text-foreground" />
                             </div>
                             <div className="text-left">
-                                <SheetTitle className="text-foreground text-base font-medium leading-tight">Log Trip</SheetTitle>
-                                <SheetDescription className="text-muted-foreground text-xs mt-0.5">Record a trip for mileage tracking</SheetDescription>
+                                <SheetTitle className="text-foreground text-base font-medium leading-tight">
+                                    {editingTrip ? 'Edit Trip' : 'Log Trip'}
+                                </SheetTitle>
+                                <SheetDescription className="text-muted-foreground text-xs mt-0.5">
+                                    {editingTrip ? 'Update your trip details' : 'Record a trip for mileage tracking'}
+                                </SheetDescription>
                             </div>
                         </div>
                     </SheetHeader>
                     {/* Scrollable form */}
                     <div className="flex-1 overflow-y-auto">
                         <form id="trip-form" onSubmit={handleSubmit} className="px-6 py-5 space-y-4">
+                            <div className="space-y-1.5">
+                                <Label className="text-[11px] uppercase tracking-wider text-muted-foreground font-medium">Date *</Label>
+                                <Input
+                                    type="date"
+                                    value={newTrip.date}
+                                    onChange={(e) => setNewTrip({ ...newTrip, date: e.target.value })}
+                                    className="bg-secondary/30 border-border/60" required
+                                />
+                            </div>
                             <div className="grid grid-cols-2 gap-3">
                                 <div className="space-y-1.5">
                                     <Label className="text-[11px] uppercase tracking-wider text-muted-foreground font-medium">Start Location *</Label>
                                     <Input
                                         placeholder="Home" value={newTrip.startLocation}
-                                        onChange={(e) => setNewTrip({ ...newTrip, startLocation: e.target.value })}
-                                        className="bg-secondary/30 border-border/60" required
+                                        onChange={(e) => { setNewTrip({ ...newTrip, startLocation: e.target.value }); setTripErrors(p => ({ ...p, startLocation: '' })); }}
+                                        className={`bg-secondary/30 border-border/60 ${tripErrors.startLocation ? 'border-destructive' : ''}`} required
                                     />
+                                    {tripErrors.startLocation && <p className="text-xs text-destructive mt-1">{tripErrors.startLocation}</p>}
                                 </div>
                                 <div className="space-y-1.5">
                                     <Label className="text-[11px] uppercase tracking-wider text-muted-foreground font-medium">End Location *</Label>
                                     <Input
                                         placeholder="Office" value={newTrip.endLocation}
-                                        onChange={(e) => setNewTrip({ ...newTrip, endLocation: e.target.value })}
-                                        className="bg-secondary/30 border-border/60" required
+                                        onChange={(e) => { setNewTrip({ ...newTrip, endLocation: e.target.value }); setTripErrors(p => ({ ...p, endLocation: '' })); }}
+                                        className={`bg-secondary/30 border-border/60 ${tripErrors.endLocation ? 'border-destructive' : ''}`} required
                                     />
+                                    {tripErrors.endLocation && <p className="text-xs text-destructive mt-1">{tripErrors.endLocation}</p>}
                                 </div>
                             </div>
                             <div className="space-y-1.5">
                                 <Label className="text-[11px] uppercase tracking-wider text-muted-foreground font-medium">Distance ({distLabel}) *</Label>
                                 <Input
-                                    type="number" step="0.1" placeholder="24.5"
+                                    type="number" step="0.1" placeholder="24.5" min="0.1"
                                     value={newTrip.distance}
-                                    onChange={(e) => setNewTrip({ ...newTrip, distance: e.target.value })}
-                                    className="bg-secondary/30 border-border/60" required
+                                    onChange={(e) => { setNewTrip({ ...newTrip, distance: e.target.value }); setTripErrors(p => ({ ...p, distance: '' })); }}
+                                    className={`bg-secondary/30 border-border/60 ${tripErrors.distance ? 'border-destructive' : ''}`} required
                                 />
+                                {tripErrors.distance && <p className="text-xs text-destructive mt-1">{tripErrors.distance}</p>}
                             </div>
                             <div className="space-y-1.5">
                                 <Label className="text-[11px] uppercase tracking-wider text-muted-foreground font-medium">Purpose</Label>
@@ -302,8 +386,12 @@ export default function TripsPage() {
                     </div>
                     {/* Sticky footer */}
                     <div className="px-6 py-4 border-t border-border/50 shrink-0 bg-card">
-                        <Button type="submit" form="trip-form" className="w-full bg-primary text-primary-foreground hover:bg-primary/90 h-11 rounded-xl font-medium tracking-wide" disabled={!newTrip.startLocation || !newTrip.endLocation || !newTrip.distance}>
-                            Save Trip
+                        <Button
+                            type="submit" form="trip-form"
+                            className="w-full bg-primary text-primary-foreground hover:bg-primary/90 h-11 rounded-xl font-medium tracking-wide"
+                            disabled={!newTrip.startLocation || !newTrip.endLocation || !newTrip.distance}
+                        >
+                            {editingTrip ? 'Update Trip' : 'Save Trip'}
                         </Button>
                     </div>
                 </SheetContent>

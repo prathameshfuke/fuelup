@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, Wrench, AlertTriangle, CheckCircle2, Clock, Trash2, Calendar, Gauge } from 'lucide-react';
+import { Plus, Wrench, CheckCircle2, Trash2, Calendar, Gauge, Pencil } from 'lucide-react';
 import { GlassCard } from '@/components/ui/glass-card';
 import { BorderBeam } from '@/components/ui/border-beam';
 import { BlurReveal } from '@/components/ui/blur-reveal';
@@ -18,8 +18,10 @@ import { useVehicleStore } from '@/lib/store/vehicleStore';
 
 export default function ServiceBayPage() {
     const [isFormOpen, setIsFormOpen] = useState(false);
+    const [editingItem, setEditingItem] = useState<MaintenanceItem | null>(null);
     const [tab, setTab] = useState<'upcoming' | 'completed'>('upcoming');
-    const { addItem, completeItem, deleteItem, getUpcomingByVehicle, getCompletedByVehicle } = useMaintenanceStore();
+    const [mErrors, setMErrors] = useState<Record<string, string>>({});
+    const { addItem, updateItem, completeItem, deleteItem, getUpcomingByVehicle, getCompletedByVehicle } = useMaintenanceStore();
     const { formatCurrency, distanceUnit } = useSettingsStore();
     const { activeVehicleId } = useVehicleStore();
     const distLabel = distanceUnit === 'km' ? 'km' : 'mi';
@@ -29,24 +31,70 @@ export default function ServiceBayPage() {
     const completed = getCompletedByVehicle(vehicleId);
     const displayItems = tab === 'upcoming' ? upcoming : completed;
 
-    const [newItem, setNewItem] = useState({
+    const emptyForm = {
         service: '', dueDate: '', dueOdometer: '', priority: 'medium' as MaintenanceItem['priority'], notes: '',
-    });
+    };
+
+    const [newItem, setNewItem] = useState(emptyForm);
+
+    const openAdd = () => {
+        setEditingItem(null);
+        setNewItem(emptyForm);
+        setMErrors({});
+        setIsFormOpen(true);
+    };
+
+    const openEdit = (item: MaintenanceItem) => {
+        setEditingItem(item);
+        setNewItem({
+            service: item.service,
+            dueDate: item.dueDate || '',
+            dueOdometer: item.dueOdometer?.toString() || '',
+            priority: item.priority,
+            notes: item.notes,
+        });
+        setMErrors({});
+        setIsFormOpen(true);
+    };
+
+    const validateForm = () => {
+        const errs: Record<string, string> = {};
+        if (!newItem.service.trim()) errs.service = 'Service name is required';
+        if (newItem.dueOdometer) {
+            const odo = parseFloat(newItem.dueOdometer);
+            if (isNaN(odo) || odo <= 0) errs.dueOdometer = 'Enter a valid positive odometer value';
+        }
+        setMErrors(errs);
+        return Object.keys(errs).length === 0;
+    };
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        addItem({
-            vehicleId: vehicleId,
+        if (!validateForm()) return;
+
+        const payload = {
             service: newItem.service,
             dueDate: newItem.dueDate || undefined,
             dueOdometer: newItem.dueOdometer ? parseFloat(newItem.dueOdometer) : undefined,
             priority: newItem.priority,
-            isCompleted: false,
             notes: newItem.notes,
-        });
-        toast.success('Service record added!');
+        };
+
+        if (editingItem) {
+            updateItem(editingItem.id, payload);
+            toast.success('Service record updated!');
+        } else {
+            addItem({
+                vehicleId: vehicleId,
+                isCompleted: false,
+                ...payload,
+            });
+            toast.success('Service record added!');
+        }
         setIsFormOpen(false);
-        setNewItem({ service: '', dueDate: '', dueOdometer: '', priority: 'medium', notes: '' });
+        setEditingItem(null);
+        setNewItem(emptyForm);
+        setMErrors({});
     };
 
     const handleComplete = (id: string) => {
@@ -75,7 +123,7 @@ export default function ServiceBayPage() {
                 </BlurReveal>
                 <Button
                     className="h-10 px-6 bg-primary text-primary-foreground hover:bg-primary/90 transition-colors font-medium rounded-lg"
-                    onClick={() => setIsFormOpen(true)}
+                    onClick={openAdd}
                 >
                     <Plus className="h-4 w-4 mr-2" />
                     Log Service
@@ -144,7 +192,7 @@ export default function ServiceBayPage() {
                                                 </div>
                                             </div>
 
-                                            <div className="flex items-center justify-end gap-4">
+                                            <div className="flex items-center justify-end gap-3">
                                                 {item.isCompleted && item.cost && (
                                                     <span className="text-sm font-medium text-foreground">{formatCurrency(item.cost)}</span>
                                                 )}
@@ -157,8 +205,16 @@ export default function ServiceBayPage() {
                                                     </Button>
                                                 )}
                                                 <Button
+                                                    variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-secondary/80"
+                                                    onClick={() => openEdit(item)}
+                                                    title="Edit service"
+                                                >
+                                                    <Pencil className="h-4 w-4" />
+                                                </Button>
+                                                <Button
                                                     variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10"
                                                     onClick={() => { deleteItem(item.id); toast.success('Removed'); }}
+                                                    title="Delete service"
                                                 >
                                                     <Trash2 className="h-4 w-4" />
                                                 </Button>
@@ -187,7 +243,7 @@ export default function ServiceBayPage() {
                         {tab === 'upcoming' && (
                             <Button
                                 className="mt-6 px-6 py-2 bg-primary text-primary-foreground rounded-lg"
-                                onClick={() => setIsFormOpen(true)}
+                                onClick={openAdd}
                             >
                                 Add Reminder
                             </Button>
@@ -200,13 +256,13 @@ export default function ServiceBayPage() {
             <Button
                 size="icon"
                 className="fixed bottom-24 right-6 h-14 w-14 shadow-md md:hidden rounded-full bg-primary text-primary-foreground z-40 hover:bg-primary/90"
-                onClick={() => setIsFormOpen(true)}
+                onClick={openAdd}
             >
                 <Plus className="h-6 w-6" />
             </Button>
 
-            {/* Add Maintenance Sheet */}
-            <Sheet open={isFormOpen} onOpenChange={setIsFormOpen}>
+            {/* Add / Edit Maintenance Sheet */}
+            <Sheet open={isFormOpen} onOpenChange={(open) => { setIsFormOpen(open); if (!open) { setEditingItem(null); setMErrors({}); } }}>
                 <SheetContent side="bottom" className="w-[min(560px,96vw)] inset-auto left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-border p-0 max-h-[88vh] flex flex-col overflow-hidden shadow-2xl">
 
                     {/* Header */}
@@ -216,8 +272,12 @@ export default function ServiceBayPage() {
                                 <Wrench className="h-4 w-4 text-foreground" />
                             </div>
                             <div className="text-left">
-                                <SheetTitle className="text-foreground text-base font-medium leading-tight">Add Service Record</SheetTitle>
-                                <SheetDescription className="text-muted-foreground text-xs mt-0.5">Track upcoming vehicle maintenance</SheetDescription>
+                                <SheetTitle className="text-foreground text-base font-medium leading-tight">
+                                    {editingItem ? 'Edit Service Record' : 'Add Service Record'}
+                                </SheetTitle>
+                                <SheetDescription className="text-muted-foreground text-xs mt-0.5">
+                                    {editingItem ? 'Update your maintenance details' : 'Track upcoming vehicle maintenance'}
+                                </SheetDescription>
                             </div>
                         </div>
                     </SheetHeader>
@@ -228,9 +288,10 @@ export default function ServiceBayPage() {
                                 <Label className="text-[11px] uppercase tracking-wider text-muted-foreground font-medium">Service Name *</Label>
                                 <Input
                                     placeholder="Oil Change, Tire Rotation..." value={newItem.service}
-                                    onChange={(e) => setNewItem({ ...newItem, service: e.target.value })}
-                                    className="bg-secondary/30 border-border/60" required
+                                    onChange={(e) => { setNewItem({ ...newItem, service: e.target.value }); setMErrors(p => ({ ...p, service: '' })); }}
+                                    className={`bg-secondary/30 border-border/60 ${mErrors.service ? 'border-destructive' : ''}`} required
                                 />
+                                {mErrors.service && <p className="text-xs text-destructive mt-1">{mErrors.service}</p>}
                             </div>
                             <div className="grid grid-cols-2 gap-3">
                                 <div className="space-y-1.5">
@@ -244,10 +305,11 @@ export default function ServiceBayPage() {
                                 <div className="space-y-1.5">
                                     <Label className="text-[11px] uppercase tracking-wider text-muted-foreground font-medium">Due Odometer ({distLabel})</Label>
                                     <Input
-                                        type="number" placeholder="30000" value={newItem.dueOdometer}
-                                        onChange={(e) => setNewItem({ ...newItem, dueOdometer: e.target.value })}
-                                        className="bg-secondary/30 border-border/60"
+                                        type="number" placeholder="30000" min="1" step="1" value={newItem.dueOdometer}
+                                        onChange={(e) => { setNewItem({ ...newItem, dueOdometer: e.target.value }); setMErrors(p => ({ ...p, dueOdometer: '' })); }}
+                                        className={`bg-secondary/30 border-border/60 ${mErrors.dueOdometer ? 'border-destructive' : ''}`}
                                     />
+                                    {mErrors.dueOdometer && <p className="text-xs text-destructive mt-1">{mErrors.dueOdometer}</p>}
                                 </div>
                             </div>
                             <div className="space-y-1.5">
@@ -273,12 +335,16 @@ export default function ServiceBayPage() {
                     </div>
                     {/* Sticky footer */}
                     <div className="px-6 py-4 border-t border-border/50 shrink-0 bg-card">
-                        <Button type="submit" form="service-form" className="w-full bg-primary text-primary-foreground hover:bg-primary/90 h-11 rounded-xl font-medium tracking-wide" disabled={!newItem.service}>
-                            Save Service Record
+                        <Button
+                            type="submit" form="service-form"
+                            className="w-full bg-primary text-primary-foreground hover:bg-primary/90 h-11 rounded-xl font-medium tracking-wide"
+                            disabled={!newItem.service}
+                        >
+                            {editingItem ? 'Update Service Record' : 'Save Service Record'}
                         </Button>
                     </div>
                 </SheetContent>
             </Sheet>
-        </motion.div >
+        </motion.div>
     );
 }
