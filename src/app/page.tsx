@@ -50,14 +50,14 @@ function FloatingOrbs() {
       <div
         className="absolute -top-32 -left-24 w-[520px] h-[520px] rounded-full blur-[110px]"
         style={{
-          background: 'radial-gradient(circle, rgba(255,255,255,0.055) 0%, transparent 70%)',
+          background: 'radial-gradient(circle, hsl(var(--foreground) / 0.06) 0%, transparent 70%)',
           animation: 'float-orb-a 14s ease-in-out infinite',
         }}
       />
       <div
         className="absolute top-1/3 -right-20 w-[420px] h-[420px] rounded-full blur-[130px]"
         style={{
-          background: 'radial-gradient(circle, rgba(255,255,255,0.04) 0%, transparent 70%)',
+          background: 'radial-gradient(circle, hsl(var(--foreground) / 0.04) 0%, transparent 70%)',
           animation: 'float-orb-b 18s ease-in-out infinite',
           animationDelay: '4s',
         }}
@@ -65,7 +65,7 @@ function FloatingOrbs() {
       <div
         className="absolute bottom-10 left-1/4 w-[380px] h-[380px] rounded-full blur-[90px]"
         style={{
-          background: 'radial-gradient(circle, rgba(255,255,255,0.045) 0%, transparent 70%)',
+          background: 'radial-gradient(circle, hsl(var(--foreground) / 0.05) 0%, transparent 70%)',
           animation: 'float-orb-c 11s ease-in-out infinite',
           animationDelay: '2s',
         }}
@@ -166,14 +166,8 @@ export default function LandingPage() {
             }}
           />
 
-          {/* Subtle grid overlay */}
-          <div
-            className="absolute inset-0 z-[1] pointer-events-none"
-            style={{
-              backgroundImage: `linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px)`,
-              backgroundSize: '64px 64px',
-            }}
-          />
+          {/* Subtle grid overlay — theme-aware via .hero-grid */}
+          <div className="absolute inset-0 z-[1] pointer-events-none hero-grid" />
 
           {/* Ambient orbs */}
           <FloatingOrbs />
@@ -266,10 +260,10 @@ export default function LandingPage() {
               transition={{ duration: 0.9, ease, delay: 1.25 }}
               className="w-full max-w-5xl mx-auto relative group"
             >
-              {/* Outer glow ring */}
-              <div className="absolute -inset-px rounded-3xl bg-gradient-to-b from-white/10 via-white/5 to-transparent blur-lg opacity-60 group-hover:opacity-100 transition duration-700" />
-              {/* Glow halo */}
-              <div className="absolute -inset-3 rounded-3xl bg-gradient-radial from-white/5 to-transparent blur-2xl opacity-0 group-hover:opacity-60 transition duration-1000 pointer-events-none" />
+              {/* Outer glow ring — theme-aware */}
+              <div className="absolute -inset-px rounded-3xl bg-gradient-to-b from-foreground/10 via-foreground/5 to-transparent blur-lg opacity-60 group-hover:opacity-100 transition duration-700" />
+              {/* Glow halo — theme-aware */}
+              <div className="absolute -inset-3 rounded-3xl bg-gradient-to-r from-foreground/5 to-transparent blur-2xl opacity-0 group-hover:opacity-60 transition duration-1000 pointer-events-none" />
 
               <div className="relative rounded-2xl border border-border bg-neutral-900/60 overflow-hidden shadow-2xl flex flex-col h-[360px] md:h-[560px] group-hover:border-neutral-700 transition-colors">
                 {/* Window chrome */}
@@ -285,11 +279,11 @@ export default function LandingPage() {
 
                 {/* Mockup body */}
                 <div className="p-6 md:p-8 flex-1 grid grid-cols-1 md:grid-cols-3 gap-5 bg-card/50 relative overflow-hidden">
-                  {/* Animated scan line */}
+                  {/* Animated scan line — theme-aware */}
                   <motion.div
                     className="absolute inset-x-6 md:inset-x-8 h-[1px] pointer-events-none z-20"
                     style={{
-                      background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.45) 50%, transparent 100%)',
+                      background: 'linear-gradient(90deg, transparent 0%, hsl(var(--foreground) / 0.35) 50%, transparent 100%)',
                     }}
                     animate={{ top: ['8%', '90%'] }}
                     transition={{ duration: 4.5, ease: 'linear', repeat: Infinity, repeatDelay: 3 }}
@@ -511,14 +505,14 @@ export default function LandingPage() {
             CTA
         ════════════════════════════════════════════ */}
         <section className="py-28 px-6 relative z-10 bg-background border-y border-border overflow-hidden">
-          {/* Animated radial glow behind CTA */}
+          {/* Animated radial glow behind CTA — theme-aware */}
           <motion.div
             className="absolute inset-0 pointer-events-none"
             animate={{
               background: [
-                'radial-gradient(ellipse 60% 40% at 50% 120%, rgba(255,255,255,0.04) 0%, transparent 70%)',
-                'radial-gradient(ellipse 60% 50% at 50% 100%, rgba(255,255,255,0.07) 0%, transparent 70%)',
-                'radial-gradient(ellipse 60% 40% at 50% 120%, rgba(255,255,255,0.04) 0%, transparent 70%)',
+                'radial-gradient(ellipse 60% 40% at 50% 120%, hsl(var(--foreground) / 0.04) 0%, transparent 70%)',
+                'radial-gradient(ellipse 60% 50% at 50% 100%, hsl(var(--foreground) / 0.07) 0%, transparent 70%)',
+                'radial-gradient(ellipse 60% 40% at 50% 120%, hsl(var(--foreground) / 0.04) 0%, transparent 70%)',
               ],
             }}
             transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
