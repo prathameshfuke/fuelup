@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 
-const LOADER_KEY = "fuelup-intro-v3";
+
 
 // Fuel-drop shape in a 200×200 viewBox
 const FUEL_DROP =
@@ -20,13 +20,9 @@ export function MorphLoader({ onComplete }: MorphLoaderProps) {
   const glowRef = useRef<SVGCircleElement>(null);
   const [show, setShow] = useState(false);
 
-  // Only mount on client-side + only if session is fresh
+  // Always show on mount (every page visit)
   useEffect(() => {
-    if (typeof window !== "undefined" && !sessionStorage.getItem(LOADER_KEY)) {
-      setShow(true);
-    } else {
-      onComplete?.();
-    }
+    setShow(true);
   }, []);
 
   useEffect(() => {
@@ -46,7 +42,6 @@ export function MorphLoader({ onComplete }: MorphLoaderProps) {
 
     const tl = gsap.timeline({
       onComplete: () => {
-        sessionStorage.setItem(LOADER_KEY, "1");
         setShow(false);
         onComplete?.();
       },
