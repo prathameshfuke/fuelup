@@ -106,7 +106,7 @@ export default function AddVehiclePage() {
                     <Button variant="ghost" size="icon"><ArrowLeft className="h-5 w-5" /></Button>
                 </Link>
                 <div>
-                    <h1 className="text-2xl md:text-3xl font-bold">Add Vehicle</h1>
+                    <h1 className="text-2xl md:text-3xl font-medium">Add Vehicle</h1>
                     <p className="text-muted-foreground mt-1">Register a new vehicle to track</p>
                 </div>
             </motion.div>
@@ -151,15 +151,15 @@ export default function AddVehiclePage() {
                                     <Input
                                         type="number" min="1900" max="2030" value={form.year}
                                         onChange={(e) => setForm({ ...form, year: e.target.value })}
-                                        className="mt-1.5 bg-neutral-900 border-neutral-800" required
-                                    />
+                                className="mt-1.5 bg-secondary/30 border-border/60" required
+                                />
                                 </div>
                                 <div>
                                     <Label>License Plate</Label>
                                     <Input
                                         placeholder="ABC 1234" value={form.licensePlate}
                                         onChange={(e) => setForm({ ...form, licensePlate: e.target.value })}
-                                        className="mt-1.5 bg-neutral-900 border-neutral-800"
+                                        className="mt-1.5 bg-secondary/30 border-border/60"
                                     />
                                 </div>
                             </div>
@@ -170,7 +170,7 @@ export default function AddVehiclePage() {
                                     placeholder={form.make && form.model ? `${form.make} ${form.model}` : "My Daily Driver"}
                                     value={form.name}
                                     onChange={(e) => setForm({ ...form, name: e.target.value })}
-                                    className="mt-1.5 bg-neutral-900 border-neutral-800"
+                                    className="mt-1.5 bg-secondary/30 border-border/60"
                                 />
                             </div>
                         </CardContent>
@@ -188,9 +188,9 @@ export default function AddVehiclePage() {
                                     {vehicleTypes.map((vt) => (
                                         <button
                                             key={vt.value} type="button"
-                                            className={`flex flex-col items-center gap-1 p-3 rounded-xl border-2 transition-all ${form.type === vt.value
-                                                ? 'border-emerald-500 bg-emerald-500/10 text-white'
-                                                : 'border-transparent bg-neutral-900 hover:bg-neutral-800 text-neutral-400'
+                                    className={`flex flex-col items-center gap-1 p-3 rounded-xl border-2 transition-all ${form.type === vt.value
+                                                ? 'border-primary bg-primary/10 text-foreground'
+                                                : 'border-transparent bg-secondary hover:bg-secondary/70 text-muted-foreground'
                                                 }`}
                                             onClick={() => setForm({ ...form, type: vt.value as Vehicle['type'] })}
                                         >
@@ -204,8 +204,8 @@ export default function AddVehiclePage() {
                             <div>
                                 <Label>Fuel Type</Label>
                                 <Select value={form.fuelType} onValueChange={(v) => setForm({ ...form, fuelType: v })}>
-                                    <SelectTrigger className="mt-1.5 bg-neutral-900 border-neutral-800"><SelectValue /></SelectTrigger>
-                                    <SelectContent className="bg-neutral-950 border-neutral-800">
+                                    <SelectTrigger className="mt-1.5 bg-secondary/30 border-border/60"><SelectValue /></SelectTrigger>
+                                    <SelectContent className="bg-card border-border">
                                         {fuelTypes.map((ft) => (
                                             <SelectItem key={ft} value={ft}>{ft}</SelectItem>
                                         ))}
@@ -225,7 +225,7 @@ export default function AddVehiclePage() {
                                 {colors.map((c) => (
                                     <button
                                         key={c} type="button"
-                                        className={`h-9 w-9 rounded-full transition-all ${form.color === c ? 'ring-2 ring-offset-2 ring-offset-neutral-950 scale-110' : 'hover:scale-105'
+                                        className={`h-9 w-9 rounded-full transition-all ${form.color === c ? 'ring-2 ring-offset-2 ring-offset-background scale-110' : 'hover:scale-105'
                                             }`}
                                         style={{ backgroundColor: c, boxShadow: form.color === c ? `0 0 10px ${c}` : 'none' }}
                                         onClick={() => setForm({ ...form, color: c })}
@@ -239,7 +239,7 @@ export default function AddVehiclePage() {
 
                 {/* Submit */}
                 <motion.div variants={anim}>
-                    <Button type="submit" size="lg" className="w-full h-12 text-base bg-emerald-600 hover:bg-emerald-700 text-white" disabled={!form.make || !form.model}>
+                    <Button type="submit" size="lg" className="w-full h-12 text-base bg-primary text-primary-foreground hover:bg-primary/90" disabled={!form.make || !form.model}>
                         Add Vehicle
                     </Button>
                 </motion.div>

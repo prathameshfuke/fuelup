@@ -1,35 +1,28 @@
 'use client';
 
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useTheme } from 'next-themes';
-import { ArrowRight, BarChart3, Bell, User, Lock, Chrome } from 'lucide-react';
+import { ArrowRight, BarChart3, Bell, Lock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuthStore } from '@/lib/store/authStore';
-import { GlassCard } from '@/components/ui/glass-card';
-import { BorderBeam } from '@/components/ui/border-beam';
 import { Particles } from '@/components/ui/particles';
 import { GlowingStarsBackgroundCard } from '@/components/ui/glowing-stars-background-card';
 import { BlurReveal } from '@/components/ui/blur-reveal';
+import Link from 'next/link';
 
 export default function LoginPage() {
     const router = useRouter();
     const { theme } = useTheme();
     const { signInAsGuest } = useAuthStore();
 
-    const handleGoogleSignIn = () => {
-        // Supabase OAuth would go here
-        window.location.href = '/dashboard';
-    };
-
-    const handleGuestSignIn = () => {
+    const handleContinueAsGuest = () => {
         signInAsGuest();
         router.push('/dashboard');
     };
 
     return (
         <div className="flex min-h-screen bg-background text-foreground">
-            {/* Left side - Form */}
+            {/* Left side - Entry */}
             <div className="flex flex-1 flex-col items-center justify-center p-6 md:p-12 relative z-10 w-full lg:w-1/2">
                 <div className="w-full max-w-md space-y-8">
                     {/* Logo & Branding */}
@@ -47,24 +40,26 @@ export default function LoginPage() {
                             </span>
                         </Link>
                         <BlurReveal as="div">
-                            <h1 className="text-3xl font-semibold tracking-tight text-foreground mb-2">Welcome back</h1>
+                            <h1 className="text-3xl font-semibold tracking-tight text-foreground mb-2">Welcome to FuelUp</h1>
                             <p className="text-muted-foreground text-base">
-                                Manage your fleet with precision and style.
+                                Track fuel costs, monitor vehicle efficiency, and manage maintenance. All stored locally on your device.
                             </p>
                         </BlurReveal>
                     </div>
 
-                    {/* Auth Card */}
+                    {/* Entry Card */}
                     <div className="bg-card border border-border rounded-2xl p-6 md:p-8 shadow-sm relative overflow-hidden">
                         <div className="space-y-4 relative z-10">
                             <Button
-                                onClick={handleGuestSignIn}
-                                variant="secondary"
-                                className="w-full h-12 text-sm gap-2 bg-secondary text-secondary-foreground hover:bg-secondary/80 transition-all font-medium"
+                                onClick={handleContinueAsGuest}
+                                className="w-full h-12 text-sm gap-2 bg-primary text-primary-foreground hover:bg-primary/90 transition-all font-medium"
                             >
-                                <User className="h-4 w-4" />
                                 Continue as Guest
+                                <ArrowRight className="h-4 w-4" />
                             </Button>
+                            <p className="text-center text-xs text-muted-foreground">
+                                No sign-up required. All data is stored locally on your device.
+                            </p>
                         </div>
                     </div>
 
@@ -87,25 +82,25 @@ export default function LoginPage() {
                         Why FuelUp?
                     </p>
 
-                    {/* Feature Cards — uniform height, 3-column grid */}
+                    {/* Feature Cards */}
                     <div className="grid grid-cols-1 gap-4">
                         {[
                             {
                                 icon: BarChart3,
-                                title: 'Real-time Analytics',
-                                desc: 'Monitor fuel efficiency, track costs per distance, and spot trends over time.',
+                                title: 'Per-Vehicle Analytics',
+                                desc: 'Monitor fuel efficiency, track costs per distance, and spot trends for each vehicle individually.',
                             },
                             {
                                 icon: Bell,
-                                title: 'Smart Reminders',
-                                desc: 'Never miss a maintenance service with automated alerts based on time or distance.',
+                                title: 'Maintenance Reminders',
+                                desc: 'Keep track of upcoming services like oil changes, tire rotations, and brake checks.',
                             },
                             {
                                 icon: Lock,
-                                title: 'Secure Data',
-                                desc: 'Your fleet data is yours. Export it at any time or clear it completely with one click.',
+                                title: 'Private & Local',
+                                desc: 'All data lives on your device. Export anytime as JSON, or clear everything with one tap.',
                             },
-                        ].map(({ icon: Icon, title, desc }, i) => (
+                        ].map(({ icon: Icon, title, desc }) => (
                             <GlowingStarsBackgroundCard key={title} className="p-5">
                                 <div className="flex items-start gap-3.5">
                                     <div className="p-2.5 rounded-lg bg-secondary/80 border border-border/50 text-foreground shrink-0">

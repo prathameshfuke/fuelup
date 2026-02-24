@@ -205,61 +205,76 @@ export default function ServiceBayPage() {
 
             {/* Add Maintenance Sheet */}
             <Sheet open={isFormOpen} onOpenChange={setIsFormOpen}>
-                <SheetContent side="bottom" className="sm:max-w-md mx-auto rounded-t-xl bg-card border-border sm:h-auto h-[85vh] overflow-y-auto">
-                    <SheetHeader className="text-left mb-6">
-                        <SheetTitle className="text-foreground">Add Service Record</SheetTitle>
-                        <SheetDescription className="text-muted-foreground">Track upcoming vehicle services</SheetDescription>
+                <SheetContent side="bottom" className="w-[min(560px,96vw)] inset-auto left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-border p-0 max-h-[88vh] flex flex-col overflow-hidden shadow-2xl">
+
+                    {/* Header */}
+                    <SheetHeader className="px-6 py-4 border-b border-border/50 shrink-0">
+                        <div className="flex items-center gap-3">
+                            <div className="p-2.5 rounded-xl bg-secondary shrink-0">
+                                <Wrench className="h-4 w-4 text-foreground" />
+                            </div>
+                            <div className="text-left">
+                                <SheetTitle className="text-foreground text-base font-medium leading-tight">Add Service Record</SheetTitle>
+                                <SheetDescription className="text-muted-foreground text-xs mt-0.5">Track upcoming vehicle maintenance</SheetDescription>
+                            </div>
+                        </div>
                     </SheetHeader>
-                    <form onSubmit={handleSubmit} className="space-y-4">
-                        <div className="space-y-2">
-                            <Label className="text-foreground">Service Name *</Label>
-                            <Input
-                                placeholder="Oil Change, Tire Rotation..." value={newItem.service}
-                                onChange={(e) => setNewItem({ ...newItem, service: e.target.value })}
-                                className="bg-secondary/30 border-border text-foreground focus:border-border/60" required
-                            />
-                        </div>
-                        <div className="grid grid-cols-2 gap-4">
-                            <div className="space-y-2">
-                                <Label className="text-foreground">Due Date</Label>
+                    {/* Scrollable form */}
+                    <div className="flex-1 overflow-y-auto">
+                        <form id="service-form" onSubmit={handleSubmit} className="px-6 py-5 space-y-4">
+                            <div className="space-y-1.5">
+                                <Label className="text-[11px] uppercase tracking-wider text-muted-foreground font-medium">Service Name *</Label>
                                 <Input
-                                    type="date" value={newItem.dueDate}
-                                    onChange={(e) => setNewItem({ ...newItem, dueDate: e.target.value })}
-                                    className="bg-secondary/30 border-border text-foreground focus:border-border/60"
+                                    placeholder="Oil Change, Tire Rotation..." value={newItem.service}
+                                    onChange={(e) => setNewItem({ ...newItem, service: e.target.value })}
+                                    className="bg-secondary/30 border-border/60" required
                                 />
                             </div>
-                            <div className="space-y-2">
-                                <Label className="text-foreground">Due Odometer ({distLabel})</Label>
+                            <div className="grid grid-cols-2 gap-3">
+                                <div className="space-y-1.5">
+                                    <Label className="text-[11px] uppercase tracking-wider text-muted-foreground font-medium">Due Date</Label>
+                                    <Input
+                                        type="date" value={newItem.dueDate}
+                                        onChange={(e) => setNewItem({ ...newItem, dueDate: e.target.value })}
+                                        className="bg-secondary/30 border-border/60"
+                                    />
+                                </div>
+                                <div className="space-y-1.5">
+                                    <Label className="text-[11px] uppercase tracking-wider text-muted-foreground font-medium">Due Odometer ({distLabel})</Label>
+                                    <Input
+                                        type="number" placeholder="30000" value={newItem.dueOdometer}
+                                        onChange={(e) => setNewItem({ ...newItem, dueOdometer: e.target.value })}
+                                        className="bg-secondary/30 border-border/60"
+                                    />
+                                </div>
+                            </div>
+                            <div className="space-y-1.5">
+                                <Label className="text-[11px] uppercase tracking-wider text-muted-foreground font-medium">Priority</Label>
+                                <Select value={newItem.priority} onValueChange={(v) => setNewItem({ ...newItem, priority: v as MaintenanceItem['priority'] })}>
+                                    <SelectTrigger className="bg-secondary/30 border-border/60 h-12 rounded-xl"><SelectValue /></SelectTrigger>
+                                    <SelectContent className="bg-card border-border">
+                                        <SelectItem value="high">High Priority</SelectItem>
+                                        <SelectItem value="medium">Medium Priority</SelectItem>
+                                        <SelectItem value="low">Low Priority</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                            <div className="space-y-1.5">
+                                <Label className="text-[11px] uppercase tracking-wider text-muted-foreground font-medium">Notes (Optional)</Label>
                                 <Input
-                                    type="number" placeholder="30000" value={newItem.dueOdometer}
-                                    onChange={(e) => setNewItem({ ...newItem, dueOdometer: e.target.value })}
-                                    className="bg-secondary/30 border-border text-foreground focus:border-border/60"
+                                    placeholder="Use synthetic 5W-30..." value={newItem.notes}
+                                    onChange={(e) => setNewItem({ ...newItem, notes: e.target.value })}
+                                    className="bg-secondary/30 border-border/60"
                                 />
                             </div>
-                        </div>
-                        <div className="space-y-2">
-                            <Label className="text-foreground">Priority</Label>
-                            <Select value={newItem.priority} onValueChange={(v) => setNewItem({ ...newItem, priority: v as MaintenanceItem['priority'] })}>
-                                <SelectTrigger className="bg-secondary/30 border-border text-foreground focus:border-border/60"><SelectValue /></SelectTrigger>
-                                <SelectContent className="bg-card border-border text-foreground">
-                                    <SelectItem value="high">High Priority</SelectItem>
-                                    <SelectItem value="medium">Medium Priority</SelectItem>
-                                    <SelectItem value="low">Low Priority</SelectItem>
-                                </SelectContent>
-                            </Select>
-                        </div>
-                        <div className="space-y-2">
-                            <Label className="text-foreground">Notes (Optional)</Label>
-                            <Input
-                                placeholder="Use synthetic 5W-30..." value={newItem.notes}
-                                onChange={(e) => setNewItem({ ...newItem, notes: e.target.value })}
-                                className="bg-secondary/30 border-border text-foreground focus:border-border/60"
-                            />
-                        </div>
-                        <Button type="submit" className="w-full bg-primary text-primary-foreground hover:bg-primary/90 mt-6 h-11 rounded-lg font-medium" disabled={!newItem.service}>
-                            Save Reminder
+                        </form>
+                    </div>
+                    {/* Sticky footer */}
+                    <div className="px-6 py-4 border-t border-border/50 shrink-0 bg-card">
+                        <Button type="submit" form="service-form" className="w-full bg-primary text-primary-foreground hover:bg-primary/90 h-11 rounded-xl font-medium tracking-wide" disabled={!newItem.service}>
+                            Save Service Record
                         </Button>
-                    </form>
+                    </div>
                 </SheetContent>
             </Sheet>
         </motion.div >

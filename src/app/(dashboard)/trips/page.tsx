@@ -223,71 +223,86 @@ export default function TripsPage() {
 
             {/* Add Trip Sheet */}
             <Sheet open={isFormOpen} onOpenChange={setIsFormOpen}>
-                <SheetContent side="bottom" className="sm:max-w-md mx-auto rounded-t-xl bg-card border-border sm:h-auto h-[85vh] overflow-y-auto">
-                    <SheetHeader className="text-left mb-6">
-                        <SheetTitle className="text-foreground">Log Trip</SheetTitle>
-                        <SheetDescription className="text-muted-foreground">Record a new trip for mileage tracking</SheetDescription>
+                <SheetContent side="bottom" className="w-[min(560px,96vw)] inset-auto left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-border p-0 max-h-[88vh] flex flex-col overflow-hidden shadow-2xl">
+
+                    {/* Header */}
+                    <SheetHeader className="px-6 py-4 border-b border-border/50 shrink-0">
+                        <div className="flex items-center gap-3">
+                            <div className="p-2.5 rounded-xl bg-secondary shrink-0">
+                                <Route className="h-4 w-4 text-foreground" />
+                            </div>
+                            <div className="text-left">
+                                <SheetTitle className="text-foreground text-base font-medium leading-tight">Log Trip</SheetTitle>
+                                <SheetDescription className="text-muted-foreground text-xs mt-0.5">Record a trip for mileage tracking</SheetDescription>
+                            </div>
+                        </div>
                     </SheetHeader>
-                    <form onSubmit={handleSubmit} className="space-y-4">
-                        <div className="grid grid-cols-2 gap-4">
-                            <div className="space-y-2">
-                                <Label className="text-foreground">Start Location *</Label>
+                    {/* Scrollable form */}
+                    <div className="flex-1 overflow-y-auto">
+                        <form id="trip-form" onSubmit={handleSubmit} className="px-6 py-5 space-y-4">
+                            <div className="grid grid-cols-2 gap-3">
+                                <div className="space-y-1.5">
+                                    <Label className="text-[11px] uppercase tracking-wider text-muted-foreground font-medium">Start Location *</Label>
+                                    <Input
+                                        placeholder="Home" value={newTrip.startLocation}
+                                        onChange={(e) => setNewTrip({ ...newTrip, startLocation: e.target.value })}
+                                        className="bg-secondary/30 border-border/60" required
+                                    />
+                                </div>
+                                <div className="space-y-1.5">
+                                    <Label className="text-[11px] uppercase tracking-wider text-muted-foreground font-medium">End Location *</Label>
+                                    <Input
+                                        placeholder="Office" value={newTrip.endLocation}
+                                        onChange={(e) => setNewTrip({ ...newTrip, endLocation: e.target.value })}
+                                        className="bg-secondary/30 border-border/60" required
+                                    />
+                                </div>
+                            </div>
+                            <div className="space-y-1.5">
+                                <Label className="text-[11px] uppercase tracking-wider text-muted-foreground font-medium">Distance ({distLabel}) *</Label>
                                 <Input
-                                    placeholder="Home" value={newTrip.startLocation}
-                                    onChange={(e) => setNewTrip({ ...newTrip, startLocation: e.target.value })}
-                                    className="bg-secondary/30 border-border text-foreground focus:border-border/60" required
+                                    type="number" step="0.1" placeholder="24.5"
+                                    value={newTrip.distance}
+                                    onChange={(e) => setNewTrip({ ...newTrip, distance: e.target.value })}
+                                    className="bg-secondary/30 border-border/60" required
                                 />
                             </div>
-                            <div className="space-y-2">
-                                <Label className="text-foreground">End Location *</Label>
-                                <Input
-                                    placeholder="Office" value={newTrip.endLocation}
-                                    onChange={(e) => setNewTrip({ ...newTrip, endLocation: e.target.value })}
-                                    className="bg-secondary/30 border-border text-foreground focus:border-border/60" required
+                            <div className="space-y-1.5">
+                                <Label className="text-[11px] uppercase tracking-wider text-muted-foreground font-medium">Purpose</Label>
+                                <Select value={newTrip.purpose} onValueChange={(v) => setNewTrip({ ...newTrip, purpose: v as Trip['purpose'] })}>
+                                    <SelectTrigger className="bg-secondary/30 border-border/60 h-12 rounded-xl"><SelectValue /></SelectTrigger>
+                                    <SelectContent className="bg-card border-border">
+                                        <SelectItem value="commute">Commute</SelectItem>
+                                        <SelectItem value="business">Business</SelectItem>
+                                        <SelectItem value="personal">Personal</SelectItem>
+                                        <SelectItem value="medical">Medical</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                            <div className="flex items-center justify-between rounded-xl border border-border/50 bg-secondary/20 p-4">
+                                <Label className="text-sm text-foreground cursor-pointer">Tax Deductible?</Label>
+                                <Switch
+                                    checked={newTrip.isTaxDeductible}
+                                    onCheckedChange={(checked) => setNewTrip({ ...newTrip, isTaxDeductible: checked })}
                                 />
                             </div>
-                        </div>
-                        <div className="space-y-2">
-                            <Label className="text-foreground">Distance ({distLabel}) *</Label>
-                            <Input
-                                type="number" step="0.1" placeholder="24.5"
-                                value={newTrip.distance}
-                                onChange={(e) => setNewTrip({ ...newTrip, distance: e.target.value })}
-                                className="bg-secondary/30 border-border text-foreground focus:border-border/60" required
-                            />
-                        </div>
-                        <div className="space-y-2">
-                            <Label className="text-foreground">Purpose</Label>
-                            <Select value={newTrip.purpose} onValueChange={(v) => setNewTrip({ ...newTrip, purpose: v as Trip['purpose'] })}>
-                                <SelectTrigger className="bg-secondary/30 border-border text-foreground focus:border-border/60"><SelectValue /></SelectTrigger>
-                                <SelectContent className="bg-card border-border text-foreground">
-                                    <SelectItem value="commute">Commute</SelectItem>
-                                    <SelectItem value="business">Business</SelectItem>
-                                    <SelectItem value="personal">Personal</SelectItem>
-                                    <SelectItem value="medical">Medical</SelectItem>
-                                </SelectContent>
-                            </Select>
-                        </div>
-                        <div className="flex items-center justify-between rounded-xl border border-border bg-secondary/30 p-4">
-                            <Label className="text-foreground cursor-pointer">Tax Deductible?</Label>
-                            <Switch
-                                checked={newTrip.isTaxDeductible}
-                                onCheckedChange={(checked) => setNewTrip({ ...newTrip, isTaxDeductible: checked })}
-                            />
-                        </div>
-                        <div className="space-y-2">
-                            <Label className="text-foreground">Notes (Optional)</Label>
-                            <Input
-                                placeholder="Client meeting, doctor visit..."
-                                value={newTrip.notes}
-                                onChange={(e) => setNewTrip({ ...newTrip, notes: e.target.value })}
-                                className="bg-secondary/30 border-border text-foreground focus:border-border/60"
-                            />
-                        </div>
-                        <Button type="submit" className="w-full bg-primary text-primary-foreground hover:bg-primary/90 mt-6 h-11 rounded-lg font-medium" disabled={!newTrip.startLocation || !newTrip.endLocation || !newTrip.distance}>
+                            <div className="space-y-1.5">
+                                <Label className="text-[11px] uppercase tracking-wider text-muted-foreground font-medium">Notes (Optional)</Label>
+                                <Input
+                                    placeholder="Client meeting, doctor visit..."
+                                    value={newTrip.notes}
+                                    onChange={(e) => setNewTrip({ ...newTrip, notes: e.target.value })}
+                                    className="bg-secondary/30 border-border/60"
+                                />
+                            </div>
+                        </form>
+                    </div>
+                    {/* Sticky footer */}
+                    <div className="px-6 py-4 border-t border-border/50 shrink-0 bg-card">
+                        <Button type="submit" form="trip-form" className="w-full bg-primary text-primary-foreground hover:bg-primary/90 h-11 rounded-xl font-medium tracking-wide" disabled={!newTrip.startLocation || !newTrip.endLocation || !newTrip.distance}>
                             Save Trip
                         </Button>
-                    </form>
+                    </div>
                 </SheetContent>
             </Sheet>
         </motion.div>

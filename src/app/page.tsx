@@ -5,9 +5,9 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { motion, useScroll, useSpring } from 'framer-motion';
 import { ArrowRight, BarChart3, Fuel, ShieldCheck, Zap, Car, CheckCircle2 } from 'lucide-react';
-import { AnimatedCounter } from '@/components/ui/animated-counter';
 import { MEMORIA_EASING } from '@/lib/animations/easing';
 import { MorphLoader } from '@/components/ui/morph-loader';
+import { ThemeToggle } from '@/components/ui/theme-toggle';
 import { useTheme } from 'next-themes';
 
 const ease = [...MEMORIA_EASING.smooth] as [number, number, number, number];
@@ -74,41 +74,15 @@ function FloatingOrbs() {
   );
 }
 
-// ── Stats strip data ───────────────────────────────────────────
-const STATS = [
-  { value: 12000, suffix: '+', label: 'Drivers Tracked', prefix: '' },
-  { value: 50,    suffix: 'M+', label: 'Cost Monitored',  prefix: '₹' },
-  { value: 99.9,  suffix: '%',  label: 'Platform Uptime', prefix: '' },
-  { value: 80,    suffix: '+',  label: 'Cities Active',   prefix: '' },
-];
-
 // ── Trust pills ────────────────────────────────────────────────
-const TRUST = ['No credit card', 'Free tier included', 'End-to-end encrypted'];
+const TRUST = ['100% Free', 'Works Offline', 'Data Stays on Your Device'];
 
-// ── Feature cards data ────────────────────────────────────────
-const FEATURES = [
-  {
-    icon: Car,
-    title: 'Fleet Management',
-    desc: 'Add multiple vehicles, track individual statistics, and visualize costs across your entire lineup.',
-    stat: 150,
-    statLabel: 'Logs Handled Daily',
-    span: 1,
-  },
-  {
-    icon: BarChart3,
-    title: 'Powerful Analytics',
-    desc: 'Visualize spending patterns, efficiency trends, and cost-per-mile metrics with clear, accurate charts dynamically updated.',
-    stat: null,
-    statLabel: null,
-    span: 2,
-  },
-];
+// ── Feature cards data (unused array removed) ────────────────
 
 // ── Card stagger variants ─────────────────────────────────────
 const cardVariants = {
   hidden: { opacity: 0, y: 40, filter: 'blur(8px)' },
-  show:   { opacity: 1, y: 0,  filter: 'blur(0px)' },
+  show: { opacity: 1, y: 0, filter: 'blur(0px)' },
 };
 
 export default function LandingPage() {
@@ -142,9 +116,7 @@ export default function LandingPage() {
               <span className="text-xl font-medium tracking-tight text-foreground transition-colors duration-300">FuelUp</span>
             </div>
             <div className="flex items-center gap-4">
-              <Link href="/login" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors hidden sm:block">
-                Sign In
-              </Link>
+              <ThemeToggle />
               <Link href="/login">
                 <Button className="h-9 px-4 rounded-full bg-primary text-primary-foreground hover:bg-primary/90 transition-all font-medium">
                   Get Started
@@ -191,10 +163,10 @@ export default function LandingPage() {
             {/* ── Headline — word-by-word ── */}
             <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-light tracking-tight max-w-4xl mx-auto leading-tight text-center mb-6">
               <span className="block text-foreground">
-                <WordReveal text="Numbers are heroes." startDelay={0.25} />
+                <WordReveal text="Track every fill-up." startDelay={0.25} />
               </span>
               <span className="block text-muted-foreground font-light">
-                <WordReveal text="Labels are whispers." startDelay={0.65} />
+                <WordReveal text="See every trend." startDelay={0.65} />
               </span>
             </h1>
 
@@ -205,7 +177,7 @@ export default function LandingPage() {
               transition={{ duration: 0.7, ease, delay: 1.0 }}
               className="text-base md:text-lg tracking-wide text-neutral-400 max-w-2xl mx-auto leading-relaxed font-normal mb-10"
             >
-              A premium platform to track fuel costs, monitor performance trends, and manage vehicles with absolute clarity. Built for modern drivers.
+              Log fuel costs, monitor vehicle efficiency, and manage maintenance. All stored locally on your device. No accounts needed.
             </motion.p>
 
             {/* ── CTA ── */}
@@ -225,7 +197,7 @@ export default function LandingPage() {
                     transition={{ repeat: Infinity, duration: 2.8, ease: 'linear', repeatDelay: 1.8 }}
                   />
                   <span className="relative z-10 flex items-center gap-2">
-                    Get Started Free
+                    Get Started
                     <motion.span
                       animate={{ x: [0, 5, 0] }}
                       transition={{ repeat: Infinity, duration: 1.6, ease: 'easeInOut' }}
@@ -334,39 +306,7 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* ════════════════════════════════════════════
-            STATS STRIP
-        ════════════════════════════════════════════ */}
-        <section className="py-10 border-y border-border/40 bg-secondary/10 relative">
-          {/* Subtle background noise lines */}
-          <div
-            className="absolute inset-0 pointer-events-none opacity-[0.02]"
-            style={{
-              backgroundImage: 'repeating-linear-gradient(90deg, hsl(var(--foreground)) 0px, hsl(var(--foreground)) 1px, transparent 1px, transparent 80px)',
-            }}
-          />
-          <div className="max-w-6xl mx-auto px-6">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-              {STATS.map((stat, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, y: 24 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, amount: 0 }}
-                  transition={{ delay: i * 0.12, duration: 0.55, ease }}
-                  className="text-center py-3"
-                >
-                  <div className="text-3xl md:text-4xl font-light text-foreground tracking-tight mb-1.5 font-heading tabular-nums">
-                    {stat.prefix}
-                    <AnimatedCounter value={stat.value} />
-                    {stat.suffix}
-                  </div>
-                  <p className="text-[10px] text-muted-foreground uppercase tracking-[0.18em]">{stat.label}</p>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </section>
+        {/* Stats strip removed — no unverifiable claims */}
 
         {/* ════════════════════════════════════════════
             FEATURES
@@ -376,7 +316,7 @@ export default function LandingPage() {
             <div className="mb-16 text-center">
               <motion.h2
                 initial={{ opacity: 0, y: 20, filter: 'blur(8px)' }}
-              whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
                 viewport={{ once: true, amount: 0 }}
                 transition={{ duration: 0.7, ease }}
                 className="text-3xl md:text-4xl font-medium tracking-tight text-foreground mb-4"
@@ -407,13 +347,13 @@ export default function LandingPage() {
                   <div className="mb-6 p-4 rounded-xl bg-secondary w-max text-muted-foreground">
                     <Car className="h-6 w-6" />
                   </div>
-                  <h3 className="text-xl font-medium text-foreground mb-2">Fleet Management</h3>
+                  <h3 className="text-xl font-medium text-foreground mb-2">Multi-Vehicle Management</h3>
                   <p className="text-muted-foreground mb-auto text-sm leading-relaxed">
-                    Add multiple vehicles, track individual statistics, and visualize costs across your entire lineup.
+                    Add your cars, bikes, and scooters. Track individual fill-ups, costs, and efficiency for each vehicle separately.
                   </p>
                   <div className="pt-6">
-                    <AnimatedCounter value={150} className="text-4xl tracking-tighter text-foreground mb-1" />
-                    <span className="text-xs uppercase tracking-wider text-muted-foreground font-medium">Logs Handled Daily</span>
+                    <span className="text-4xl tracking-tighter text-foreground mb-1">∞</span>
+                    <span className="text-xs uppercase tracking-wider text-muted-foreground font-medium">Unlimited Entries</span>
                   </div>
                 </Card>
               </motion.div>
@@ -493,8 +433,8 @@ export default function LandingPage() {
                   <div className="mb-6 p-4 rounded-xl bg-secondary w-max text-muted-foreground">
                     <ShieldCheck className="h-6 w-6" />
                   </div>
-                  <h3 className="text-xl font-medium text-foreground mb-2">Secure & Private</h3>
-                  <p className="text-sm text-muted-foreground">Your data stays yours. Encrypted and safe at rest and in transit.</p>
+                  <h3 className="text-xl font-medium text-foreground mb-2">Private & Local</h3>
+                  <p className="text-sm text-muted-foreground">Your data stays on your device. No accounts, no servers, no tracking. Export or clear anytime.</p>
                 </Card>
               </motion.div>
             </div>
@@ -551,7 +491,7 @@ export default function LandingPage() {
                     animate={{ x: '220%' }}
                     transition={{ repeat: Infinity, duration: 2.8, ease: 'linear', repeatDelay: 2 }}
                   />
-                  <span className="relative z-10">Create Account</span>
+                  <span className="relative z-10">Get Started</span>
                 </Button>
               </Link>
             </motion.div>

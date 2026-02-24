@@ -23,6 +23,9 @@ interface FuelStore {
     getTotalSpent: () => number;
     getTotalFuel: () => number;
     getAverageEfficiency: () => number;
+    getTotalSpentByVehicle: (vehicleId: string) => number;
+    getTotalFuelByVehicle: (vehicleId: string) => number;
+    getAverageEfficiencyByVehicle: (vehicleId: string) => number;
 }
 
 const INITIAL_LOGS: FuelLog[] = [
@@ -150,6 +153,15 @@ export const useFuelStore = create<FuelStore>()(
                 const logsWithEff = get().logs.filter((l) => l.efficiency);
                 if (logsWithEff.length === 0) return 0;
                 return logsWithEff.reduce((sum, l) => sum + (l.efficiency || 0), 0) / logsWithEff.length;
+            },
+            getTotalSpentByVehicle: (vehicleId) =>
+                get().logs.filter((l) => l.vehicleId === vehicleId).reduce((sum, l) => sum + l.totalCost, 0),
+            getTotalFuelByVehicle: (vehicleId) =>
+                get().logs.filter((l) => l.vehicleId === vehicleId).reduce((sum, l) => sum + l.fuelAmount, 0),
+            getAverageEfficiencyByVehicle: (vehicleId) => {
+                const vehicleLogs = get().logs.filter((l) => l.vehicleId === vehicleId && l.efficiency);
+                if (vehicleLogs.length === 0) return 0;
+                return vehicleLogs.reduce((sum, l) => sum + (l.efficiency || 0), 0) / vehicleLogs.length;
             },
         }),
         {

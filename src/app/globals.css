@@ -125,7 +125,7 @@
     --foreground: 0 0% 100%;
     /* Almost pure white text */
 
-    --card: 0 0% 6%;
+    --card: 0 0% 10%;
     /* Slightly lighter than bg for elevation */
     --card-foreground: 0 0% 100%;
 

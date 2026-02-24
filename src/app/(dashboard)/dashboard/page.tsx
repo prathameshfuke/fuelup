@@ -21,18 +21,27 @@ import {
 import { useFuelStore } from '@/lib/store/fuelStore';
 import { useMaintenanceStore } from '@/lib/store/maintenanceStore';
 import { useSettingsStore, CURRENCY_CONFIG } from '@/lib/store/settingsStore';
+import { useVehicleStore } from '@/lib/store/vehicleStore';
+import { useVehiclesStore } from '@/lib/store/vehiclesStore';
 
 export default function DashboardPage() {
-    const { logs, getTotalSpent, getTotalFuel, getAverageEfficiency } = useFuelStore();
-    const { getUpcoming } = useMaintenanceStore();
+    const { getLogsByVehicle, getTotalSpentByVehicle, getTotalFuelByVehicle, getAverageEfficiencyByVehicle } = useFuelStore();
+    const { getUpcomingByVehicle } = useMaintenanceStore();
     const { formatCurrency, distanceUnit, volumeUnit, currency } = useSettingsStore();
     const currencySymbol = CURRENCY_CONFIG[currency].symbol;
+    const { activeVehicleId } = useVehicleStore();
+    const { vehicles } = useVehiclesStore();
+    const activeVehicle = vehicles.find(v => v.id === activeVehicleId);
+
+    // Vehicle-scoped data
+    const vehicleId = activeVehicleId || '';
+    const logs = getLogsByVehicle(vehicleId);
+    const avgEfficiency = getAverageEfficiencyByVehicle(vehicleId);
+    const monthlyCost = getTotalSpentByVehicle(vehicleId);
+    const upcoming = getUpcomingByVehicle(vehicleId);
 
     const distLabel = distanceUnit === 'km' ? 'km' : 'mi';
     const volLabel = volumeUnit === 'liters' ? 'L' : 'gal';
-    const avgEfficiency = getAverageEfficiency();
-    const monthlyCost = getTotalSpent();
-    const upcoming = getUpcoming();
 
     // Chart data
     const chartData = (() => {
@@ -70,7 +79,7 @@ export default function DashboardPage() {
                     </BlurReveal>
                     <BlurReveal delay={0.1}>
                         <p className="text-muted-foreground font-mono text-sm tracking-widest uppercase">
-                            Overview of vehicle performance and metrics
+                            {activeVehicle ? `${activeVehicle.name} · ${activeVehicle.make} ${activeVehicle.model}` : 'Select a vehicle to get started'}
                         </p>
                     </BlurReveal>
                 </div>
@@ -90,11 +99,6 @@ export default function DashboardPage() {
                             <div className="p-2 rounded-lg bg-secondary text-muted-foreground">
                                 <Gauge className="h-4 w-4" />
                             </div>
-                            {avgEfficiency > 14 && (
-                                <div className="text-[10px] font-medium uppercase tracking-wide px-2 py-0.5 rounded border text-success bg-success/10 border-success/20">
-                                    ↑ +5.2%
-                                </div>
-                            )}
                         </div>
                         <div>
                             <h4 className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-1">Avg. Efficiency</h4>
@@ -122,7 +126,7 @@ export default function DashboardPage() {
                             </div>
                         </div>
                         <div>
-                <h4 className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-1">Total Spent</h4>
+                            <h4 className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-1">Total Spent</h4>
                             <div className="flex items-baseline gap-2">
                                 <span className="text-xl md:text-3xl font-light text-foreground tracking-tight truncate">
                                     {monthlyCost > 0 ? formatCurrency(monthlyCost) : '-'}
@@ -187,12 +191,12 @@ export default function DashboardPage() {
                         <BorderBeam size={300} duration={12} delay={0} borderWidth={1.5} />
                     </div>
                     <div className="relative z-10 p-6 flex-1 flex flex-col">
-                    <BlurReveal delay={0.2} className="mb-6">
-                        <div className="flex items-center gap-2">
-                            <TrendingUp className="h-4 w-4 text-muted-foreground" />
-                            <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-widest">Efficiency Trend</h3>
-                        </div>
-                    </BlurReveal>
+                        <BlurReveal delay={0.2} className="mb-6">
+                            <div className="flex items-center gap-2">
+                                <TrendingUp className="h-4 w-4 text-muted-foreground" />
+                                <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-widest">Efficiency Trend</h3>
+                            </div>
+                        </BlurReveal>
                         <div className="flex-1 w-full min-h-0">
                             <ResponsiveContainer width="100%" height="100%">
                                 <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
@@ -247,15 +251,15 @@ export default function DashboardPage() {
                         <BorderBeam size={300} duration={12} delay={0} borderWidth={1.5} />
                     </div>
                     <div className="relative z-10 p-6 flex-1 flex flex-col">
-                    <BlurReveal delay={0.2} className="mb-6">
-                        <div className="flex items-center gap-2">
-                            <span className="h-4 w-4 flex items-center justify-center text-sm font-medium leading-none text-muted-foreground">{currencySymbol}</span>
+                        <BlurReveal delay={0.2} className="mb-6">
+                            <div className="flex items-center gap-2">
+                                <span className="h-4 w-4 flex items-center justify-center text-sm font-medium leading-none text-muted-foreground">{currencySymbol}</span>
                                 <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-widest">Fuel Spending</h3>
-                        </div>
-                    </BlurReveal>
+                            </div>
+                        </BlurReveal>
                         <div className="flex-1 w-full min-h-0">
                             <ResponsiveContainer width="100%" height="100%">
-                            <BarChart data={chartData} margin={{ top: 10, right: 10, left: 5, bottom: 0 }}>
+                                <BarChart data={chartData} margin={{ top: 10, right: 10, left: 5, bottom: 0 }}>
                                     <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
                                     <XAxis
                                         dataKey="date"
@@ -348,7 +352,7 @@ export default function DashboardPage() {
                                 </motion.div>
                             ))}
                             {recentLogs.length === 0 && (
-                                <p className="text-center text-muted-foreground py-8 text-sm">No pit stops yet</p>
+                                <p className="text-center text-muted-foreground py-8 text-sm">No fill-ups recorded for this vehicle</p>
                             )}
                         </div>
                     </div>

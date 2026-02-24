@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { User, Bell, Globe, Shield, LogOut, ChevronRight, Check, Settings, Wallet, Smartphone, Database, Lock, Map as MapIcon, Moon } from 'lucide-react';
+import { User, Bell, Globe, Shield, LogOut, ChevronRight, Check, Settings, Wallet, Smartphone, Database, Lock, Map as MapIcon, Moon, Trash2 } from 'lucide-react';
 import { GlassCard } from '@/components/ui/glass-card';
 import { BorderBeam } from '@/components/ui/border-beam';
 import { BlurReveal } from '@/components/ui/blur-reveal';
@@ -28,17 +28,17 @@ export default function SettingsPage() {
 
     const handleSignOut = () => {
         authSignOut();
-        toast.success('Signed out successfully');
+        toast.success('App reset successfully');
         router.push('/');
     };
 
     const handleExportData = () => {
         const data = {
             settings: { currency, distanceUnit, volumeUnit },
-            fuelLogs: JSON.parse(localStorage.getItem('fuelup-fuel-logs') || '{}'),
+            fuelLogs: JSON.parse(localStorage.getItem('fuelup-fuel-logs-v3') || '{}'),
             vehicles: JSON.parse(localStorage.getItem('fuelup-vehicles') || '{}'),
-            trips: JSON.parse(localStorage.getItem('fuelup-trips') || '{}'),
-            maintenance: JSON.parse(localStorage.getItem('fuelup-maintenance') || '{}'),
+            trips: JSON.parse(localStorage.getItem('fuelup-trips-v2') || '{}'),
+            maintenance: JSON.parse(localStorage.getItem('fuelup-maintenance-v2') || '{}'),
         };
         const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
@@ -52,12 +52,13 @@ export default function SettingsPage() {
 
     const handleClearData = () => {
         if (confirm('Are you sure you want to delete all your data? This cannot be undone.')) {
-            localStorage.removeItem('fuelup-fuel-logs');
+            localStorage.removeItem('fuelup-fuel-logs-v3');
             localStorage.removeItem('fuelup-vehicles');
-            localStorage.removeItem('fuelup-trips');
-            localStorage.removeItem('fuelup-maintenance');
+            localStorage.removeItem('fuelup-trips-v2');
+            localStorage.removeItem('fuelup-maintenance-v2');
             localStorage.removeItem('fuelup-settings');
             localStorage.removeItem('fuelup-auth-store');
+            localStorage.removeItem('fuelup-vehicle-store');
             toast.success('All data cleared');
             router.push('/');
         }
@@ -85,8 +86,8 @@ export default function SettingsPage() {
                 </BlurReveal>
             </div>
 
-                {/* Profile Section */}
-                <GlassCard className="relative overflow-hidden group hover:border-border transition-colors z-10 w-full">
+            {/* Profile Section */}
+            <GlassCard className="relative overflow-hidden group hover:border-border transition-colors z-10 w-full">
                 <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl overflow-hidden pointer-events-none z-0">
                     <BorderBeam size={300} duration={12} delay={0} borderWidth={1.5} colorFrom="rgba(255,255,255,0.3)" colorTo="rgba(255,255,255,0)" />
                 </div>
@@ -100,17 +101,12 @@ export default function SettingsPage() {
                         <div className="flex-1">
                             <h3 className="text-xl font-medium text-foreground">{user?.name || 'Guest User'}</h3>
                             <p className="text-sm text-muted-foreground mt-1">
-                                {user?.isGuest ? 'Browsing as guest' : 'user@example.com'}
+                                Local mode · all data stored on this device
                             </p>
                             <div className="mt-4 flex gap-3">
                                 <Badge variant="outline" className="text-xs font-normal px-3 py-1 bg-secondary/50 border-border text-foreground">
-                                    {user?.isGuest ? 'Guest Access' : 'Pro Plan'}
+                                    Local Mode
                                 </Badge>
-                                {user?.isGuest && (
-                                    <Button variant="outline" size="sm" className="text-xs h-7" onClick={() => router.push('/login')}>
-                                        Sign In
-                                    </Button>
-                                )}
                             </div>
                         </div>
                     </div>
@@ -290,15 +286,39 @@ export default function SettingsPage() {
                             <Button
                                 variant="outline"
                                 className="w-full mt-2 h-10 gap-2 border-border text-foreground hover:bg-secondary transition-all"
-                                onClick={handleSignOut}
+                                onClick={() => {
+                                    authSignOut();
+                                    toast.success('Logged out');
+                                    router.push('/');
+                                }}
                             >
-                                <LogOut className="h-4 w-4" /> Sign Out
+                                <LogOut className="h-4 w-4" /> Log Out
                             </Button>
+                            <Button
+                                variant="outline"
+                                className="w-full mt-2 h-10 gap-2 border-destructive/50 text-destructive hover:bg-destructive/10 transition-all"
+                                onClick={handleClearData}
+                            >
+                                <Trash2 className="h-4 w-4" /> Reset App
+                            </Button>
+
+                            {/* Privacy Statement */}
+                            <div className="mt-4 p-4 rounded-lg bg-secondary/30 border border-border">
+                                <div className="flex items-start gap-3">
+                                    <Shield className="h-4 w-4 text-muted-foreground mt-0.5 shrink-0" />
+                                    <div>
+                                        <p className="text-xs font-medium text-foreground mb-1">Privacy Note</p>
+                                        <p className="text-xs text-muted-foreground leading-relaxed">
+                                            All your data is stored locally on this device. Nothing is uploaded to any server. You can export your data at any time or delete it permanently.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </GlassCard>
 
-                <p className="text-center text-[10px] text-muted-foreground mt-8 uppercase tracking-widest">FuelUp Premium • Minimalist Edition</p>
+                <p className="text-center text-[10px] text-muted-foreground mt-8 uppercase tracking-widest">FuelUp • Local-first Vehicle Tracker</p>
             </div>
         </motion.div>
     );

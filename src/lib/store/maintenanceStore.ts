@@ -21,6 +21,8 @@ interface MaintenanceStore {
     deleteItem: (id: string) => void;
     getUpcoming: () => MaintenanceItem[];
     getCompleted: () => MaintenanceItem[];
+    getUpcomingByVehicle: (vehicleId: string) => MaintenanceItem[];
+    getCompletedByVehicle: (vehicleId: string) => MaintenanceItem[];
 }
 
 const INITIAL_ITEMS: MaintenanceItem[] = [
@@ -95,6 +97,8 @@ export const useMaintenanceStore = create<MaintenanceStore>()(
             deleteItem: (id) => set((state) => ({ items: state.items.filter((i) => i.id !== id) })),
             getUpcoming: () => get().items.filter((i) => !i.isCompleted),
             getCompleted: () => get().items.filter((i) => i.isCompleted),
+            getUpcomingByVehicle: (vehicleId) => get().items.filter((i) => !i.isCompleted && i.vehicleId === vehicleId),
+            getCompletedByVehicle: (vehicleId) => get().items.filter((i) => i.isCompleted && i.vehicleId === vehicleId),
         }),
         {
             name: 'fuelup-maintenance-v2' // Bumped version to force realistic mock data load 
