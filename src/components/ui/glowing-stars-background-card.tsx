@@ -3,7 +3,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { useReducedMotion } from "@/hooks/useReducedMotion";
 
 interface GlowingStarsBackgroundCardProps {
   className?: string;
@@ -15,20 +14,28 @@ export function GlowingStarsBackgroundCard({
   children,
 }: GlowingStarsBackgroundCardProps) {
   const [mouseEnter, setMouseEnter] = useState(false);
-  const prefersReducedMotion = useReducedMotion();
 
   return (
     <div
       onMouseEnter={() => setMouseEnter(true)}
       onMouseLeave={() => setMouseEnter(false)}
       className={cn(
-        "bg-card/60 backdrop-blur-xl p-6 max-w-md max-h-[20rem] h-full w-full rounded-2xl border border-white/10 dark:border-neutral-700 hover:border-white/20 transition-all duration-300",
+        "relative rounded-2xl border border-border/50 bg-card/60 backdrop-blur-xl overflow-hidden",
+        "hover:border-border transition-all duration-300 group",
         className
       )}
     >
-      <div className="flex justify-center items-center mb-6">
+      {/* Stars fill the entire card background */}
+      <div className="absolute inset-0 z-0">
         <StarGrid mouseEnter={mouseEnter} />
       </div>
+      {/* Gradient fade at bottom so content stays readable */}
+      <div className="absolute inset-x-0 bottom-0 h-3/4 z-[1] pointer-events-none"
+        style={{
+          background: "linear-gradient(to top, hsl(var(--card) / 0.92) 0%, transparent 100%)",
+        }}
+      />
+      {/* Content */}
       <div className="relative z-10">{children}</div>
     </div>
   );
@@ -63,14 +70,14 @@ export function GlowingStarsDescription({
 }
 
 function StarGrid({ mouseEnter }: { mouseEnter: boolean }) {
-  const stars = 108;
-  const columns = 18;
+  const stars = 120;
+  const columns = 20;
   const [glowingStars, setGlowingStars] = useState<number[]>([]);
   const highlightedStars = useRef<number[]>([]);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      highlightedStars.current = Array.from({ length: 5 }, () =>
+      highlightedStars.current = Array.from({ length: 4 }, () =>
         Math.floor(Math.random() * stars)
       );
       setGlowingStars([...highlightedStars.current]);
@@ -81,11 +88,12 @@ function StarGrid({ mouseEnter }: { mouseEnter: boolean }) {
 
   return (
     <div
-      className="h-48 p-1 w-full"
+      className="w-full h-full"
       style={{
         display: "grid",
         gridTemplateColumns: `repeat(${columns}, 1fr)`,
         gap: "1px",
+        padding: "4px",
       }}
     >
       {[...Array(stars)].map((_, starIdx) => {
@@ -120,7 +128,9 @@ function Star({ isGlowing, delay }: { isGlowing: boolean; delay: number }) {
       initial={{ scale: 1 }}
       animate={{
         scale: isGlowing ? [1, 1.2, 2.5, 2.2, 1.5] : 1,
-        background: isGlowing ? "hsl(var(--foreground))" : "hsl(var(--muted-foreground))",
+        background: isGlowing
+          ? "hsl(var(--foreground))"
+          : "hsl(var(--muted-foreground))",
       }}
       transition={{
         duration: 2,
@@ -143,9 +153,9 @@ function Glow({ delay }: { delay: number }) {
         delay,
       }}
       exit={{ opacity: 0 }}
-      className="absolute left-1/2 -translate-x-1/2 z-10 h-[4px] w-[4px] rounded-full bg-primary blur-[1px] shadow-2xl"
+      className="absolute left-1/2 -translate-x-1/2 z-10 h-[4px] w-[4px] rounded-full bg-foreground/60 blur-[1px] shadow-2xl"
       style={{
-        boxShadow: "0 0 8px hsl(var(--primary))",
+        boxShadow: "0 0 6px hsl(var(--foreground) / 0.5)",
       }}
     />
   );

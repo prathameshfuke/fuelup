@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useTheme } from 'next-themes';
 import { cn } from '@/lib/utils';
 import { useUIStore } from '@/lib/store/uiStore';
 import {
@@ -31,6 +32,7 @@ const navItems = [
 
 export function Sidebar() {
     const pathname = usePathname();
+    const { theme } = useTheme();
     const { sidebarCollapsed, toggleSidebar } = useUIStore();
 
     return (
@@ -43,7 +45,11 @@ export function Sidebar() {
             {/* Logo */}
             <div className="flex h-16 items-center gap-3 border-b border-border px-4">
                 <div className="bg-primary rounded p-0.5">
-                    <img src="/logo.png" alt="FuelUp" className="h-5 w-5 object-contain invert mix-blend-screen" />
+                    <img
+                        src={theme === 'dark' ? '/images/logo-dark.png' : '/images/logo-light.png'}
+                        alt="FuelUp"
+                        className="h-5 w-5 object-contain"
+                    />
                 </div>
                 {!sidebarCollapsed && (
                     <span className="text-xl font-medium tracking-tight text-foreground">

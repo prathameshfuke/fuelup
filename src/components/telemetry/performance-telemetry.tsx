@@ -6,6 +6,7 @@ import { BottomNav } from '@/components/shared/bottom-nav';
 import { MetricCard } from '@/components/shared/metric-card';
 import { SectorCard } from '@/components/shared/sector-card';
 import { TabNavigation } from '@/components/shared/tab-navigation';
+import { useSettingsStore } from '@/lib/store/settingsStore';
 
 type TabType = 'last-stint' | 'last-24h' | 'season';
 
@@ -26,6 +27,7 @@ interface SectorData {
 
 export function PerformanceTelemetry() {
   const [activeTab, setActiveTab] = useState<TabType>('last-stint');
+  const { formatCurrency } = useSettingsStore();
 
   const tripBreakdownData: TripBreakdownData[] = [
     { label: 'HWY', value: 60, percentage: 60, color: 'bg-cyan-400' },
@@ -217,7 +219,7 @@ export function PerformanceTelemetry() {
         <div className="grid grid-cols-2 gap-4">
           <div className="text-center">
             <p className="text-xs text-[#64748b] tracking-widest mb-1">COST</p>
-            <p className="text-2xl font-bold text-white">$14.50</p>
+            <p className="text-2xl font-bold text-white">{formatCurrency(14.50)}</p>
           </div>
         </div>
       </div>

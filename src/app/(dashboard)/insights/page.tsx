@@ -8,7 +8,6 @@ import { useMaintenanceStore } from '@/lib/store/maintenanceStore';
 import { useSettingsStore } from '@/lib/store/settingsStore';
 import { format, differenceInDays } from 'date-fns';
 import { BlurReveal } from '@/components/ui/blur-reveal';
-import { HyperspaceBackground } from '@/components/ui/hyperspace-background';
 
 import { EfficiencyTrend } from '@/components/charts/efficiency-trend';
 import { MonthlySpend } from '@/components/charts/monthly-spend';
@@ -137,9 +136,7 @@ export default function InsightsPage() {
     }
 
     return (
-        <>
-            <HyperspaceBackground className="fixed inset-0 -z-10" starCount={120} speed={0.3} interactive={false} />
-            <motion.div variants={container} initial="hidden" animate="show" className="relative space-y-6 max-w-7xl mx-auto pb-10 px-6 py-8 z-10">
+        <motion.div variants={container} initial="hidden" animate="show" className="relative space-y-6 max-w-7xl mx-auto pb-28 md:pb-10 px-6 py-8 z-10">
                 <motion.div variants={item}>
                     <BlurReveal as="div">
                         <h1 className="text-3xl md:text-4xl font-heading font-medium tracking-tight text-foreground uppercase flex items-center gap-3">
@@ -212,6 +209,5 @@ export default function InsightsPage() {
                     <FillupHeatmap logs={logs} />
                 </motion.div>
             </motion.div>
-        </>
     );
 }

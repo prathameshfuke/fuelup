@@ -2,8 +2,6 @@
 
 import { GlassCard } from "@/components/ui/glass-card";
 import { BorderBeam } from "@/components/ui/border-beam";
-import { Area, AreaChart, ResponsiveContainer } from "recharts";
-import { chartColors } from "@/components/charts/chart-utils";
 
 interface StatCardPremiumProps {
     title: string;
@@ -12,7 +10,7 @@ interface StatCardPremiumProps {
     icon: React.ElementType;
     trend?: "up" | "down" | "neutral";
     trendValue?: string;
-    data?: any[]; // For sparkline
+    data?: any[]; // kept for API compat, unused
     dataKey?: string;
     color?: "primary" | "secondary" | "success" | "warning" | "danger";
 }
@@ -24,12 +22,8 @@ export function StatCardPremium({
     icon: Icon,
     trend,
     trendValue,
-    data,
-    dataKey = "val",
     color = "primary",
 }: StatCardPremiumProps) {
-    const selectedColor = chartColors[color];
-
     return (
         <GlassCard className="relative p-5 flex flex-col h-full group hover:border-neutral-700 transition-colors z-10 w-full">
             <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl overflow-hidden pointer-events-none z-0">
@@ -57,29 +51,6 @@ export function StatCardPremium({
                 </div>
             </div>
 
-            {/* Sparkline Overlay */}
-            {data && data.length > 0 && (
-                <div className="absolute bottom-0 left-0 right-0 h-16 opacity-30 group-hover:opacity-60 transition-opacity z-0 pointer-events-none">
-                    <ResponsiveContainer width="100%" height="100%">
-                        <AreaChart data={data}>
-                            <defs>
-                                <linearGradient id={`spark-${color}`} x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="0%" stopColor={selectedColor.fill} stopOpacity={0.3} />
-                                    <stop offset="100%" stopColor={selectedColor.fill} stopOpacity={0} />
-                                </linearGradient>
-                            </defs>
-                            <Area
-                                type="monotone"
-                                dataKey={dataKey}
-                                stroke={selectedColor.stroke}
-                                strokeWidth={2}
-                                fill={`url(#spark-${color})`}
-                                isAnimationActive={false}
-                            />
-                        </AreaChart>
-                    </ResponsiveContainer>
-                </div>
-            )}
         </GlassCard>
     );
 }

@@ -70,7 +70,7 @@ export default function SettingsPage() {
             initial={{ opacity: 0, filter: 'blur(10px)' }}
             animate={{ opacity: 1, filter: 'blur(0px)' }}
             transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
-            className="container mx-auto p-6 max-w-3xl space-y-8 pb-10"
+            className="container mx-auto p-6 max-w-3xl space-y-8 pb-28 md:pb-10"
         >
             {/* Header */}
             <div className="mb-8">

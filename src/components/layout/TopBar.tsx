@@ -5,17 +5,20 @@ import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { useAuthStore } from '@/lib/store/authStore';
 import Link from 'next/link';
+import { useTheme } from 'next-themes';
 
 export function TopBar() {
     const { user } = useAuthStore();
     const initial = user?.name?.[0]?.toUpperCase() || 'G';
+    const { resolvedTheme } = useTheme();
+    const logoSrc = resolvedTheme === 'dark' ? '/images/logo-dark.png' : '/images/logo-light.png';
 
     return (
         <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-border bg-background/80 backdrop-blur-md px-4 md:px-6">
             {/* Mobile Logo */}
             <div className="flex items-center gap-2 md:hidden">
                 <div className="bg-primary rounded p-0.5">
-                    <img src="/logo.png" alt="FuelUp" className="h-5 w-5 object-contain invert mix-blend-screen" />
+                    <img src={logoSrc} alt="FuelUp" className="h-5 w-5 object-contain" />
                 </div>
                 <span className="text-lg font-medium tracking-tight text-foreground">
                     FuelUp

@@ -7,6 +7,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Navigation, MapPin } from "lucide-react";
 import { useTheme } from "next-themes";
+import { useSettingsStore, CURRENCY_CONFIG } from "@/lib/store/settingsStore";
 
 // Fix Leaflet marker icon issue in Next.js
 const iconUrl = "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png";
@@ -48,6 +49,8 @@ function MapUpdater({ center }: { center: [number, number] }) {
 
 export default function FuelStationMap() {
     const { theme } = useTheme();
+    const { currency } = useSettingsStore();
+    const currencySymbol = CURRENCY_CONFIG[currency].symbol;
     const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
     const [stations, setStations] = useState<FuelStation[]>([]);
     const [selectedStation, setSelectedStation] = useState<FuelStation | null>(null);
@@ -152,19 +155,19 @@ export default function FuelStationMap() {
                                 <div className="rounded-lg bg-secondary p-2 text-center">
                                     <div className="text-xs text-muted-foreground">Regular</div>
                                     <div className="font-bold">
-                                        ${selectedStation.currentPrices.regular?.toFixed(2) || "—"}
+                                        {selectedStation.currentPrices.regular != null ? `${currencySymbol}${selectedStation.currentPrices.regular.toFixed(2)}` : "—"}
                                     </div>
                                 </div>
                                 <div className="rounded-lg bg-secondary p-2 text-center">
                                     <div className="text-xs text-muted-foreground">Premium</div>
                                     <div className="font-bold">
-                                        ${selectedStation.currentPrices.premium?.toFixed(2) || "—"}
+                                        {selectedStation.currentPrices.premium != null ? `${currencySymbol}${selectedStation.currentPrices.premium.toFixed(2)}` : "—"}
                                     </div>
                                 </div>
                                 <div className="rounded-lg bg-secondary p-2 text-center">
                                     <div className="text-xs text-muted-foreground">Diesel</div>
                                     <div className="font-bold">
-                                        ${selectedStation.currentPrices.diesel?.toFixed(2) || "—"}
+                                        {selectedStation.currentPrices.diesel != null ? `${currencySymbol}${selectedStation.currentPrices.diesel.toFixed(2)}` : "—"}
                                     </div>
                                 </div>
                             </div>

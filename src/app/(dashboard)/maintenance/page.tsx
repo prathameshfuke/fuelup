@@ -59,7 +59,7 @@ export default function ServiceBayPage() {
             initial={{ opacity: 0, filter: 'blur(10px)' }}
             animate={{ opacity: 1, filter: 'blur(0px)' }}
             transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
-            className="container mx-auto p-6 max-w-7xl space-y-8"
+            className="container mx-auto p-6 max-w-7xl space-y-8 pb-24 md:pb-8"
         >
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
                 <BlurReveal as="div">

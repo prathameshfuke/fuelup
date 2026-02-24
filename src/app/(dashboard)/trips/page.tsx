@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, Route, MapPin, Briefcase, Heart, Stethoscope, Car as CarIcon, Trash2, DollarSign, Calendar } from 'lucide-react';
+import { Plus, Route, MapPin, Briefcase, Heart, Stethoscope, Car as CarIcon, Trash2, Calendar } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { GlassCard } from '@/components/ui/glass-card';
 import { BorderBeam } from '@/components/ui/border-beam';
@@ -15,7 +15,7 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet';
 import { toast } from 'sonner';
 import { useTripsStore, type Trip } from '@/lib/store/tripsStore';
-import { useSettingsStore } from '@/lib/store/settingsStore';
+import { useSettingsStore, CURRENCY_CONFIG } from '@/lib/store/settingsStore';
 
 const purposeConfig: Record<Trip['purpose'], { icon: React.ElementType }> = {
     commute: { icon: CarIcon },
@@ -28,7 +28,8 @@ export default function TripsPage() {
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [filter, setFilter] = useState<'all' | Trip['purpose']>('all');
     const { trips, addTrip, deleteTrip, getTaxDeductibleTrips, getTotalDistance } = useTripsStore();
-    const { formatCurrency, distanceUnit } = useSettingsStore();
+    const { formatCurrency, distanceUnit, currency } = useSettingsStore();
+    const currencySymbol = CURRENCY_CONFIG[currency].symbol;
     const distLabel = distanceUnit === 'km' ? 'km' : 'mi';
     const ratePerKm = 0.655; // IRS standard mileage rate approximation
 
@@ -65,7 +66,7 @@ export default function TripsPage() {
             initial={{ opacity: 0, filter: 'blur(10px)' }}
             animate={{ opacity: 1, filter: 'blur(0px)' }}
             transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
-            className="container mx-auto p-6 max-w-7xl space-y-8"
+            className="container mx-auto p-6 max-w-7xl space-y-8 pb-24 md:pb-8"
         >
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
                 <BlurReveal as="div">
@@ -94,7 +95,7 @@ export default function TripsPage() {
                 <div className="relative z-10 p-6 md:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
                     <div>
                         <div className="flex items-center gap-2 mb-2">
-                            <DollarSign className="h-4 w-4 text-muted-foreground" />
+                            <span className="h-4 w-4 flex items-center justify-center text-sm font-medium leading-none text-muted-foreground">{currencySymbol}</span>
                             <p className="text-xs text-muted-foreground uppercase tracking-wide">Estimated Reimbursement</p>
                         </div>
                         <div className="text-4xl font-light text-foreground tracking-tight">

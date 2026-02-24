@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-    Plus, Fuel, Calendar, MapPin, DollarSign, Droplets, Gauge, Trash2
+    Plus, Fuel, Calendar, MapPin, Droplets, Gauge, Trash2
 } from 'lucide-react';
 import { GlassCard } from '@/components/ui/glass-card';
 import { BorderBeam } from '@/components/ui/border-beam';
@@ -19,13 +19,14 @@ import { Switch } from '@/components/ui/switch';
 import { toast } from 'sonner';
 import { useFuelStore } from '@/lib/store/fuelStore';
 import { useVehiclesStore } from '@/lib/store/vehiclesStore';
-import { useSettingsStore } from '@/lib/store/settingsStore';
+import { useSettingsStore, CURRENCY_CONFIG } from '@/lib/store/settingsStore';
 
 export default function FuelPage() {
     const [isFormOpen, setIsFormOpen] = useState(false);
     const { logs, addLog, deleteLog, getTotalSpent, getTotalFuel, getAverageEfficiency } = useFuelStore();
     const { vehicles } = useVehiclesStore();
-    const { formatCurrency, distanceUnit, volumeUnit } = useSettingsStore();
+    const { formatCurrency, distanceUnit, volumeUnit, currency } = useSettingsStore();
+    const currencySymbol = CURRENCY_CONFIG[currency].symbol;
     const activeVehicle = vehicles[0];
 
     const [newLog, setNewLog] = useState({
@@ -72,7 +73,7 @@ export default function FuelPage() {
             initial={{ opacity: 0, filter: 'blur(10px)' }}
             animate={{ opacity: 1, filter: 'blur(0px)' }}
             transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
-            className="container mx-auto p-6 max-w-7xl space-y-8"
+            className="container mx-auto p-6 max-w-7xl space-y-8 pb-24 md:pb-8"
         >
             {/* Header */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
@@ -103,7 +104,7 @@ export default function FuelPage() {
                     <div className="relative z-10 p-6">
                         <div className="flex justify-between items-start mb-4">
                             <div className="p-2 rounded-lg bg-secondary text-muted-foreground">
-                                <DollarSign className="h-4 w-4" />
+                                <span className="h-4 w-4 flex items-center justify-center text-sm font-medium leading-none">{currencySymbol}</span>
                             </div>
                         </div>
                         <div>

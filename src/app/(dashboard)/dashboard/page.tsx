@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import {
-    Fuel, DollarSign, Gauge, TrendingUp, TrendingDown,
+    Fuel, Gauge, TrendingUp, TrendingDown,
     Plus, Droplets, Route, Bell, ChevronRight, ArrowRight
 } from 'lucide-react';
 import { GlassCard } from '@/components/ui/glass-card';
@@ -20,12 +20,13 @@ import {
 } from 'recharts';
 import { useFuelStore } from '@/lib/store/fuelStore';
 import { useMaintenanceStore } from '@/lib/store/maintenanceStore';
-import { useSettingsStore } from '@/lib/store/settingsStore';
+import { useSettingsStore, CURRENCY_CONFIG } from '@/lib/store/settingsStore';
 
 export default function DashboardPage() {
     const { logs, getTotalSpent, getTotalFuel, getAverageEfficiency } = useFuelStore();
     const { getUpcoming } = useMaintenanceStore();
-    const { formatCurrency, distanceUnit, volumeUnit } = useSettingsStore();
+    const { formatCurrency, distanceUnit, volumeUnit, currency } = useSettingsStore();
+    const currencySymbol = CURRENCY_CONFIG[currency].symbol;
 
     const distLabel = distanceUnit === 'km' ? 'km' : 'mi';
     const volLabel = volumeUnit === 'liters' ? 'L' : 'gal';
@@ -56,7 +57,7 @@ export default function DashboardPage() {
             initial={{ opacity: 0, filter: 'blur(10px)' }}
             animate={{ opacity: 1, filter: 'blur(0px)' }}
             transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
-            className="container mx-auto p-6 max-w-7xl space-y-8"
+            className="container mx-auto p-6 max-w-7xl space-y-8 pb-24 md:pb-8"
         >
             {/* Header */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -117,13 +118,13 @@ export default function DashboardPage() {
                     <CardContent className="p-6">
                         <div className="flex justify-between items-start mb-4">
                             <div className="p-2 rounded-lg bg-secondary text-muted-foreground">
-                                <DollarSign className="h-4 w-4" />
+                                <span className="h-4 w-4 flex items-center justify-center text-sm font-medium leading-none">{currencySymbol}</span>
                             </div>
                         </div>
                         <div>
-                            <h4 className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-1">Total Spent</h4>
+                <h4 className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-1">Total Spent</h4>
                             <div className="flex items-baseline gap-2">
-                                <span className="text-3xl font-light text-foreground tracking-tight">
+                                <span className="text-xl md:text-3xl font-light text-foreground tracking-tight truncate">
                                     {monthlyCost > 0 ? formatCurrency(monthlyCost) : '-'}
                                 </span>
                             </div>
@@ -248,13 +249,13 @@ export default function DashboardPage() {
                     <div className="relative z-10 p-6 flex-1 flex flex-col">
                     <BlurReveal delay={0.2} className="mb-6">
                         <div className="flex items-center gap-2">
-                            <DollarSign className="h-4 w-4 text-muted-foreground" />
-                            <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-widest">Fuel Spending</h3>
+                            <span className="h-4 w-4 flex items-center justify-center text-sm font-medium leading-none text-muted-foreground">{currencySymbol}</span>
+                                <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-widest">Fuel Spending</h3>
                         </div>
                     </BlurReveal>
                         <div className="flex-1 w-full min-h-0">
                             <ResponsiveContainer width="100%" height="100%">
-                                <BarChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                            <BarChart data={chartData} margin={{ top: 10, right: 10, left: 5, bottom: 0 }}>
                                     <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
                                     <XAxis
                                         dataKey="date"
@@ -265,10 +266,12 @@ export default function DashboardPage() {
                                         dy={10}
                                     />
                                     <YAxis
+                                        width={68}
                                         stroke="transparent"
                                         tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 10 }}
                                         tickLine={false}
                                         axisLine={false}
+                                        tickFormatter={(v: number) => formatCurrency(v)}
                                     />
                                     <Tooltip
                                         contentStyle={{

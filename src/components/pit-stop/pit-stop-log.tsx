@@ -2,8 +2,11 @@
 
 import Image from 'next/image';
 import { useState } from 'react';
+import { useSettingsStore, CURRENCY_CONFIG } from '@/lib/store/settingsStore';
 
 export function PitStopLog() {
+  const { currency } = useSettingsStore();
+  const currencySymbol = CURRENCY_CONFIG[currency].symbol;
   const [odometer, setOdometer] = useState('45230');
   const [fuelLoad, setFuelLoad] = useState(45.5);
   const [mode, setMode] = useState<'per' | 'tot'>('per');
@@ -146,7 +149,7 @@ export function PitStopLog() {
                   }`}
                 >
                   <p className="text-xs font-bold text-[#94a3b8]">{m === 'per' ? 'PER' : 'TOT'}</p>
-                  <p className="text-sm font-bold text-white">{m === 'per' ? 'L' : '$'}</p>
+                  <p className="text-sm font-bold text-white">{m === 'per' ? 'L' : currencySymbol}</p>
                 </button>
               ))}
             </div>
@@ -165,7 +168,7 @@ export function PitStopLog() {
                 onChange={(e) => setPrice(e.target.value)}
                 className="text-2xl font-bold text-white bg-transparent outline-none w-full"
               />
-              <p className="text-sm text-[#64748b] text-right mt-1">$</p>
+              <p className="text-sm text-[#64748b] text-right mt-1">{currencySymbol}</p>
             </div>
           </div>
         </div>
@@ -215,7 +218,7 @@ export function PitStopLog() {
         <div className="grid grid-cols-2 gap-4 pt-4 border-t border-dashed border-[#1e293b]">
           <div className="rounded border border-[#1e293b] bg-[#151c26] p-4">
             <p className="text-xs font-bold tracking-widest text-[#64748b] mb-2">TOTAL COST</p>
-            <p className="text-2xl font-bold text-white">$84.17</p>
+            <p className="text-2xl font-bold text-white">{currencySymbol}84.17</p>
           </div>
           <div className="rounded border border-[#1e293b] bg-[#151c26] p-4">
             <p className="text-xs font-bold tracking-widest text-[#64748b] mb-2">EST. RANGE</p>
