@@ -22,32 +22,7 @@ interface VehiclesStore {
     getVehicle: (id: string) => Vehicle | undefined;
 }
 
-const INITIAL_VEHICLES: Vehicle[] = [
-    {
-        id: 'v1',
-        name: 'My Daily Driver',
-        type: 'car',
-        make: 'Honda',
-        model: 'Civic',
-        year: 2022,
-        fuelType: 'Gasoline',
-        color: 'Sonic Grey',
-        licensePlate: 'ABC-1234',
-        isActive: true,
-    },
-    {
-        id: 'v2',
-        name: 'Weekend Cruiser',
-        type: 'motorcycle',
-        make: 'Yamaha',
-        model: 'MT-07',
-        year: 2020,
-        fuelType: 'Gasoline',
-        color: 'Ice Fluo',
-        licensePlate: 'MOTO-99',
-        isActive: true,
-    },
-];
+const INITIAL_VEHICLES: Vehicle[] = [];
 
 export const useVehiclesStore = create<VehiclesStore>()(
     persist(

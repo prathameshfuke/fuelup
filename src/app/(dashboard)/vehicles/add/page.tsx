@@ -43,6 +43,9 @@ export default function AddVehiclePage() {
         color: '#3b82f6', licensePlate: '',
     });
 
+    const [isCustomMake, setIsCustomMake] = useState(false);
+    const [isCustomModel, setIsCustomModel] = useState(false);
+
     // Filter makes by selected vehicle type
     const makeOptions = useMemo(
         () => getMakes(form.type as VehicleTypeCategory).map(m => ({ value: m, label: m })),
@@ -57,10 +60,13 @@ export default function AddVehiclePage() {
     // When type changes: reset make and model
     const handleTypeChange = (newType: Vehicle['type']) => {
         setForm(prev => ({ ...prev, type: newType, make: '', model: '', fuelType: 'Gasoline' }));
+        setIsCustomMake(false);
+        setIsCustomModel(false);
     };
 
     const handleMakeSelect = (make: string) => {
         setForm(prev => ({ ...prev, make, model: '' }));
+        setIsCustomModel(false);
     };
 
     const handleModelSelect = (modelName: string) => {
@@ -154,30 +160,72 @@ export default function AddVehiclePage() {
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
                                     <Label>Make *</Label>
-                                    <div className="mt-1.5">
-                                        <Combobox
-                                            options={makeOptions}
-                                            value={form.make}
-                                            onSelect={handleMakeSelect}
-                                            placeholder={`Select ${form.type} make...`}
-                                            searchPlaceholder="Search makes..."
-                                        />
+                                    <div className="mt-1.5 space-y-2">
+                                        {isCustomMake ? (
+                                            <Input
+                                                placeholder={`Enter custom ${form.type} make...`}
+                                                value={form.make}
+                                                onChange={(e) => setForm(prev => ({ ...prev, make: e.target.value, model: '' }))}
+                                                className="bg-secondary/30 border-border/60"
+                                            />
+                                        ) : (
+                                            <Combobox
+                                                options={makeOptions}
+                                                value={form.make}
+                                                onSelect={handleMakeSelect}
+                                                placeholder={`Select ${form.type} make...`}
+                                                searchPlaceholder="Search makes..."
+                                            />
+                                        )}
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                setIsCustomMake(!isCustomMake);
+                                                setForm(prev => ({ ...prev, make: '', model: '' }));
+                                                if (!isCustomMake) setIsCustomModel(true); // If switching to custom make, also need custom model
+                                            }}
+                                            className="text-xs text-primary hover:underline"
+                                        >
+                                            {isCustomMake ? "Select from list" : "Enter custom make"}
+                                        </button>
                                     </div>
-                                    {makeOptions.length === 0 && (
+                                    {!isCustomMake && makeOptions.length === 0 && (
                                         <p className="text-xs text-muted-foreground mt-1">No makes available for this type</p>
                                     )}
                                 </div>
                                 <div>
                                     <Label>Model *</Label>
-                                    <div className="mt-1.5">
-                                        <Combobox
-                                            options={modelOptions}
-                                            value={form.model}
-                                            onSelect={handleModelSelect}
-                                            placeholder={form.make ? "Select model..." : "Select make first"}
-                                            searchPlaceholder="Search models..."
-                                            disabled={!form.make}
-                                        />
+                                    <div className="mt-1.5 space-y-2">
+                                        {isCustomMake || isCustomModel ? (
+                                            <Input
+                                                placeholder={form.make ? "Enter custom model..." : "Enter make first"}
+                                                value={form.model}
+                                                onChange={(e) => setForm(prev => ({ ...prev, model: e.target.value }))}
+                                                disabled={!form.make}
+                                                className="bg-secondary/30 border-border/60"
+                                            />
+                                        ) : (
+                                            <Combobox
+                                                options={modelOptions}
+                                                value={form.model}
+                                                onSelect={handleModelSelect}
+                                                placeholder={form.make ? "Select model..." : "Select make first"}
+                                                searchPlaceholder="Search models..."
+                                                disabled={!form.make}
+                                            />
+                                        )}
+                                        {form.make && !isCustomMake && (
+                                            <button
+                                                type="button"
+                                                onClick={() => {
+                                                    setIsCustomModel(!isCustomModel);
+                                                    setForm(prev => ({ ...prev, model: '' }));
+                                                }}
+                                                className="text-xs text-primary hover:underline"
+                                            >
+                                                {isCustomModel ? "Select from list" : "Enter custom model"}
+                                            </button>
+                                        )}
                                     </div>
                                 </div>
                             </div>
