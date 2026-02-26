@@ -1,4 +1,4 @@
-# FuelUp ⛽🚗
+# FuelUp 
 
 FuelUp is a modern, privacy-focused Next.js application designed to track fuel consumption, vehicle maintenance, and travel trips—all seamlessly managed within an elegant and sleek user interface. Built with a "premium glassmorphism" aesthetic (Memoria Design System) and relying entirely on local storage for ultra-fast, offline-first performance.
 
